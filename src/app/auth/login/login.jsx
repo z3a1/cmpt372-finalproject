@@ -6,8 +6,14 @@ export default function Logincomp(){
     const getFormData = (event) => {
         event.preventDefault()
         const userInput = new FormData(event.currentTarget)
+        const defaultRole = "Member"
         console.log(userInput.get('email'))
         console.log(userInput.get('password'))
+        /**
+         * Todo:
+         * -> Verification if user exists
+         * -> Session verification
+         */
       }
 
     return(
