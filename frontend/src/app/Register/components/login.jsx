@@ -1,5 +1,5 @@
 import {FormEvent} from "react"
-import styles from "../../page.module.css"
+import styles from "../registerStyle.module.css"
 
 export default function Logincomp(){
 

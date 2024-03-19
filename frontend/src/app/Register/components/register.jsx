@@ -1,6 +1,6 @@
 import {FormEvent} from "react"
 import {v4 as idGen} from "uuid"
-import styles from "../../page.module.css"
+import styles from "../registerStyle.module.css"
 
 export default function Registercomp(){
 
