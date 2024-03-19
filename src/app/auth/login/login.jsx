@@ -13,6 +13,7 @@ export default function Logincomp(){
          * Todo:
          * -> Verification if user exists
          * -> Session verification
+         * -> Redirect to main page
          */
       }
 
