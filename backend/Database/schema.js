@@ -8,13 +8,13 @@ var userSchema = new Schema({
     fname: String,
     lname: String,
     email: {type: String, unique: true, required: 'User must have an email!'},
-    Role: {type: String, enum:['Member','Admin'], default: 'Member'}
+    Role: {type: String, enum:['Member','Admin'], default: 'Member'},
 
 })
 
 var friendSchema = new Schema({
-    user_id: 'UUID',
-    friend_id: 'UUID',
+    user_id: {type: 'UUID', ref:'User'},
+    friend_id: {type: 'UUID', ref:'User'},
     status: String
 })
 
@@ -30,17 +30,17 @@ var locationSchema = new Schema({
 var eventSchema = new Schema({
     event_id: 'UUID',
     name: String,
-    creator: 'UUID',
+    creator: {type: 'UUID', ref:'User'},
     title: String,
     description: String,
-    location_id: 'UUID',
+    location_id: {type: 'UUID', ref:'Location'},
     creation_date: Date,
     deletion_date: Date
 })
 
 var attendeeSchema = new Schema({
-    event_id: 'UUID',
-    user_id: 'UUID',
+    event_id: {type: 'UUID', ref:'Location'},
+    user_id: {type: 'UUID', ref:'User'},
     status: {type: String, enum: ['invited','confirmed','denied','cancelled']}
 })
 
