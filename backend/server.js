@@ -23,6 +23,10 @@ app.post('/login',passport.authenticate('local',{failureRedirect: '/login'}), (r
     console.log(req.user)
 })
 
+// Google maps
+const googleMaps = require('./GoogleMaps/googleMaps')
+app.use('/maps', googleMaps)
+
 app.post('/register',async (req,res) => {
     console.log(req.body)
     let newUser = {
