@@ -9,7 +9,6 @@ var userSchema = new Schema({
     lname: String,
     email: {type: String, unique: true, required: 'User must have an email!'},
     Role: {type: String, enum:['Member','Admin'], default: 'Member'},
-
 })
 
 var friendSchema = new Schema({

@@ -1,28 +1,27 @@
 import "../VideoPlayer.css";
 import React, { useState, useEffect } from "react";
 
-export default function VideoPlayer({ videoId, visible=true, removeFavouriteDisplay }) {
+export default function VideoPlayer({ videoId, userId, visible=true, removeFavouriteDisplay }) {
   const [checkFavourite, setCheckFavourite] = useState(false);
   useEffect(() => {
-    const favouriteList = JSON.parse(localStorage.getItem("favourites")) || [];
+    const favouriteList = JSON.parse(localStorage.getItem(`user-${userId}-vids`)) || [];
     const isFavourited = favouriteList.includes(videoId);
     setCheckFavourite(isFavourited);
-  }, [videoId]);
+  }, [videoId, userId]);
 
   function updateFavourite() {
-    const favouriteList = JSON.parse(localStorage.getItem("favourites")) || [];
+    const favouriteList = JSON.parse(localStorage.getItem(`user-${userId}-vids`)) || [];
 
-   
     const isFavorite = favouriteList.includes(videoId);
      //If it already exists, then delete
     if (isFavorite) { 
       const updatedList = favouriteList.filter((id) => id !== videoId);
-      localStorage.setItem("favourites", JSON.stringify(updatedList));
+      localStorage.setItem(`user-${userId}-vids`, JSON.stringify(updatedList));
       setCheckFavourite(false);
       removeFavouriteDisplay()
     } else {
       favouriteList.push(videoId);
-      localStorage.setItem("favourites", JSON.stringify(favouriteList));
+      localStorage.setItem(`user-${userId}-vids`, JSON.stringify(favouriteList));
       setCheckFavourite(true);
     }
   }

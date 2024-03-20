@@ -23,10 +23,9 @@ router.get("/", async (req, res, next) => {
     */
     const videoIds = ["xNRJwmlRBNU", "jb-cDp5StCw", "SqcY0GlETPk"];
 
-
-    res.send(videoIds);
+    res.status(200).send(videoIds);
   } catch (err) {
-    next(err);
+    res.status(500).json({ err: 'Internal server error' });
   }
 });
 

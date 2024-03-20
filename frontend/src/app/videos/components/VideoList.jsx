@@ -3,7 +3,7 @@ import VideoPlayer from "./VideoPlayer";
 import "../VideoList.css";
 import React, { useState, useEffect } from "react";
 
-export default function VideoList({ location }) {
+export default function VideoList({ location, userId  }) {
   const [videoIds, setVideoIds] = useState([]);
 
   //UseEffect to rerender after location has be updated
@@ -33,7 +33,7 @@ export default function VideoList({ location }) {
   return (
     <div className="videolist-container">
       {videoIds.map((id) => (
-        <VideoPlayer key={id} videoId={id} />
+        <VideoPlayer key={id} videoId={id} userId={userId} />
       ))}
     </div>
   );

@@ -7,6 +7,9 @@ export default function VideosPage() {
   const [location, setLocation] = useState("");
   const [submitState, setSubmitState] = useState("");
 
+  //TESTING WITH DIFFERENT USERS
+  const userId = 11;
+
   function onSubmit(e) {
     e.preventDefault();
     setSubmitState({ checkSubmit: true });
@@ -28,8 +31,10 @@ export default function VideosPage() {
         />
         <button type="submit">Search</button>
       </form>
-      {submitState.checkSubmit && <VideoList location={location} />}
-      <a href = '/videos/favourites'>Favourites Page</a>
+      {submitState.checkSubmit && (
+        <VideoList location={location} userId={userId} />
+      )}
+      <a href={`/videos/favourites?userId=${userId}`}>Favourites Page</a>
     </div>
   );
 }
