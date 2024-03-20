@@ -8,7 +8,9 @@ var userSchema = new Schema({
     fname: String,
     lname: String,
     email: {type: String, unique: true, required: 'User must have an email!'},
-    Role: {type: String, enum:['Member','Admin'], default: 'Member'},
+    role: {type: String, enum:['Member','Admin'], default: 'Member'},
+    password: {type: String, unique: true, required: 'User needs a password!!!'}
+
 })
 
 var friendSchema = new Schema({
@@ -48,7 +50,16 @@ const Friend = mongoose.model('Friend',friendSchema)
 const Location = mongoose.model('Location',locationSchema)
 const Event = mongoose.model('Event',eventSchema)
 const Attendee = mongoose.model('Attendee',attendeeSchema)
+const initializeDB = () => {
+    try{
+        mongoose.connect(process.env.CONNECTION_SECRET)
+    }
+    catch(e){
+        throw(e)
+    }
+}
+
 
 module.exports = {
-    User,Friend,Location,Event,Attendee
+    User,Friend,Location,Event,Attendee,initializeDB
 }

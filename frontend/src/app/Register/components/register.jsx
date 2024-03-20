@@ -1,6 +1,7 @@
 import {FormEvent} from "react"
 import {v4 as idGen} from "uuid"
 import styles from "../registerStyle.module.css"
+import axios from "axios"
 
 export default function Registercomp(){
 
@@ -17,6 +18,14 @@ export default function Registercomp(){
             - Check if the user name exists already
             - Will be handeled by the Express server
         */
+       axios.post(process.env.SERVER_URL + "/register",{
+        id: idGen(),
+        fname: userInput.get('fname'),
+        lname: userInput.get('lname'),
+        userName: userInput.get('userName'),
+        email: userInput.get('email'),
+        password: userInput.get('password')
+       })
       }
 
     return(

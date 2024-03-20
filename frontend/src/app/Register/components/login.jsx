@@ -1,5 +1,6 @@
 import {FormEvent} from "react"
 import styles from "../registerStyle.module.css"
+import axios from "axios"
 
 export default function Logincomp(){
 
@@ -15,6 +16,10 @@ export default function Logincomp(){
          * -> Session verification
          * -> Redirect to main page
          */
+        axios.post(process.env.SERVER_URL + "/login",{
+            email: userInput.get('email'),
+            password: userInput.get('password')
+        })
       }
 
     return(
