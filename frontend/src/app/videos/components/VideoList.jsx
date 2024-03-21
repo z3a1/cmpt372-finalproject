@@ -1,9 +1,10 @@
 "use client";
+import axios from "axios";
 import VideoPlayer from "./VideoPlayer";
 import "../VideoList.css";
 import React, { useState, useEffect } from "react";
 
-export default function VideoList({ location, userId  }) {
+export default function VideoList({ location, userId}) {
   const [videoIds, setVideoIds] = useState([]);
 
   //UseEffect to rerender after location has be updated
@@ -17,6 +18,7 @@ export default function VideoList({ location, userId  }) {
         });
         const ids = await res.json();
         setVideoIds(ids);
+      
       } catch (err) {
         console.log(err);
       }

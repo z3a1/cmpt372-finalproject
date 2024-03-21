@@ -23,6 +23,10 @@ app.post('/login',passport.authenticate('local',{failureRedirect: '/login'}), (r
     console.log(req.user)
 })
 
+//Youtube videos
+const videos = require('./Videos/videos')
+app.use('/videos', videos)
+
 // Google maps
 const googleMaps = require('./GoogleMaps/googleMaps')
 app.use('/maps', googleMaps)
@@ -45,10 +49,7 @@ app.post('/register',async (req,res) => {
 })
 
 try{
-    db.initializeDB()//Youtube videos
-const videos = require('./Videos/videos')
-app.use('/videos', videos)
-
+    db.initializeDB()
     app.listen(process.env.PORT, () => {
         console.log("Server is up and running on specified port")    })
 

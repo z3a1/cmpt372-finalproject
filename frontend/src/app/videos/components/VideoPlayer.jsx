@@ -1,29 +1,56 @@
 import "../VideoPlayer.css";
+import axios from "axios";
 import React, { useState, useEffect } from "react";
 
 export default function VideoPlayer({ videoId, userId, visible=true, removeFavouriteDisplay }) {
   const [checkFavourite, setCheckFavourite] = useState(false);
   useEffect(() => {
-    const favouriteList = JSON.parse(localStorage.getItem(`user-${userId}-vids`)) || [];
-    const isFavourited = favouriteList.includes(videoId);
-    setCheckFavourite(isFavourited);
+    //const favouriteList = JSON.parse(localStorage.getItem(`user-${userId}-vids`)) || []; //Local Storage
+    // const isFavourited = favouriteList.includes(videoId);
+    // setCheckFavourite(isFavourited);
+
+    const getData = async () => {
+ 
+     await axios.get(`http://localhost:8080/videos/favourites/${userId}/${videoId}/checkFavourite`).then(res => {
+          console.log(res.data)   
+          setCheckFavourite(res.data.checkFavourite);
+      })
+      .catch(error => console.error(error));
+       
+    }
+    getData(); 
   }, [videoId, userId]);
 
-  function updateFavourite() {
-    const favouriteList = JSON.parse(localStorage.getItem(`user-${userId}-vids`)) || [];
+    async function updateFavourite() {
 
-    const isFavorite = favouriteList.includes(videoId);
-     //If it already exists, then delete
-    if (isFavorite) { 
-      const updatedList = favouriteList.filter((id) => id !== videoId);
-      localStorage.setItem(`user-${userId}-vids`, JSON.stringify(updatedList));
-      setCheckFavourite(false);
-      removeFavouriteDisplay()
+    
+    if (checkFavourite) {
+      await axios.delete(`http://localhost:8080/videos/favourites/${userId}/${videoId}`).then(res=>{
+        removeFavouriteDisplay();
+        setCheckFavourite(false);
+      }).catch(error => console.error(error));
+    
     } else {
-      favouriteList.push(videoId);
-      localStorage.setItem(`user-${userId}-vids`, JSON.stringify(favouriteList));
-      setCheckFavourite(true);
+      await axios.post(`http://localhost:8080/videos/favourites/${userId}`, { videoId }).then(res=>{
+        setCheckFavourite(false);
+      }).catch(error => console.error(error));
     }
+
+
+    //Local Storage Version
+    //const favouriteList = JSON.parse(localStorage.getItem(`user-${userId}-vids`)) || []; //Local Storage
+    //const isFavorite = favouriteList.includes(videoId);
+     //If it already exists, then delete
+    // if (isFavorite) { 
+    //   const updatedList = favouriteList.filter((id) => id !== videoId);
+    //   localStorage.setItem(`user-${userId}-vids`, JSON.stringify(updatedList));
+    //   setCheckFavourite(false);
+    //   removeFavouriteDisplay()
+    // } else {
+    //   favouriteList.push(videoId);
+    //   localStorage.setItem(`user-${userId}-vids`, JSON.stringify(favouriteList));
+    //   setCheckFavourite(true);
+    // }
   }
 
   //don't render if not visible
