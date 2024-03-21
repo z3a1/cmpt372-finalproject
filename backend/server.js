@@ -32,6 +32,7 @@ app.use(cors())
 app.post('/login',passport.authenticate('local',{failureRedirect: '/login'}), (req,res) => {
     console.log("It works?")
     console.log(req.user)
+    res.send({user_id: req.user.user_id, fname: req.user.fname, lname: req.user.lname})
 })
 
 //Youtube videos
@@ -54,8 +55,9 @@ app.post('/register',async (req,res) => {
         role: 'Member'
     }
     let newDocument = new db.User(newUser)
-    await newDocument.save().then(res => {
-        console.log(res)
+    await newDocument.save().then(dbRes => {
+        console.log(dbRes)
+        res.send({user_id: dbRes.user_id, fname: dbRes.fname, lname: dbRes.lname})
     })
 })
 
