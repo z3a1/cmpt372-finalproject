@@ -44,6 +44,18 @@ app.post('/register',async (req,res) => {
     })
 })
 
+// Friends List 
+const friends = require('./FriendsList/friendsRouter');
+app.use('/friends', friends);
+// app.get('/friends', (req, res) => {
+//     res.send('in friends list');
+// });
+
+///// just to test the server
+// app.get('/', (req, res) => {
+//     res.send('the server!');
+// });
+
 try{
     db.initializeDB()
     app.listen(process.env.PORT, () => {

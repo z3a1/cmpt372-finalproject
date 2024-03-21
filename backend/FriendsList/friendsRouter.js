@@ -1,5 +1,6 @@
 var express = require ('express')
 var router = express.Router()
+const axios = require("axios")
 var db = require('../Database/schema')
 
 const friends = db.Friend;
@@ -90,7 +91,8 @@ router.get('/friends/', async (req, res) => {
 })
 
 //for all the people in the database - probably needs to be on a separate page? maybe? idk
-router.get('friends/', async (req, res) => {
+/*
+router.get('/friends/', async (req, res) => {
     try {
         ////// idk what is happening here yet 
         // search by name????? 
@@ -107,6 +109,7 @@ router.get('friends/', async (req, res) => {
         res.status(500).json({ message: 'internal server error' })
     }
 })
+*/
 
 
 router.post('/friends/', async (req, res) => {

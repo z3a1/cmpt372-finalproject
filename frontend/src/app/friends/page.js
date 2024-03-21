@@ -16,9 +16,9 @@ export default function FriendsPage() {
     //TODO: add a "search" - just writes the name and adds
     const add = async (evt) => {
         //add a new friendddd 
-        const r = friendService.getFriendCount();
-        console.log(r);
-        const newFriend = { id: friendService.getFriendCount()+1, name: 'Friend' };;
+        // const r = friendService.getFriendCount();
+        // console.log(r);
+        const newFriend = { userId: '1', friendId: '1' };;
         console.log('hi');
         try {
             await friendService.addFriend(newFriend);
@@ -55,7 +55,7 @@ export default function FriendsPage() {
         <div className="container" >
             <button className="add" onClick={add}>Add Friend</button>
             <ul className="friendsList">
-                {friends.map((friend) => (
+                {friends?.map((friend) => (
                     <li key={friend.id} className="friend">
                         {friend.name} 
                         <button className="remove" onClick={() => remove(friend.id)}>Remove</button>

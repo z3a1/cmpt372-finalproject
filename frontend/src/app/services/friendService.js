@@ -6,12 +6,16 @@ import axios from 'axios';
 
 const friendService =  {
 
-    friends: [],
+    // friends: [],
 
     getAllFriends: async() => {
 
         try {
-            await axios.get('http:localhost:8080/friends');
+            const response = await axios.get('http://localhost:8080/friends').then( res =>{
+                console.log(res.data);
+                /// more functionality for the res
+            });
+            // const response = await fetch ('http://localhost:8080/friends');
         } catch(error){
             console.error('Error fetching friends:', error);
             throw error;
@@ -25,7 +29,9 @@ const friendService =  {
     deleteFriend: async(id) => {
         // wrap with json after
         try {
-            await axios.delete('http:localhost:8080/friends', id);
+            await axios.delete('http://localhost:8080/friends', id).then(res =>{
+                console.log(res.data);
+            });
         } catch(error){
             console.error('Error fetching friends:', error);
             throw error;
@@ -42,7 +48,9 @@ const friendService =  {
     addFriend: async(f) =>{
         // wrap with json after
         try {
-            await axios.post('http:localhost:8080/friends', f);
+            await axios.post('http://localhost:8080/friends', f).then(res =>{
+                console.log(res.data)
+            });
         } catch(error){
             console.error('Error fetching friends:', error);
             throw error;
@@ -53,6 +61,8 @@ const friendService =  {
         // localStorage.UserArray = JSON.stringify(friendService.friends);     
         // return;
     }
+
+    // TODO: need to add a search function
 
     // getFriendCount: async() => {
     //     // const r = friendService.friends.length;
