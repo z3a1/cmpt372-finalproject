@@ -11,7 +11,7 @@ export default function FavouriteVideos({ userId }) {
     //setFavourites(favouriteList);
 
     const getFavourites = async () => {
-        await axios.get(`http://localhost:8080/videos/favourites/${userId}`).then(res => {
+        await axios.get(process.env.SERVER_URL + `/videos/favourites/${userId}`).then(res => {
             console.log(res)
             setFavourites(res.data.favourites);
         }).catch(error => console.error(error));
