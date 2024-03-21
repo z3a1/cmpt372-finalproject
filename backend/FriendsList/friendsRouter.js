@@ -26,11 +26,7 @@ const helper = {
             return friendInfo;
         });
 
-        /// possibly needs to do this the opposite way as well??? - depedns on hwo I create
-
-        // const moreFriends = await friends.find({ friend_id: userId }).then(async (res) =>{
-        //     await user.find({ user_id: res }, username, fname, lname).exec();
-        // });
+        /// possibly needs to do this the opposite way as well??? - depedns on how I create a friend 
     },
 
     //get all users (for the search)
@@ -78,6 +74,9 @@ const helper = {
 
 }
 
+
+//TODO: make another get for friend count (total friends)
+
 //for all the friends of that user 
 router.get('/friends/', async (req, res) => {
     try {
@@ -99,7 +98,7 @@ router.get('friends/', async (req, res) => {
         const first = req.body.first;
 
         if (!last || !first) {
-            return res.status(400).json({ message: "First and last name are required in the request body" });
+            return res.status(400).json({ message: "First or last name is required in the request body" });
         }
 
         await helper.getPeople(last, first);
