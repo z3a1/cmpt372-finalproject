@@ -23,6 +23,10 @@ app.post('/login',passport.authenticate('local',{failureRedirect: '/login'}), (r
     console.log(req.user)
 })
 
+//Youtube videos
+const videos = require('./Videos/videos')
+app.use('/videos', videos)
+
 // Google maps
 const googleMaps = require('./GoogleMaps/googleMaps')
 app.use('/maps', googleMaps)
