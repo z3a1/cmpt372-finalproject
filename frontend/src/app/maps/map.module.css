@@ -1,0 +1,21 @@
+.placesContainer {
+  position: absolute;
+  top: 6vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  width: 300px;
+}
+
+.mapContainer {
+  width: 80%;
+  height: 80vh;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5vh;
+  border: 2px solid;
+}
+
+.mapCaptionContainer {
+  text-align:center;
+}
