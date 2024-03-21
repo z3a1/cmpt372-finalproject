@@ -6,24 +6,17 @@ const friends = db.Friend;
 const user = db.User;
 
 let path = require ('path')
-
 let fs = require ('fs')
 
 
-/////// add mongoose queries...
 const helper = {
 
+    //maybe do a count as well? how many firends does the user have being displayed???
     //get all friends (to be displayed in friends list)
     getFriends: async function (userId){
 
-        //maybe do a count as well? how many firends does the user have being displayed???
-        // await friends.countDocuments({ user_id: userId }).exec();
-
         //get all friend_ids -> then search the user schema for their username, fname, lname
-
-
         //hence allFriends contains username, fname, lname (I think...)
-
         await friends.find({ user_id: userId }).then(async(res)=>{
             const friendIds = await res.filter(friend => friend.user_id !== userId).map(friend => friend.friend_id);
             const friendInfo = await user.find({ user_id: { $in: friendIds }}).select('username fname lname user_id').exec();
@@ -42,16 +35,19 @@ const helper = {
 
     //get all users (for the search)
     getPeople: async function (last, first){
-        //get all people in the database that have the first and last name?? 
-        // if (first != null || last != null){
-        //     await user.find({ fname: first, lname: last })
-        // } else{
-        //     if (first != null){
-        //         await user.find({ fname: first })
-        //     } else{
-        //         await user.find({ lname: last })
-        //     }
-        // }
+        //get all people in the database that have the first and last name
+        if (first != null || last != null){
+            const people = await user.find({ fname: first, lname: last }).select('username fname lname').exec();
+            return people;
+        } else{
+            if (first != null){
+                const people = await user.find({ fname: first });
+                return people
+            } else{
+                const people = await user.find({ lname: last });
+                return people;
+            }
+        }
     },
 
 
@@ -101,6 +97,10 @@ router.get('friends/', async (req, res) => {
         // search by name????? 
         const last = req.body.last;
         const first = req.body.first;
+
+        if (!last || !first) {
+            return res.status(400).json({ message: "First and last name are required in the request body" });
+        }
 
         await helper.getPeople(last, first);
     } catch (error){
