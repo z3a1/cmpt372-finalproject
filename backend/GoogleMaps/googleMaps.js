@@ -55,17 +55,4 @@ router.get('/api/places/selected/address', async (req, res) => {
     }
 })
 
-// Place Name
-var placeName;
-
-// Process selected place name
-router.post('/api/places/selected', async (req, res) => {
-    placeName = req.body.placeName
-})
-
-// Get place name
-router.get('/api/places/selected', async (req, res) => {
-    res.send(placeName)
-})
-
 module.exports = router;

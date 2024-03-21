@@ -1,11 +1,3 @@
-/* html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-} */
-
 .placesContainer {
   position: absolute;
   top: 6vh;
@@ -21,13 +13,9 @@ body {
   margin-left: auto;
   margin-right: auto;
   margin-top: 5vh;
+  border: 2px solid;
 }
 
 .mapCaptionContainer {
   text-align:center;
-}
-
-.comboboxInput {
-  width: 100%;
-  padding: 0.5rem;
 }
