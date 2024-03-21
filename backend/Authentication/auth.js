@@ -22,17 +22,3 @@ async function(email,pass,done) {
     }
 }
 ))
-
-/**
- * (err,user) => {
-            if(err){
-                done(err)
-            }
-            if(!user){
-                done(null,false)
-            }
-            if(user){
-                done(null,user)
-            }
-        }
- */

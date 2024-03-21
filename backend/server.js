@@ -44,12 +44,11 @@ app.post('/register',async (req,res) => {
     })
 })
 
-try{
+app.get('/mongo', (req, res) => {
     db.initializeDB()
-    app.listen(process.env.PORT, () => {
-        console.log("Server is up and running on specified port")
-    })
-}
-catch(e){
-    console.log(e)
-}
+    res.send("mongo")
+})
+
+app.listen(process.env.PORT, () => {
+    console.log("Server is up and running on specified port")
+})
