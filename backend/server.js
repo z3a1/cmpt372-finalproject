@@ -14,15 +14,12 @@ app.use(session({
     saveUninitialized: true
 }))
 
-//CORS middleware
-var corsMiddleware = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'OPTIONS, GET, PUT, PATCH, POST, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Authorization');
-    next();
-}
-app.use(corsMiddleware);
-
+const corsOptions = cors({
+    origin: ["https://backend-tmmf5kaaqa-uw.a.run.app", "http://localhost:8080"],
+    credentials: true, 
+})
+app.use(corsOptions);
+app.options('*', corsOptions)
 
 app.use(passport.session())
 app.use(express.urlencoded({extended: true}))

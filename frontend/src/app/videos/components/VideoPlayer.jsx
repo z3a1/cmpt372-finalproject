@@ -11,7 +11,7 @@ export default function VideoPlayer({ videoId, userId, visible=true, removeFavou
 
     const getData = async () => {
  
-     await axios.get(`http://localhost:8080/videos/favourites/${userId}/${videoId}/checkFavourite`).then(res => {
+     await axios.get(process.env.SERVER_URL + `/videos/favourites/${userId}/${videoId}/checkFavourite`).then(res => {
           console.log(res.data)   
           setCheckFavourite(res.data.checkFavourite);
       })
@@ -25,13 +25,13 @@ export default function VideoPlayer({ videoId, userId, visible=true, removeFavou
 
     
     if (checkFavourite) {
-      await axios.delete(`http://localhost:8080/videos/favourites/${userId}/${videoId}`).then(res=>{
+      await axios.delete(process.env.SERVER_URL + `/videos/favourites/${userId}/${videoId}`).then(res=>{
         removeFavouriteDisplay();
         setCheckFavourite(false);
       }).catch(error => console.error(error));
     
     } else {
-      await axios.post(`http://localhost:8080/videos/favourites/${userId}`, { videoId }).then(res=>{
+      await axios.post(process.env.SERVER_URL + `/videos/favourites/${userId}`, { videoId }).then(res=>{
         setCheckFavourite(false);
       }).catch(error => console.error(error));
     }
