@@ -21,6 +21,7 @@ export default function FriendsPage() {
         const newFriend = { userId: '1', friendId: '1' };;
         console.log('hi');
         try {
+            console.log('adding new friend', newFriend);
             await friendService.addFriend(newFriend);
             fetchFriends();
         } catch (error){

@@ -13,6 +13,14 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }))
+
+const corsOptions = cors({
+    origin: ["https://backend-tmmf5kaaqa-uw.a.run.app", "http://localhost:8080"],
+    credentials: true, 
+})
+app.use(corsOptions);
+app.options('*', corsOptions)
+
 app.use(passport.session())
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
@@ -22,6 +30,10 @@ app.post('/login',passport.authenticate('local',{failureRedirect: '/login'}), (r
     console.log("It works?")
     console.log(req.user)
 })
+
+//Youtube videos
+const videos = require('./Videos/videos')
+app.use('/videos', videos)
 
 // Google maps
 const googleMaps = require('./GoogleMaps/googleMaps')
@@ -56,12 +68,11 @@ app.use('/friends', friends);
 //     res.send('the server!');
 // });
 
-try{
+app.get('/mongo', (req, res) => {
     db.initializeDB()
-    app.listen(process.env.PORT, () => {
-        console.log("Server is up and running on specified port")
-    })
-}
-catch(e){
-    console.log(e)
-}
+    res.send("mongo")
+})
+
+app.listen(process.env.PORT, () => {
+    console.log("Server is up and running on specified port")
+})

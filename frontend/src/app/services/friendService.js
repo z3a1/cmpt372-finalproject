@@ -11,7 +11,7 @@ const friendService =  {
     getAllFriends: async() => {
 
         try {
-            const response = await axios.get('http://localhost:8080/friends').then( res =>{
+            const response = await axios.get(process.env.SERVER_UR + '/friends').then( res =>{
                 console.log(res.data);
                 /// more functionality for the res
             });
@@ -29,7 +29,7 @@ const friendService =  {
     deleteFriend: async(id) => {
         // wrap with json after
         try {
-            await axios.delete('http://localhost:8080/friends', id).then(res =>{
+            await axios.delete(process.env.SERVER_UR + '/friends', id).then(res =>{
                 console.log(res.data);
             });
         } catch(error){
@@ -48,7 +48,7 @@ const friendService =  {
     addFriend: async(f) =>{
         // wrap with json after
         try {
-            await axios.post('http://localhost:8080/friends', f).then(res =>{
+            await axios.post(process.env.SERVER_UR + '/friends', f).then(res =>{
                 console.log(res.data)
             });
         } catch(error){

@@ -1,6 +1,7 @@
 var mongoose = require('mongoose')
 const {v4: uuidv4} = require('uuid')
 var Schema = mongoose.Schema
+require('dotenv').config()
 
 var userSchema = new Schema({
     user_id: {type: 'UUID', default: () => uuidv4()},
@@ -45,11 +46,23 @@ var attendeeSchema = new Schema({
     status: {type: String, enum: ['invited','confirmed','denied','cancelled']}
 })
 
+var videoSchema = new Schema({
+    video_id: String
+})
+
+var likedVideoSchema = new Schema({
+    user_id: { type: String, ref: 'User' },
+    video_id: { type: String, ref: 'Video' }
+})
+
 const User = mongoose.model('User',userSchema)
 const Friend = mongoose.model('Friend',friendSchema)
 const Location = mongoose.model('Location',locationSchema)
 const Event = mongoose.model('Event',eventSchema)
 const Attendee = mongoose.model('Attendee',attendeeSchema)
+const Video = mongoose.model('Video', videoSchema)
+const LikedVideo = mongoose.model('LikedVideo', likedVideoSchema)
+
 const initializeDB = () => {
     try{
         mongoose.connect(process.env.CONNECTION_SECRET)
@@ -61,5 +74,5 @@ const initializeDB = () => {
 
 
 module.exports = {
-    User,Friend,Location,Event,Attendee,initializeDB
+    User,Friend,Location,Event,Attendee,Video,LikedVideo,initializeDB
 }

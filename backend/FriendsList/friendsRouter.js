@@ -18,14 +18,20 @@ const helper = {
 
         //get all friend_ids -> then search the user schema for their username, fname, lname
         //hence allFriends contains username, fname, lname (I think...)
+
+        console.log('in get friends');
         await friends.find({ user_id: userId }).then(async(res)=>{
             const friendIds = await res.filter(friend => friend.user_id !== userId).map(friend => friend.friend_id);
             const friendInfo = await user.find({ user_id: { $in: friendIds }}).select('username fname lname user_id').exec();
             for await(const doc of friendInfo){
                 console.log(doc);
             }
+            console.log('in get friends - after the queries');
             return friendInfo;
         });
+
+        console.log('no friends');
+        return;
 
         /// possibly needs to do this the opposite way as well??? - depedns on how I create a friend 
     },
@@ -79,9 +85,11 @@ const helper = {
 //TODO: make another get for friend count (total friends)
 
 //for all the friends of that user 
-router.get('/friends/', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const userId = req.body.userId;
+
+        console.log('userId', req.body.userId)
 
         await helper.getFriends(userId);
     } catch (error){
@@ -112,11 +120,14 @@ router.get('/friends/', async (req, res) => {
 */
 
 
-router.post('/friends/', async (req, res) => {
+router.post('/people/', async (req, res) => {
     try {
         // main user id and friend id (friend to add)
         const userId = req.body.userId;
         const friendId = req.body.friendId;
+
+        console.log('userId', userId);
+        console.log('friendId', friendId);
 
         if (!userId || !friendId) {
             return res.status(400).json({ message: "userId and friendId are required in the request body" });
@@ -132,7 +143,7 @@ router.post('/friends/', async (req, res) => {
 })
 
 
-router.delete('/friends/', async (req, res) => {
+router.delete('/', async (req, res) => {
     try {
         //pass in friendId
         const userId = req.body.userId;
