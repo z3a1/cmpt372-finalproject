@@ -15,7 +15,7 @@ app.use(session({
 }))
 
 const corsOptions = cors({
-    origin: ["https://backend-tmmf5kaaqa-uw.a.run.app", "http://localhost:8080"],
+    origin: ["https://backend-tmmf5kaaqa-uw.a.run.app/", "http://localhost:8080/","http://localhost:3000/"],
     credentials: true, 
 })
 app.use(corsOptions);

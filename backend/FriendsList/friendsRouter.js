@@ -100,7 +100,7 @@ router.get('/', async (req, res) => {
 
 //for all the people in the database - probably needs to be on a separate page? maybe? idk
 /*
-router.get('/friends/', async (req, res) => {
+router.get('/people/', async (req, res) => {
     try {
         ////// idk what is happening here yet 
         // search by name????? 
@@ -120,9 +120,12 @@ router.get('/friends/', async (req, res) => {
 */
 
 
-router.post('/people/', async (req, res) => {
+///TODO: change later
+router.post('/', async (req, res) => {
     try {
         // main user id and friend id (friend to add)
+
+        console.log('req', req);
         const userId = req.body.userId;
         const friendId = req.body.friendId;
 

@@ -9,9 +9,10 @@ const friendService =  {
     // friends: [],
 
     getAllFriends: async() => {
-
+        //TODO: get rid of the URL - something is going wrong with my URL connection
         try {
-            const response = await axios.get(process.env.SERVER_UR + '/friends').then( res =>{
+            console.log(process.env.SERVER_URL);
+            const response = await axios.get(process.env.SERVER_URL + 'friends').then( res =>{
                 console.log(res.data);
                 /// more functionality for the res
             });
@@ -29,9 +30,12 @@ const friendService =  {
     deleteFriend: async(id) => {
         // wrap with json after
         try {
-            await axios.delete(process.env.SERVER_UR + '/friends', id).then(res =>{
+            await axios.delete(process.env.SERVER_URL + 'friends', id).then(res =>{
                 console.log(res.data);
             });
+            // await axios.delete('http://localhost:8080/friends', id).then(res =>{
+            //     console.log(res.data);
+            // });
         } catch(error){
             console.error('Error fetching friends:', error);
             throw error;
@@ -48,9 +52,12 @@ const friendService =  {
     addFriend: async(f) =>{
         // wrap with json after
         try {
-            await axios.post(process.env.SERVER_UR + '/friends', f).then(res =>{
+            await axios.post(process.env.SERVER_URL + 'friends', f).then(res =>{
                 console.log(res.data)
             });
+            // await axios.post('http://localhost:8080/friends', f).then(res =>{
+            //     console.log(res.data)
+            // });
         } catch(error){
             console.error('Error fetching friends:', error);
             throw error;
