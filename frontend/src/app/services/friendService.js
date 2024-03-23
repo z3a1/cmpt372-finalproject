@@ -5,41 +5,29 @@ import axios from 'axios';
 
 
 const friendService =  {
-
+    // TODO: Remove later
     // friends: [],
 
-    getAllFriends: async() => {
-        //TODO: get rid of the URL - something is going wrong with my URL connection
-        try {
-            console.log(process.env.SERVER_URL);
-            const response = await axios.get(process.env.SERVER_URL + 'friends').then( res =>{
-                console.log(res.data);
-                /// more functionality for the res
-            });
-            // const response = await fetch ('http://localhost:8080/friends');
-        } catch(error){
-            console.error('Error fetching friends:', error);
-            throw error;
-        }
+    getAllFriends: async(userId) => {
+        return await axios.get(process.env.SERVER_URL + `/friends/all?userId=${userId}`)
+        .then(res => {
+            console.log(res.data)
+            return res.data
+        })
+        .catch(err => console.error("Error getting all friends", err))
 
         /// LOCAL STORAGE
         // const friends = JSON.parse(localStorage.UserArray);
         // return friends || '[]';
     },
 
-    deleteFriend: async(id) => {
-        // wrap with json after
-        try {
-            await axios.delete(process.env.SERVER_URL + 'friends', id).then(res =>{
-                console.log(res.data);
-            });
-            // await axios.delete('http://localhost:8080/friends', id).then(res =>{
-            //     console.log(res.data);
-            // });
-        } catch(error){
-            console.error('Error fetching friends:', error);
-            throw error;
-        }
+    deleteFriend: async(userId, friendId) => {
+        console.log(userId, friendId)
+        await axios.delete(process.env.SERVER_URL + `/friends/delete?userId=${userId}&friendId=${friendId}`)
+        .then(res => {
+            console.log(res)
+        })
+        .catch(err => console.error("Error deleting friend", err))
 
         /// LOCAL STORAGE
         // friendService.friends = friendService.friends.filter((p) =>{
@@ -49,19 +37,12 @@ const friendService =  {
         // return;
     },
 
-    addFriend: async(f) =>{
-        // wrap with json after
-        try {
-            await axios.post(process.env.SERVER_URL + 'friends', f).then(res =>{
-                console.log(res.data)
-            });
-            // await axios.post('http://localhost:8080/friends', f).then(res =>{
-            //     console.log(res.data)
-            // });
-        } catch(error){
-            console.error('Error fetching friends:', error);
-            throw error;
-        }
+    addFriend: async(friend) =>{
+        await axios.post(process.env.SERVER_URL + `/friends/add?userId=${friend.userId}&friendId=${friend.friendId}`)
+        .then(res => {
+            console.log(res)
+        })
+        .catch(err => console.error("Error adding friend", err))
 
         /// LOCAL STORAGE
         // friendService.friends.push(f);
@@ -82,7 +63,6 @@ const friendService =  {
     //         throw error;
     //     }
     // }
-
 }
 
 export default friendService

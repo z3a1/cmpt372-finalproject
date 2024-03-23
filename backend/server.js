@@ -14,6 +14,8 @@ app.use(session({
     saveUninitialized: true
 }))
 
+const PORT = process.env.PORT || 8080;
+
 const corsOptions = cors({
     origin: ["https://backend-tmmf5kaaqa-uw.a.run.app/", "http://localhost:8080/","http://localhost:3000/"],
     credentials: true, 
@@ -39,6 +41,10 @@ app.use('/videos', videos)
 const googleMaps = require('./GoogleMaps/googleMaps')
 app.use('/maps', googleMaps)
 
+// Friends List 
+const friends = require('./FriendsList/friendsRouter');
+app.use('/friends', friends);
+
 app.post('/register',async (req,res) => {
     console.log(req.body)
     let newUser = {
@@ -56,23 +62,12 @@ app.post('/register',async (req,res) => {
     })
 })
 
-// Friends List 
-const friends = require('./FriendsList/friendsRouter');
-app.use('/friends', friends);
-// app.get('/friends', (req, res) => {
-//     res.send('in friends list');
-// });
-
-///// just to test the server
-// app.get('/', (req, res) => {
-//     res.send('the server!');
-// });
-
-app.get('/mongo', (req, res) => {
+try {
     db.initializeDB()
-    res.send("mongo")
-})
+    app.listen(PORT, () => {
+        console.log("Server is up and running on specified port", PORT)
+    })
+} catch (err) {
+    console.error("Error", err)
+}
 
-app.listen(process.env.PORT, () => {
-    console.log("Server is up and running on specified port")
-})
