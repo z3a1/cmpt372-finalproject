@@ -2,6 +2,7 @@ import {FormEvent} from "react"
 import {v4 as idGen} from "uuid"
 import styles from "../registerStyle.module.css"
 import axios from "axios"
+import { Input, TextInput } from '@mantine/core';
 
 export default function Registercomp(){
 
