@@ -14,6 +14,7 @@ app.use(session({
     saveUninitialized: true
 }))
 
+app.use(cors())
 const corsOptions = cors({
     origin: ["https://backend-tmmf5kaaqa-uw.a.run.app", "http://localhost:8080"],
     credentials: true, 
@@ -24,12 +25,11 @@ app.options('*', corsOptions)
 app.use(passport.session())
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
-app.use(cors())
 
 app.post('/login',passport.authenticate('local',{failureRedirect: '/login'}), (req,res) => {
     console.log("It works?")
     console.log(req.user)
-    res.send({user_id: req.user.user_id, fname: req.user.fname, lname: req.user.lname})
+    res.json({user_id: req.user[0].user_id, fname: req.user[0].fname, lname: req.user[0].lname})
 })
 
 //Youtube videos
@@ -54,7 +54,7 @@ app.post('/register',async (req,res) => {
     let newDocument = new db.User(newUser)
     await newDocument.save().then(dbRes => {
         console.log(dbRes)
-        res.send({user_id: dbRes.user_id, fname: dbRes.fname, lname: dbRes.lname})
+        res.json({user_id: dbRes.user_id, fname: dbRes.fname, lname: dbRes.lname})
     })
 })
 
@@ -64,5 +64,6 @@ app.get('/mongo', (req, res) => {
 })
 
 app.listen(process.env.PORT, () => {
+    db.initializeDB()
     console.log("Server is up and running on specified port")
 })

@@ -4,7 +4,7 @@ import axios from "axios"
 
 export default function Logincomp(){
 
-    const getFormData = (event) => {
+    const getFormData = async (event) => {
         event.preventDefault()
         const userInput = new FormData(event.currentTarget)
         const defaultRole = "Member"
@@ -16,10 +16,12 @@ export default function Logincomp(){
          * -> Session verification
          * -> Redirect to main page
          */
-        axios.post(process.env.SERVER_URL + "/login",{
+        await axios.post(process.env.SERVER_URL + "/login",{
             email: userInput.get('email'),
             password: userInput.get('password')
-        })
+        }).then(res => {
+            console.log(res)
+           })
       }
 
     return(

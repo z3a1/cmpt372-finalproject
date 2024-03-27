@@ -5,7 +5,7 @@ import axios from "axios"
 
 export default function Registercomp(){
 
-    const getFormData = (event) => {
+    const getFormData = async (event) => {
         event.preventDefault()
         const userInput = new FormData(event.currentTarget)
         const newUserId = idGen()
@@ -18,13 +18,18 @@ export default function Registercomp(){
             - Check if the user name exists already
             - Will be handeled by the Express server
         */
-       axios.post(process.env.SERVER_URL + "/register",{
+      await axios.post(process.env.SERVER_URL + "/register",{
         id: idGen(),
         fname: userInput.get('fname'),
         lname: userInput.get('lname'),
         userName: userInput.get('userName'),
         email: userInput.get('email'),
         password: userInput.get('password')
+       }).then(res => {
+        res.json()
+       })
+       .then(serverRes => {
+        console.log(serverRes)
        })
       }
 
