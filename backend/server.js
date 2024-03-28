@@ -14,9 +14,10 @@ app.use(session({
     saveUninitialized: true
 }))
 
-app.use(cors())
+// CORS
 const corsOptions = cors({
-    origin: ["https://backend-tmmf5kaaqa-uw.a.run.app", "http://localhost:8080"],
+    origin: ["https://backend-tmmf5kaaqa-uw.a.run.app", "http://localhost:8080", "http://localhost:3000", "http://146.148.99.120"],
+    allowedHeaders: ["*"],
     credentials: true, 
 })
 app.use(corsOptions);
@@ -58,12 +59,8 @@ app.post('/register',async (req,res) => {
     })
 })
 
-app.get('/mongo', (req, res) => {
-    db.initializeDB()
-    res.send("mongo")
-})
+db.initializeDB()
 
 app.listen(process.env.PORT, () => {
-    db.initializeDB()
     console.log("Server is up and running on specified port")
 })

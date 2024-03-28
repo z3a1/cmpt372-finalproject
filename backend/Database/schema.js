@@ -63,14 +63,10 @@ const Video = mongoose.model('Video', videoSchema)
 const LikedVideo = mongoose.model('LikedVideo', likedVideoSchema)
 
 const initializeDB = () => {
-    try{
-        mongoose.connect(process.env.CONNECTION_SECRET)
-    }
-    catch(e){
-        throw(e)
-    }
+    mongoose.connect(process.env.CONNECTION_SECRET)
+        .then(() => console.log('Connected to MongoDB'))
+        .catch(error => console.error('MongoDB connection error:', error));
 }
-
 
 module.exports = {
     User,Friend,Location,Event,Attendee,Video,LikedVideo,initializeDB

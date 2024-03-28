@@ -1,4 +1,5 @@
 'use client'
+import Link from "next/link";
 import FavouriteVideos from "../components/FavouriteVideos";
 import { useSearchParams } from 'next/navigation'
 
@@ -10,7 +11,7 @@ export default function FavouritesPage() {
     <div>
       <FavouriteVideos userId={userId}></FavouriteVideos>
 
-      <a href="/videos">Return</a>
+      <Link href="/videos">Return</Link>
     </div>
   );
 }
