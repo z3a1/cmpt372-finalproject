@@ -9,11 +9,11 @@ const friendService =  {
     // friends: [],
 
     getAllFriends: async(userId) => {
-        return await axios.get(process.env.SERVER_URL + `/friends/all?userId=${userId}`)
-        .then(res => {
-            console.log(res.data)
-            return res.data
-        })
+        return await axios.get(process.env.SERVER_URL + `/friends/get/all?userId=${userId}`)
+            .then(res => {
+                console.log(res.data)
+                return res.data
+            })
         .catch(err => console.error("Error getting all friends", err))
 
         /// LOCAL STORAGE
@@ -21,13 +21,13 @@ const friendService =  {
         // return friends || '[]';
     },
 
-    deleteFriend: async(userId, friendId) => {
-        console.log(userId, friendId)
-        await axios.delete(process.env.SERVER_URL + `/friends/delete?userId=${userId}&friendId=${friendId}`)
-        .then(res => {
-            console.log(res)
-        })
-        .catch(err => console.error("Error deleting friend", err))
+    deleteFriend: async(id) => {
+        console.log(id)
+        await axios.delete(process.env.SERVER_URL + `/friends/delete/friend?friendRequestId=${id}`)
+            .then(res => {
+                console.log(res)
+            })
+            .catch(err => console.error("Error deleting friend", err))
 
         /// LOCAL STORAGE
         // friendService.friends = friendService.friends.filter((p) =>{
