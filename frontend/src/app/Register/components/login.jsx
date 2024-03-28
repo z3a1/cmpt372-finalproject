@@ -2,7 +2,7 @@ import styles from "../registerStyle.module.css"
 import axios from "axios"
 import {TextInput, Button, Box, PasswordInput } from '@mantine/core';
 import { Title } from "@mantine/core";
-import { useForm } from '@mantine/form';
+import { useForm, isEmail, matches } from '@mantine/form';
 
 export default function Logincomp(){
 
@@ -10,17 +10,19 @@ export default function Logincomp(){
         initialValues: {
             email: '',
             password: '',
+        },
+        validate: {
+            email: isEmail("Not a valid email!"),
+            password: matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,"The password is invalid!")
         }
     })
 
     const getFormData = async (event) => {
         event.preventDefault()
-        const userInput = new FormData(event.currentTarget)
+        loginForm.validate()
         const defaultRole = "Member"
-        console.log(userInput)
+        let {email, password} = loginForm.values
         console.log(loginForm.values)
-        console.log(userInput.get('email'))
-        console.log(userInput.get('password'))
         // await axios.post(process.env.SERVER_URL + "/login",{
         //     email: userInput.get('email'),
         //     password: userInput.get('password')
@@ -30,15 +32,19 @@ export default function Logincomp(){
       }
 
     return(
-        <section className={styles.componentContainer}>
+        <Box maw={450} mx = "auto">
             <Title order={2}>Sign In:</Title>
             <Box maw={349} mx = "auto">
                 <form onSubmit={getFormData}>
-                    <TextInput label = "Email: " placeholder="example@gmail.com" required = {true} {...loginForm.getInputProps('email')}/>
-                    <PasswordInput label = "Password: " required = {true} {...loginForm.getInputProps('password', {type: 'password'})}/>
+                    <TextInput label = "Email: " 
+                    placeholder="example@gmail.com" 
+                    required = {true} withAsterisk {...loginForm.getInputProps('email')}/>
+                    <PasswordInput label = "Password: " 
+                    required = {true}
+                     {...loginForm.getInputProps('password', {type: 'password'})}/>
                     <Button variant="filled" color="green" type="submit">Login</Button>
                 </form>
             </Box>
-        </section>
+        </Box>
     )
 }
