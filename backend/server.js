@@ -48,11 +48,20 @@ app.post('/register',async (req,res) => {
     })
 })
 
-app.get('/mongo', (req, res) => {
-    db.initializeDB()
-    res.send("mongo")
-})
+// app.get('/mongo', (req, res) => {
+//     db.initializeDB()
+//     res.send("mongo")
+// })
 
-app.listen(process.env.PORT, () => {
-    console.log("Server is up and running on specified port")
-})
+// app.listen(process.env.PORT, () => {
+//     console.log("Server is up and running on specified port")
+// })
+
+try {
+    db.initializeDB()
+    app.listen(process.env.PORT, () => {
+        console.log("Server is up and running on specified port", process.env.PORT)
+    })
+} catch (err) {
+    console.error("shit", err)
+}
