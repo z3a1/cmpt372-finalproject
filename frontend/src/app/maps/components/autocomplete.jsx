@@ -2,7 +2,7 @@ import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocom
 import useOnclickOutside from "react-cool-onclickoutside";
 import autocompleteStyle from "./autocomplete.module.css"
 
-export default function PlacesAutocomplete({ setSelectedCoordinates, setSelectedPlaceName }) {
+export default function PlacesAutocomplete({ setMapCenter, setSelectedCoordinates, setSelectedPlaceName, processSelectedAddress }) {
     const {
         ready,
         value,
@@ -20,12 +20,15 @@ export default function PlacesAutocomplete({ setSelectedCoordinates, setSelected
         clearSuggestions();
 
         // Get latitude and longitude via utility functions
-        getGeocode({ address: description }).then((results) => {
-            const { lat, lng } = getLatLng(results[0]);
-            console.log("📍 Coordinates: ", { lat, lng });
-            setSelectedCoordinates({lat, lng})
-            setSelectedPlaceName(description)
-        });
+        getGeocode({ address: description })
+            .then((results) => {
+                const { lat, lng } = getLatLng(results[0]);
+                console.log("📍 Coordinates: ", description, { lat, lng });
+                setMapCenter({lat, lng})
+                setSelectedCoordinates({lat, lng})
+                setSelectedPlaceName(description)
+                processSelectedAddress(lat, lng)
+            });
     };
 
     const renderSuggestions = () => data.map((suggestion) => {
