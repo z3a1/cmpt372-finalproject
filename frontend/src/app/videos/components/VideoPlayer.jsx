@@ -2,7 +2,7 @@ import "../VideoPlayer.css";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 
-export default function VideoPlayer({ videoId, userId, visible=true, removeFavouriteDisplay }) {
+export default function VideoPlayer({ videoId, userId, visible=true, getFavourites }) {
   const [checkFavourite, setCheckFavourite] = useState(false);
   useEffect(() => {
     //const favouriteList = JSON.parse(localStorage.getItem(`user-${userId}-vids`)) || []; //Local Storage
@@ -12,8 +12,11 @@ export default function VideoPlayer({ videoId, userId, visible=true, removeFavou
     const getData = async () => {
  
      await axios.get(process.env.SERVER_URL + `/videos/favourites/${userId}/${videoId}/checkFavourite`).then(res => {
-          console.log(res.data)   
-          setCheckFavourite(res.data.checkFavourite);
+       if (res.data && res.data.likedVid.length > 0) {
+        setCheckFavourite(true);
+       } else {
+          setCheckFavourite(false);
+       }
       })
       .catch(error => console.error(error));
        
@@ -26,13 +29,13 @@ export default function VideoPlayer({ videoId, userId, visible=true, removeFavou
     
     if (checkFavourite) {
       await axios.delete(process.env.SERVER_URL + `/videos/favourites/${userId}/${videoId}`).then(res=>{
-        removeFavouriteDisplay();
         setCheckFavourite(false);
+        getFavourites();
       }).catch(error => console.error(error));
     
     } else {
       await axios.post(process.env.SERVER_URL + `/videos/favourites/${userId}`, { videoId }).then(res=>{
-        setCheckFavourite(false);
+        setCheckFavourite(true);
       }).catch(error => console.error(error));
     }
 

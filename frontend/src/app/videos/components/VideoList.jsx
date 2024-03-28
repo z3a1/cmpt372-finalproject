@@ -13,11 +13,13 @@ export default function VideoList({ location, userId}) {
       try {
         //Added travel to end of location, to search for travel spots
         const query = `${location} places`;
-        const res = await fetch(process.env.SERVER_URL + `/videos?q=${query}`, {
+        await fetch(process.env.SERVER_URL + `/videos?q=${query}`, {
           cache: "no-cache",
-        });
-        const ids = await res.json();
-        setVideoIds(ids);
+        }).then(res => res.json())
+        .then(serverRes => {
+          console.log(serverRes)
+          setVideoIds(serverRes);
+        })
       
       } catch (err) {
         console.log(err);

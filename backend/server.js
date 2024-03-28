@@ -14,10 +14,10 @@ app.use(session({
     saveUninitialized: true
 }))
 
-const PORT = process.env.PORT || 8080;
-
+// CORS
 const corsOptions = cors({
-    origin: ["https://backend-tmmf5kaaqa-uw.a.run.app/", "http://localhost:8080/","http://localhost:3000/"],
+    origin: ["https://backend-tmmf5kaaqa-uw.a.run.app", "http://localhost:8080", "http://localhost:3000", "http://146.148.99.120"],
+    allowedHeaders: ["*"],
     credentials: true, 
 })
 app.use(corsOptions);
@@ -26,11 +26,11 @@ app.options('*', corsOptions)
 app.use(passport.session())
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
-app.use(cors())
 
 app.post('/login',passport.authenticate('local',{failureRedirect: '/login'}), (req,res) => {
     console.log("It works?")
     console.log(req.user)
+    res.json({user_id: req.user[0].user_id, fname: req.user[0].fname, lname: req.user[0].lname})
 })
 
 //Youtube videos
@@ -57,17 +57,14 @@ app.post('/register',async (req,res) => {
         role: 'Member'
     }
     let newDocument = new db.User(newUser)
-    await newDocument.save().then(res => {
-        console.log(res)
+    await newDocument.save().then(dbRes => {
+        console.log(dbRes)
+        res.json({user_id: dbRes.user_id, fname: dbRes.fname, lname: dbRes.lname})
     })
 })
 
-try {
-    db.initializeDB()
-    app.listen(PORT, () => {
-        console.log("Server is up and running on specified port", PORT)
-    })
-} catch (err) {
-    console.error("Error", err)
-}
+db.initializeDB()
 
+app.listen(process.env.PORT, () => {
+    console.log("Server is up and running on specified port")
+})

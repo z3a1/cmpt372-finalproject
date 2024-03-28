@@ -27,7 +27,6 @@ router.get('/api/places/nearby/search', async (req, res) => {
 
 // Get the place from marker
 router.get('/api/places/marker/search', async (req, res) => {
-    console.log("hlogin")
     const placeId = req.query.placeId
     
     try {

@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import FavouriteVideos from "./components/FavouriteVideos";
 import VideoList from "./components/VideoList";
 import { useState } from "react";
@@ -6,7 +7,8 @@ import {v4 as idGen} from "uuid"
 
 export default function VideosPage() {
   const [location, setLocation] = useState("");
-  const [submitState, setSubmitState] = useState("");
+  //var location;
+  const [submitState, setSubmitState] = useState(false);
 
   //TESTING WITH DIFFERENT USERS
   const userId = '65fa73b955410eecb776f5b1'
@@ -14,9 +16,10 @@ export default function VideosPage() {
   function onSubmit(e) {
     e.preventDefault();
     setSubmitState({ checkSubmit: true });
+    
   }
   function updateLocation(e) {
-    setLocation(e.target.value);
+     setLocation(e.target.value);
   }
 
   return (
@@ -26,16 +29,20 @@ export default function VideosPage() {
         <input
           type="text"
           id="location"
+          name = "location"
           value={location}
           placeholder="Enter a Location"
           onChange={updateLocation}
         />
         <button type="submit">Search</button>
       </form>
+      <Link href={`/videos/favourites?userId=${userId}`}>Favourites Page</Link>
+        <br></br>
+        <Link href="/">Return to Homepage</Link>
       {submitState.checkSubmit && (
         <VideoList location={location} userId={userId} />
       )}
-      <a href={`/videos/favourites?userId=${userId}`}>Favourites Page</a>
+      
     </div>
   );
 }
