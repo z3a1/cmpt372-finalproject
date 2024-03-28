@@ -4,7 +4,7 @@ var Schema = mongoose.Schema
 require('dotenv').config()
 
 var userSchema = new Schema({
-    user_id: {type: 'UUID', default: () => uuidv4()},
+    // user_id: {type: 'UUID', default: () => uuidv4()},
     username: {type: String, unique: true, required: 'Username cannot be empty!'},
     fname: String,
     lname: String,
@@ -15,9 +15,19 @@ var userSchema = new Schema({
 })
 
 var friendSchema = new Schema({
-    user_id: {type: 'UUID', ref:'User'},
-    friend_id: {type: 'UUID', ref:'User'},
-    status: String
+    user_id: {
+        type: 'ObjectId',
+        ref:'User'
+    },
+    friend_id: {
+        type: 'ObjectId', 
+        ref:'User'
+    },
+    status: {
+        type: String,
+        enum: ['pending', 'accepted'],
+        default: 'pending'
+    }
 })
 
 var locationSchema = new Schema({
