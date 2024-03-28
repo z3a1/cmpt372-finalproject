@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import FavouriteVideos from "./components/FavouriteVideos";
 import VideoList from "./components/VideoList";
 import { useState } from "react";
@@ -35,13 +36,13 @@ export default function VideosPage() {
         />
         <button type="submit">Search</button>
       </form>
-        <a href={`/videos/favourites?userId=${userId}`}>Favourites Page</a> 
+      <Link href={`/videos/favourites?userId=${userId}`}>Favourites Page</Link>
         <br></br>
-        <a href="/">Return to Homepage</a>
+        <Link href="/">Return to Homepage</Link>
       {submitState.checkSubmit && (
         <VideoList location={location} userId={userId} />
       )}
-    
+      
     </div>
   );
 }

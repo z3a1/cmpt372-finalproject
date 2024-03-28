@@ -6,12 +6,11 @@ import mapStyle from "./map.module.css"
 import PlacesAutocomplete from './components/autocomplete';
 
 // Constants
-const LOCAL_BACKEND_URL = "http://localhost:8080/maps"; // TODO: Remove later
 const STARTING_LOCATION = { lat: 49.21, lng: -122.96 };
 
 export default function Places() {
     const { isLoaded } = useLoadScript({
-        googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+        googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY,
         libraries: ['places'],
         language: 'en'
     });
@@ -35,7 +34,7 @@ function Map() {
     const processPlaceName = async (e) => {
         if (e.placeId) {
             // Get specific place name
-            await axios.get(LOCAL_BACKEND_URL + `/api/places/marker/search?placeId=${e.placeId}`)
+            await axios.get(process.env.SERVER_URL + `/maps/api/places/marker/search?placeId=${e.placeId}`)
                 .then(res => {
                     console.log(res.data.displayName.text)
                     setSelectedPlaceName(res.data.displayName.text)
@@ -47,8 +46,9 @@ function Map() {
     }
 
     const processSelectedAddress = async (lat, lng) => {
-        await axios.get(LOCAL_BACKEND_URL + `/api/places/selected/address?lat=${lat}&lng=${lng}`)
+        await axios.get(process.env.SERVER_URL + `/maps/api/places/selected/address?lat=${lat}&lng=${lng}`)
             .then(res => {
+                console.log(res.data)
                 console.log(res.data.results[0].formatted_address)
                 setSelectedAddress(res.data.results[0].formatted_address)
             })
@@ -75,7 +75,7 @@ function Map() {
     const handleMarkerDoubleClick = async () => {
         console.log("Getting nearby places...", selectedCoordinates.lat, selectedCoordinates.lng)
         // On click spawn nearby places around a given radius
-        await axios.get(LOCAL_BACKEND_URL + `/api/places/nearby/search?lat=${selectedCoordinates.lat}&lng=${selectedCoordinates.lng}`)
+        await axios.get(process.env.SERVER_URL + `/maps/api/places/nearby/search?lat=${selectedCoordinates.lat}&lng=${selectedCoordinates.lng}`)
             .then(res => {
                 console.log(res.data)
                 setNearbyPlaces(res.data)

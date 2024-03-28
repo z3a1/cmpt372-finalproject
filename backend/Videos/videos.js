@@ -10,31 +10,31 @@ var db = require("../Database/schema");
 
 router.get("/", async (req, res, next) => {
   try {
-    //  const searchQuery = req.query.q;
+     const searchQuery = req.query.q;
 
-    // //Searching is 100 quota units per request
-    // const url = `${youtubeApiUrl}/search?key=${youtbeApiKey}&type=video&part=id&fields=items(id)&maxResults=3&q=${searchQuery}`;
+    //Searching is 100 quota units per request
+    const url = `${youtubeApiUrl}/search?key=${youtbeApiKey}&type=video&part=id&fields=items(id)&maxResults=3&q=${searchQuery}`;
 
-    // const response = await axios.get(url);
-    // const videoIds = response.data.items.map((item) => item.id.videoId);
+    const response = await axios.get(url);
+    const videoIds = response.data.items.map((item) => item.id.videoId);
 
     /*
       TESTING PURPOSES BELOW
       MUST REMOVE THIS RES.SEND BEFORE UNCOMMENTING THE REST
     */
-    const videoIds = ["xNRJwmlRBNU", "jb-cDp5StCw", "SqcY0GlETPk"];
+   // const videoIds = ["xNRJwmlRBNU", "jb-cDp5StCw", "SqcY0GlETPk"];
 
     for (const videoId of videoIds) {
       await db.Video.findOne({ video_id: videoId }).then(async (checkVid) => {
         if (!checkVid) {
           await new db.Video({ video_id: videoId })
             .save()
-            .then((saveVid) => {});
+           // .then((saveVid) => {});
         }
       });
     }
 
-    res.status(200).send(videoIds);
+    res.status(200).json(videoIds);
   } catch (err) {
     res.status(500).json({ err: "Internal server error" });
   }

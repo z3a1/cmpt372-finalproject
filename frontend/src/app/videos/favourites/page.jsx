@@ -1,4 +1,5 @@
-"use client";
+'use client'
+import Link from "next/link";
 import FavouriteVideos from "../components/FavouriteVideos";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
@@ -9,11 +10,9 @@ export default function FavouritesPage() {
   const userId = searchParams.get("userId");
   return (
     <div>
-       <a href="/videos">Return</a>
-      {/* <Suspense> */}
-        <FavouriteVideos userId={userId}></FavouriteVideos>
-      {/* </Suspense> */}
-     
+      <FavouriteVideos userId={userId}></FavouriteVideos>
+
+      <Link href="/videos">Return</Link>
     </div>
   );
 }
