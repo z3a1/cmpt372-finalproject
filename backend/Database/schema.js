@@ -10,7 +10,6 @@ var userSchema = new Schema({
     email: {type: String, unique: true, required: 'User must have an email!'},
     role: {type: String, enum:['Member','Admin'], default: 'Member'},
     password: {type: String, unique: true, required: 'User needs a password!!!'}
-
 })
 
 var friendSchema = new Schema({
@@ -20,28 +19,36 @@ var friendSchema = new Schema({
 })
 
 var locationSchema = new Schema({
-    location_id: 'UUID',
+    // location_id: 'ObjectId',
     name: String,
     address: String,
-    city: String,
-    stateProvince: String,
-    country: String
+    // city: String,
+    // stateProvince: String,
+    // country: String
 })
 
 var eventSchema = new Schema({
-    event_id: 'UUID',
-    name: String,
-    creator: {type: 'UUID', ref:'User'},
-    title: String,
+    // event_id: 'ObjectId',
+    creator_id: {type: 'ObjectId', ref:'User'},
+    event_name: String,
+    // place_name: String, // TODO: maybe not needed
+    location_id: {type: 'ObjectId', ref:'Location'},
     description: String,
-    location_id: {type: 'UUID', ref:'Location'},
-    creation_date: Date,
-    deletion_date: Date
+    event_date: Date,
+    creation_date: {
+        type: Date,
+        default: Date.now
+    },
+    visibility: {
+        type: String,
+        enum: ['private', 'public'],
+        default: 'private'
+    }
 })
 
 var attendeeSchema = new Schema({
-    event_id: {type: 'UUID', ref:'Location'},
-    user_id: {type: 'UUID', ref:'User'},
+    event_id: {type: 'ObjectId', ref:'Event'},
+    user_id: {type: 'ObjectId', ref:'User'},
     status: {type: String, enum: ['invited','confirmed','denied','cancelled']}
 })
 

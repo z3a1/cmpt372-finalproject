@@ -41,6 +41,10 @@ app.use('/videos', videos)
 const googleMaps = require('./GoogleMaps/googleMaps')
 app.use('/maps', googleMaps)
 
+// Events
+const events = require('./Events/events')
+app.use('/events', events)
+
 app.post('/register',async (req,res) => {
     console.log(req.body)
     let newUser = {
