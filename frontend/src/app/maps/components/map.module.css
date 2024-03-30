@@ -1,0 +1,26 @@
+.mainContainer {
+    margin-top: 5vh;
+  }
+  
+  .placesContainer {
+    position: absolute;
+    top: 6vh;
+    left: 43%;
+    transform: translateX(-50%);
+    z-index: 10;
+    width: 300px;
+  }
+  
+  .mapContainer {
+    /* width: 60%; */
+    height: 80vh;
+    margin-left: 10vw;
+    margin-right: auto;
+    border: 2px solid;
+  }
+  
+  .leftContent {
+    float: left;
+    width: 70%;
+  }
+  
