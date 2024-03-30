@@ -169,7 +169,22 @@ router.get('/get/pending', async (req, res) => {
     }
 })
 
-// Send a friend request
+// Get all pending friend requests
+router.get('/get/requests', async (req, res) => {
+    const userId = req.query.userId;
+
+    try {
+        const friendRequests = await Friend.find({ friend_id: userId, status: "pending" })
+        console.log("Pending friend requests:", friendRequests)
+        res.status(200).json({ friendRequests });
+    } catch (err) {
+        console.log('Error getting all pending friend requests of user:', err);
+        res.status(500).json({ message: 'internal server error' })
+    }
+})
+
+// Handles all friend additions
+// Includes accepting pending friend requests sent by others
 router.post('/add', async (req, res) => {
     const userId = req.query.userId;
     const friendId = req.query.friendId;
@@ -177,57 +192,38 @@ router.post('/add', async (req, res) => {
     console.log('friendId', friendId);
 
     try {
-        const friend = {
-            user_id: userId,
-            friend_id: friendId
-        }
-        const aFriend = {
-            user_id: friendId,
-            friend_id: userId
-        }
-
-        const existingFriend = await Friend.findOne(friend) 
-        const existingAFriend = await Friend.findOne(aFriend)
-
-        // Already friends
-        if (existingFriend && existingAFriend) {
-            console.log("User is already friends with friend", existingFriend, existingAFriend)
-            res.status(200).json({ message: 'User is already friends with friend' });
-
-        // User has already sent a friend request
-        } else if (existingFriend && !existingAFriend) {
-            console.log("User has already sent a friend request to:", friendId)
-            res.status(200).json({ message: 'User has already sent a friend request to friend' });
-
-        // User and friend both sent requests to eachother
-        } else if (!existingFriend && existingAFriend) {
-            // Friend's request is accepted ahd is now a friend of user
-            const newAFriend = new Friend(aFriend)
-            newAFriend.status = 'accepted'
-            await newAFriend.save()
-                .then(savedAFriend => console.log("User accepted friend:", savedAFriend))
-                .catch(err => console.error("Error saving a friend:", err))
-
-            // User is now friends with friend
-            const newFriend = new Friend(friend)
-            newFriend.status = 'accepted'
-            await newFriend.save()
-                .then(savedFriend => console.log("Friend accepted user:", savedFriend))
-                .catch(err => console.error("Error saving friend:", err))
-
-            res.status(200).json({ message: 'Successfully accepted friend requests for both user and friend' });
-        
-        // User sends a friend request
+        // User is already friends
+        const existingFriendship = await Friend.findOne({ user_id: userId, friend_id: friendId, status: "accepted" });
+        if (existingFriendship) {
+            console.log("User is already friends with friend", existingFriendship)
+            res.status(400).json({ message: 'User is already friends' })
         } else {
-            const newFriend = new Friend(friend)
-            await newFriend.save()
-                .then(savedFriend => console.log("Friend request saved for user:", savedFriend))
-                .catch(err => console.error("Error saving friend request:", err))
-
-            res.status(201).json({ message: 'Successfully added friend request' });
+            // User has already sent a friend request to person
+            const existingFriendRequest = await Friend.findOne({ user_id: userId, friend_id: friendId })
+            if (existingFriendRequest) {
+                console.log("friend request already sent", existingFriendRequest)
+                res.status(400).json({ message: 'Friend request already sent' })
+            } else {
+                const existingRequestFromFriend = await Friend.findOneAndUpdate(
+                    { user_id: friendId, friend_id: userId },
+                    { status: "accepted" })
+        
+                // Person has sent a friend request to user - accepts it
+                if (existingRequestFromFriend) {
+                    await Friend.create({ user_id: userId, friend_id: friendId, status: "accepted" })
+                    console.log("Friend has previously sent a friend request.Both are now friends")
+                    res.status(200).json({ message: 'Successfully accepted friend requests for both user and friend' });
+                
+                // User sends friend request to person
+                } else {
+                    await Friend.create({ user_id: userId, friend_id: friendId })
+                    console.log("sent friend request")
+                    res.status(201).json({ message: 'Successfully accepted friend requests for both user and friend' });
+                }        
+            }
         }
     } catch (error) {
-        console.log('Error adding friend', error);
+        console.error("Error adding friend:", error)
         res.status(500).json({ message: 'internal server error' })
     }
 })

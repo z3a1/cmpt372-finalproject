@@ -11,14 +11,29 @@ const friendService =  {
     getAllFriends: async(userId) => {
         return await axios.get(process.env.SERVER_URL + `/friends/get/all?userId=${userId}`)
             .then(res => {
-                console.log(res.data)
                 return res.data
             })
-        .catch(err => console.error("Error getting all friends", err))
+        .catch(error => console.error("Error getting all friends", error.message))
 
         /// LOCAL STORAGE
         // const friends = JSON.parse(localStorage.UserArray);
         // return friends || '[]';
+    },
+
+    getPendingFriends: async(userId) => {
+        return await axios.get(process.env.SERVER_URL + `/friends/get/pending?userId=${userId}`)
+            .then(res => {
+                return res.data
+            })
+        .catch(error => console.error("Error getting pending friends", error.message))
+    },
+
+    getAcceptedFriends: async(userId) => {
+        return await axios.get(process.env.SERVER_URL + `/friends/get/accepted?userId=${userId}`)
+            .then(res => {
+                return res.data
+            })
+        .catch(error => console.error("Error getting accepted friends", error.message))
     },
 
     deleteFriend: async(id) => {
@@ -27,7 +42,7 @@ const friendService =  {
             .then(res => {
                 console.log(res)
             })
-            .catch(err => console.error("Error deleting friend", err))
+            .catch(error => console.error("Error deleting friend", error.message))
 
         /// LOCAL STORAGE
         // friendService.friends = friendService.friends.filter((p) =>{
@@ -42,7 +57,7 @@ const friendService =  {
         .then(res => {
             console.log(res)
         })
-        .catch(err => console.error("Error adding friend", err))
+        .catch(error => console.error("Error adding friend", error.message))
 
         /// LOCAL STORAGE
         // friendService.friends.push(f);
