@@ -1,8 +1,6 @@
 'use client'
-import Image from "next/image";
-import styles from "./page.module.css";
-import {redirect} from 'next/navigation'
-import Link from "next/link";
+import {redirect} from 'next/navigation';
+import {MantineProvider } from '@mantine/core';
 
 export default function Home() {
 
@@ -12,15 +10,17 @@ export default function Home() {
   }
 
   return (
-    <body>
-      <h1>Socialiser</h1>
-      <section>
-        <h2>TODO: Service API below this header</h2>
-        <Link href = '/Register'>Register Page</Link><br/>
-        <Link href = '/friends'>Friends Page</Link><br/>
-        <Link href = '/maps'>Maps Page</Link><br/>
-        <Link href = '/videos'>Videos Page</Link>
-      </section>
-    </body>
+    <MantineProvider>
+      <body>
+        <h1>Title of Website</h1>
+        <section>
+          <h2>TODO: Service API below this header</h2>
+          <a href = '/Register'>Register Page</a><br/>
+          <a href = '/friends'>Friends Page</a><br/>
+          <a href = '/maps'>Maps Page</a><br/>
+          <a href = '/videos'>Videos Page</a>
+        </section>
+      </body>
+    </MantineProvider>
   );
 }

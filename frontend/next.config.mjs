@@ -7,7 +7,12 @@ const nextConfig = {
     output: 'export',
     experimental: {
         missingSuspenseWithCSRBailout: false,
+        optimizePackageImports: [
+            '@mantine/core',
+            '@mantine/hooks'
+        ],
     },
+    trailingSlash: true,
     
 };
 
