@@ -12,6 +12,7 @@ const nextConfig = {
             '@mantine/hooks'
         ],
     },
+    trailingSlash: true,
     
 };
 

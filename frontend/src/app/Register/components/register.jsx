@@ -45,17 +45,6 @@ export default function Registercomp(){
         <Box maw = {349} mx = "auto">
             <Title order = {2}>Register Today For Free!</Title>
             <form onSubmit={getFormData}>
-                {/* <label>First Name: </label>
-                <input type = "text" name = "fname" required/>
-                <label>Last Name: </label>
-                <input type = "text" name = "lname" required/>
-                <label>User Name: </label>
-                <input type = "text" name = "userName" required/>
-                <label>Email: </label>
-                <input type = "email" name = "email" required/>
-                <label>Password: </label>
-                <input type = "password" name = "password" required/>
-                <button>Register</button> */}
                 <TextInput label = "First Name" placeholder="John" required = {true}
                 withAsterisk {...registerForm.getInputProps('fname')}/>
                 <TextInput label = "Last Name" placeholder="Doe" required = {true}
