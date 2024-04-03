@@ -4,11 +4,6 @@ import {MantineProvider } from '@mantine/core';
 
 export default function Home() {
 
-  let redirectToRegis = () => {
-    console.log("Redirecting")
-    redirect('/Register')
-  }
-
   return (
     <MantineProvider>
       <body>
