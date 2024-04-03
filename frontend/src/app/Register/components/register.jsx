@@ -3,8 +3,11 @@ import styles from "../registerStyle.module.css"
 import axios from "axios"
 import { TextInput, Box, PasswordInput, Title, Button } from '@mantine/core';
 import { useForm, matches, isEmail } from "@mantine/form"
+import { useRouter } from "next/navigation";
 
 export default function Registercomp(){
+
+    const router = useRouter()
 
     const registerForm = useForm({
         initialValues: {
@@ -26,20 +29,22 @@ export default function Registercomp(){
         event.preventDefault()
         registerForm.validate()
         const newUserId = idGen()
-    //   await axios.post(process.env.SERVER_URL + "/register",{
-    //     id: idGen(),
-    //     fname: userInput.get('fname'),
-    //     lname: userInput.get('lname'),
-    //     userName: userInput.get('userName'),
-    //     email: userInput.get('email'),
-    //     password: userInput.get('password')
-    //    }).then(res => {
-    //     res.json()
-    //    })
-    //    .then(serverRes => {
-    //     console.log(serverRes)
-    //    })
-      }
+        let {fname,lname,user_name,email,password} = registerForm.values;
+        await axios.post(process.env.SERVER_URL + "/auth/register",{
+        id: newUserId,
+        fname: fname,
+        lname: lname,
+        user_name: user_name,
+        email: email,
+        password: password
+       }).then(res => {
+        console.log(res)
+        router.push(`/User?id=${res.data.user_id}`)
+       })
+       .catch(err => {
+            alert(err)
+       })
+    }
 
     return(
         <Box maw = {349} mx = "auto">
@@ -56,7 +61,7 @@ export default function Registercomp(){
                 <PasswordInput label = "Password: " 
                 required = {true}
                     {...registerForm.getInputProps('password', {type: 'password'})}/>
-                <Button variant="gradient" gradient = {{from: 'cyan', to: 'green', deg: 0}} type="submit">Login</Button>
+                <Button variant="gradient" gradient = {{from: 'cyan', to: 'green', deg: 0}} type="submit">Register!</Button>
             </form>
         </Box>
     )
