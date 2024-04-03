@@ -32,7 +32,8 @@ export default function Logincomp(){
             router.push(`/User/?id=${res.data}`)
         })
         .catch(err => {
-            alert(err)
+            console.log(err)
+            alert(err.response.data.message)
         })
       }
 
