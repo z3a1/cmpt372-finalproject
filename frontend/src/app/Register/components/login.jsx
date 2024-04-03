@@ -3,8 +3,11 @@ import axios from "axios"
 import {TextInput, Button, Box, PasswordInput } from '@mantine/core';
 import { Title } from "@mantine/core";
 import { useForm, isEmail, matches } from '@mantine/form';
+import { useRouter } from "next/navigation";
 
 export default function Logincomp(){
+
+    const router = useRouter()
 
     const loginForm = useForm({
         initialValues: {
@@ -20,15 +23,14 @@ export default function Logincomp(){
     const getFormData = async (event) => {
         event.preventDefault()
         loginForm.validate()
-        const defaultRole = "Member"
         let {email, password} = loginForm.values
-        console.log(loginForm.values)
-        // await axios.post(process.env.SERVER_URL + "/login",{
-        //     email: userInput.get('email'),
-        //     password: userInput.get('password')
-        // }).then(res => {
-        //     console.log(res)
-        //    })
+        await axios.post(process.env.SERVER_URL + "/login",{
+            email: email,
+            password: password
+        }).then(res => {
+            console.log(res)
+            router.push(`/User/?id=${res.data}`)
+        })
       }
 
     return(
