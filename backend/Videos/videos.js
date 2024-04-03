@@ -22,18 +22,18 @@ router.get("/", async (req, res, next) => {
       TESTING PURPOSES BELOW
       MUST REMOVE THIS RES.SEND BEFORE UNCOMMENTING THE REST
     */
-   // const videoIds = ["xNRJwmlRBNU", "jb-cDp5StCw", "SqcY0GlETPk"];
+    //const videoIds = ["xNRJwmlRBNU", "jb-cDp5StCw", "SqcY0GlETPk"];
 
     for (const videoId of videoIds) {
       await db.Video.findOne({ video_id: videoId }).then(async (checkVid) => {
         if (!checkVid) {
           await new db.Video({ video_id: videoId })
             .save()
-           // .then((saveVid) => {});
+            .then((saveVid) => {});
         }
       });
     }
-
+    
     res.status(200).json(videoIds);
   } catch (err) {
     res.status(500).json({ err: "Internal server error" });
