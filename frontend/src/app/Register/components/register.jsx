@@ -30,7 +30,7 @@ export default function Registercomp(){
         registerForm.validate()
         const newUserId = idGen()
         let {fname,lname,user_name,email,password} = registerForm.values;
-        await axios.post(process.env.SERVER_URL + "/register",{
+        await axios.post(process.env.SERVER_URL + "/auth/register",{
         id: newUserId,
         fname: fname,
         lname: lname,
@@ -40,6 +40,9 @@ export default function Registercomp(){
        }).then(res => {
         console.log(res)
         router.push(`/User?id=${res.data.user_id}`)
+       })
+       .catch(err => {
+            alert(err)
        })
     }
 

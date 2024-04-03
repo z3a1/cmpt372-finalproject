@@ -21,11 +21,14 @@ export default function verifyUser(){
         }
         else{
             console.log(id)
-            await axios.post(process.env.SERVER_URL + "/getUserId", {id: id})
+            await axios.post(process.env.SERVER_URL + "/auth/getUserId", {id: id})
             .then(serverRes => {
                 console.log(serverRes)
                 setUserLoadState(true)
                 setUser(serverRes.data)
+            })
+            .catch(err => {
+                alert(err)
             })
         }
     }
