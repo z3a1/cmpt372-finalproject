@@ -2,17 +2,18 @@
 import Link from "next/link";
 import FavouriteVideos from "./components/FavouriteVideos";
 import VideoList from "./components/VideoList";
-import { useState } from "react";
-import { v4 as idGen } from "uuid";
-import { Button, TextInput, rem, ActionIcon, Grid } from "@mantine/core";
-import { IconSearch, IconArrowRight } from "@tabler/icons-react";
-import "./VideoPage.css";
-import { useSearchParams } from "next/navigation";
+import {v4 as idGen} from "uuid"
+import { useSearchParams, useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import userService from "../services/user"
 
 export default function VideosPage() {
   const [location, setLocation] = useState("");
   //var location;
   const [submitState, setSubmitState] = useState(false);
+  const searchParams = useSearchParams()
+  const id = searchParams.get('id')
+  const router = useRouter()
 
   const searchParams = useSearchParams();
 
@@ -28,6 +29,16 @@ export default function VideosPage() {
   function resetSubmitState() {
     setSubmitState(false);
   }
+
+  useEffect(() => {
+    let getUser = async () => {
+      let res = await userService.getUserId(id)
+      if(!res){
+        router.push("/")
+      }
+    }
+    getUser()
+  },[])
 
   return (
     <>

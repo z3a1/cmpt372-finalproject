@@ -16,7 +16,6 @@ export default function Logincomp(){
         },
         validate: {
             email: isEmail("Not a valid email!"),
-            password: matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,"The password is invalid!")
         }
     })
 
@@ -29,7 +28,7 @@ export default function Logincomp(){
             password: password
         }).then(res => {
             console.log(res)
-            router.push(`/?id=${res.data}`)
+            router.push(`/Landing/?id=${res.data}`)
         })
         .catch(err => {
             console.log(err)
@@ -38,7 +37,7 @@ export default function Logincomp(){
       }
 
     return(
-        <Box maw={450} mx = "auto">
+        <Box maw={349} mx = "auto">
             <Title order={2}>Sign In:</Title>
             <Box maw={349} mx = "auto">
                 <form onSubmit={getFormData}>
@@ -48,7 +47,7 @@ export default function Logincomp(){
                     <PasswordInput label = "Password: " 
                     required = {true}
                      {...loginForm.getInputProps('password', {type: 'password'})}/>
-                    <Button variant="filled" color="green" type="submit">Login</Button>
+                    <Button variant="filled" color="green" type="submit" mt={20}>Login</Button>
                 </form>
             </Box>
         </Box>
