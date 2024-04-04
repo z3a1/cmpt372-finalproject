@@ -7,12 +7,12 @@ import { Suspense } from "react";
 export default function FavouritesPage() {
   const searchParams = useSearchParams();
 
-  const userId = searchParams.get("userId");
+  const userId = searchParams.get("id");
   return (
     <div>
       <FavouriteVideos userId={userId}></FavouriteVideos>
 
-      <Link href="/videos">Return</Link>
+      <Link href= {`/videos/?id=${userId}`}>Return</Link>
     </div>
   );
 }

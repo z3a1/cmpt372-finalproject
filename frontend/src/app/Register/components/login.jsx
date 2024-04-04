@@ -29,7 +29,7 @@ export default function Logincomp(){
             password: password
         }).then(res => {
             console.log(res)
-            router.push(`/User/?id=${res.data}`)
+            router.push(`/?id=${res.data}`)
         })
         .catch(err => {
             console.log(err)

@@ -1,0 +1,17 @@
+.video-container {
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 20px;
+  overflow: hidden;
+  height: 245px;
+}
+
+.search-container{
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 20px;
+  overflow: hidden;
+  height: 245px;
+}

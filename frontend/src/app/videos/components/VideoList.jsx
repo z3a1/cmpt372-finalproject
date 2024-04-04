@@ -3,8 +3,10 @@ import axios from "axios";
 import VideoPlayer from "./VideoPlayer";
 import "../VideoList.css";
 import React, { useState, useEffect } from "react";
+import "@mantine/carousel/styles.css";
+import { Carousel } from "@mantine/carousel";
 
-export default function VideoList({ location, userId}) {
+export default function VideoList({ location, userId }) {
   const [videoIds, setVideoIds] = useState([]);
 
   //UseEffect to rerender after location has be updated
@@ -15,12 +17,11 @@ export default function VideoList({ location, userId}) {
         const query = `${location} places`;
         await fetch(process.env.SERVER_URL + `/videos?q=${query}`, {
           cache: "no-cache",
-        }).then(res => res.json())
-        .then(serverRes => {
-          console.log(serverRes)
-          setVideoIds(serverRes);
         })
-      
+          .then((res) => res.json())
+          .then((serverRes) => {
+            setVideoIds(serverRes);
+          });
       } catch (err) {
         console.log(err);
       }
@@ -36,9 +37,13 @@ export default function VideoList({ location, userId}) {
 
   return (
     <div className="videolist-container">
-      {videoIds.map((id) => (
-        <VideoPlayer key={id} videoId={id} userId={userId} />
-      ))}
+      <Carousel slideSize="70%" height={300} slideGap="md">
+        {videoIds.map((id) => (
+          <Carousel.Slide>
+            <VideoPlayer key={id} videoId={id} userId={userId} />
+          </Carousel.Slide>
+        ))}
+      </Carousel>
     </div>
   );
 }

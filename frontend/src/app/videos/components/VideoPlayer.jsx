@@ -1,3 +1,4 @@
+import { Button } from "@mantine/core";
 import "../VideoPlayer.css";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
@@ -69,9 +70,9 @@ export default function VideoPlayer({ videoId, userId, visible=true, getFavourit
         allowFullScreen
         title="video"
       />
-      <button onClick={updateFavourite}>
+      <Button onClick={updateFavourite}>
         {checkFavourite ? "Remove from Favourites" : "Click to Favourite"}
-      </button>
+      </Button>
     </div>
   );
 }

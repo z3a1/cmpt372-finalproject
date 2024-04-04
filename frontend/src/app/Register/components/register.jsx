@@ -39,7 +39,7 @@ export default function Registercomp(){
         password: password
        }).then(res => {
         console.log(res)
-        router.push(`/User?id=${res.data.user_id}`)
+        router.push(`/?id=${res.data.user_id}`)
        })
        .catch(err => {
             alert(err)

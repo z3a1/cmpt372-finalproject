@@ -3,46 +3,85 @@ import Link from "next/link";
 import FavouriteVideos from "./components/FavouriteVideos";
 import VideoList from "./components/VideoList";
 import { useState } from "react";
-import {v4 as idGen} from "uuid"
+import { v4 as idGen } from "uuid";
+import { Button, TextInput, rem, ActionIcon, Grid } from "@mantine/core";
+import { IconSearch, IconArrowRight } from "@tabler/icons-react";
+import "./VideoPage.css";
+import { useSearchParams } from "next/navigation";
 
 export default function VideosPage() {
   const [location, setLocation] = useState("");
   //var location;
   const [submitState, setSubmitState] = useState(false);
 
-  //TESTING WITH DIFFERENT USERS
-  const userId = '65fa73b955410eecb776f5b1'
+  const searchParams = useSearchParams();
+
+  const userId = searchParams.get("id");
 
   function onSubmit(e) {
-    e.preventDefault();
-    setSubmitState({ checkSubmit: true });
-    
+    setSubmitState(true);
   }
   function updateLocation(e) {
-     setLocation(e.target.value);
+    setLocation(e.target.value);
+  }
+
+  function resetSubmitState() {
+    setSubmitState(false);
   }
 
   return (
-    <div>
-      <form onSubmit={onSubmit}>
-        <label htmlFor="location">Enter City: </label>
-        <input
-          type="text"
-          id="location"
-          name = "location"
-          value={location}
-          placeholder="Enter a Location"
-          onChange={updateLocation}
-        />
-        <button type="submit">Search</button>
-      </form>
-      <Link href={`/videos/favourites?userId=${userId}`}>Favourites Page</Link>
-        <br></br>
-        <Link href="/">Return to Homepage</Link>
-      {submitState.checkSubmit && (
-        <VideoList location={location} userId={userId} />
-      )}
-      
-    </div>
+    <>
+      <Grid>
+        <Grid.Col span={4}>
+          <div className="search-container">
+            <form onSubmit={onSubmit}>
+              <label htmlFor="location">Enter City: </label>
+              <TextInput
+                radius="xl"
+                size="md"
+                rightSectionWidth={42}
+                leftSection={
+                  <IconSearch
+                    style={{ width: rem(18), height: rem(18) }}
+                    stroke={1.5}
+                  />
+                }
+                rightSection={
+                  <ActionIcon
+                    size={32}
+                    radius="xl"
+                    variant="filled"
+                    color="green"
+                  >
+                    <IconArrowRight
+                      style={{ width: rem(18), height: rem(18) }}
+                      stroke={1.5}
+                      onClick={onSubmit}
+                    />
+                  </ActionIcon>
+                }
+                type="text"
+                id="location"
+                name="location"
+                value={location}
+                placeholder="Enter a Location"
+                onChange={updateLocation}
+                onKeyDown={resetSubmitState}
+              />
+            </form>
+            <Link href={`/videos/favourites?id=${userId}`}>
+              Favourites Page
+            </Link>
+            <br></br>
+            <Link href={`/?id=${userId}`}>Return to Homepage</Link>
+          </div>
+        </Grid.Col>
+        <Grid.Col span={8}>
+          <div className="video-container">
+            {submitState && <VideoList location={location} userId={userId} />}
+          </div>
+        </Grid.Col>
+      </Grid>
+    </>
   );
 }
