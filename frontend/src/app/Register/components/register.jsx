@@ -39,7 +39,7 @@ export default function Registercomp(){
         password: password
        }).then(res => {
         console.log(res)
-        router.push(`/User?id=${res.data.user_id}`)
+        router.push(`/Landing?id=${res.data.user_id}`)
        })
        .catch(err => {
             alert(err)
@@ -61,7 +61,7 @@ export default function Registercomp(){
                 <PasswordInput label = "Password: " 
                 required = {true}
                     {...registerForm.getInputProps('password', {type: 'password'})}/>
-                <Button variant="gradient" gradient = {{from: 'cyan', to: 'green', deg: 0}} type="submit">Register!</Button>
+                <Button variant="gradient" gradient = {{from: 'cyan', to: 'green', deg: 0}} type="submit" mt={20}>Register!</Button>
             </form>
         </Box>
     )
