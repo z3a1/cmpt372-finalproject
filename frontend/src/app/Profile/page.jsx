@@ -5,6 +5,8 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import "./user.modules.css"
 import userService from "../services/user"
+import FavouriteVideos from '../videos/components/FavouriteVideos'
+import NavBar from '../Components/navbar'
 
 
 export default function verifyUser(){
@@ -32,6 +34,7 @@ export default function verifyUser(){
 
     return(
         <MantineProvider>
+            <NavBar/>
             <Group justify='center' mx = "auto" maw = {500} className='loaderStyles'>
                 {!userLoaded && <Loader color = "cyan" size = {500}/>}
                 {userLoaded && 
@@ -40,6 +43,7 @@ export default function verifyUser(){
                     <Title order = {4}>Name: {user.fname} {user.lname}</Title>
                     <Title order = {4}>Email: {user.email}</Title>
                     <Title order = {4}>Password: {'*'.repeat(10)}</Title>
+                    <FavouriteVideos id = {id}/>
                 </SimpleGrid>}
             </Group>
         </MantineProvider>

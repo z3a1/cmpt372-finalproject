@@ -2,7 +2,6 @@
 import Link from "next/link";
 import FavouriteVideos from "./components/FavouriteVideos";
 import VideoList from "./components/VideoList";
-import { useState } from "react";
 import {v4 as idGen} from "uuid"
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'

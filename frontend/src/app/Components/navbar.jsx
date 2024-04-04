@@ -10,9 +10,9 @@ export default function NavBar(params){
 
     const dataLinks = [
         { link: `/Profile?id=${params.id}`, label: "Profile", icon: IconUserCircle },
-        { link: "/friends", label: "Friends", icon: IconFriends },
-        { link: "/events", label: "Create Event", icon: IconMapPin },
-        { link: "/videos", label: "Event Suggestions", icon: IconBrandYoutube },
+        { link: `/friends?id=${params.id}`, label: "Friends", icon: IconFriends },
+        { link: `/events?id=${params.id}`, label: "Create Event", icon: IconMapPin },
+        { link: `/videos?id=${params.id}`, label: "Event Suggestions", icon: IconBrandYoutube },
       ];
 
     const links = dataLinks.map((data, index) => (
