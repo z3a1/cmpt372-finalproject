@@ -56,9 +56,10 @@ const friendService =  {
     },
 
     searchPeople: async(userName) => {
-        await axios.get(process.env.SERVER_URL + `/friends/get/people?userName=${userName}}`)
+        await axios.get(process.env.SERVER_URL + `/friends/get/people?userName=${userName}`)
         .then(res => {
             return res.data
+            // use the data to go to a new page -> user profile
         })
         .catch(error => console.error("Error getting people", error.message))
     }
