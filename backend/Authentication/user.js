@@ -10,7 +10,11 @@ const router = express.Router()
 router.use(passport.initialize())
 router.use(passport.session())
 
-router.post('/login',passport.authenticate('local',{failureRedirect: '/login'}), (req,res) => {
+router.get('/error', (req,res) => {
+    res.status(500).json({message: "Could not authenticate user!"})
+})
+
+router.post('/login',passport.authenticate('local',{failureRedirect: '/auth/error'}), (req,res) => {
     res.status(200).json(req.user._id.toString())
 })
 
