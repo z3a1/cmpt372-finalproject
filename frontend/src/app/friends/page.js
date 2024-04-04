@@ -18,8 +18,12 @@ export default function FriendsPage() {
     const [pendingFriends, setPendingFriends] = useState([]);
     const [acceptedFriends, setAcceptedFriends] = useState([]);
     const [pendingFriendRequests, setPendingFriendRequests] = useState([]);
+    const [pendingFriendRequestsLength, setPendingFriendRequestsLength] = useState([]);
 
-    //TODO: add a "search" - just writes the name and adds
+    const [userName, setUserName] = useState([]);
+
+
+    // To be deleted 
     const add = async () => {
         let newFriend = { userId: USER_ID, friendId: FRIEND_ID };
         try {
@@ -70,7 +74,12 @@ export default function FriendsPage() {
         await axios.get(process.env.SERVER_URL + `/friends/get/requests?userId=${USER_ID}`)
             .then(res => {
                 console.log("fetching pending friend requests:", res.data.pendingFriendRequests)
-                setPendingFriendRequests(res.data.pendingFriendRequests)
+                setPendingFriendRequests(res.data.pendingFriendRequests);
+                if (pendingFriendRequests === null || pendingFriendRequests === undefined){
+                    setPendingFriendRequestsLength(0);
+                } else{
+                    setPendingFriendRequestsLength (pendingFriendRequests.length);
+                }
             })
             .catch(error => console.error('Error fetching pending friend requests:', error))
     }
@@ -83,6 +92,25 @@ export default function FriendsPage() {
         getPendingFriendRequests();
     }
 
+    const searchPeople = async (userName) =>{    
+        try {
+            console.log('Searching for a new friend', userName);
+            await friendService.searchPeople(userName)
+            
+        } catch (error){
+            console.error('Error finding friend:', error)
+        }
+    }
+
+    const handleInputChange = (event) =>{
+        setUserName(event.target.value);
+    }
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        searchPeople(userName);
+    }
+
     // On load
     useEffect(() => {
         fetchFriends()
@@ -92,6 +120,11 @@ export default function FriendsPage() {
     return (
         <div className="container" >
             <button className="add" onClick={() => add()}>Add Friend</button>
+            <form onSubmit={handleSubmit}>
+                <input type='text' placeholder='Search User Name...' className='searchFriend' value={userName} onChange={handleInputChange}></input>
+                <button type="search" className='search'>Search</button>
+            </form>
+            
             <ul className="friendsList">
                 {friends.map((friend, index) => (
                     <li key={index} className="friend">
@@ -103,14 +136,16 @@ export default function FriendsPage() {
 
             <div>
                 <h2>Pending Friend Requests</h2>
-                {pendingFriendRequests.map((request, index) => (
-                    <div key={index}>
-                        <h4>{request._id}</h4>
-                        <p>- {request.user_id}</p>
-                        <p>- {request.friend_id}</p>
-                        <button onClick={() => acceptFriendRequest(request)}>Accept</button>
-                    </div>
-                ))}
+                { pendingFriendRequestsLength > 0 ? (
+                    pendingFriendRequests.map((request, index) => (
+                        <div key={index}>
+                            <h4>{request._id}</h4>
+                            <p>- {request.user_id}</p>
+                            <p>- {request.friend_id}</p>
+                            <button onClick={() => acceptFriendRequest(request)}>Accept</button>
+                        </div>
+                    ))
+                ) : null }
             </div>
 
             <div>

@@ -17,6 +17,26 @@
     background-color: #0056b3;
 }
 
+.searchFriend {
+    width: 80%;
+    padding: 10px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+}
+
+.search{
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+}
+
+.search:hover {
+    background-color: #0056b3;
+}
+
 ul {
     list-style-type: none;
     padding: 0;
