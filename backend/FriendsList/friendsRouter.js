@@ -44,7 +44,7 @@ router.get('/get/accepted', async (req, res) => {
         // To be able to get the friend's name
         const friendArray = await getInfo(allAcceptedFriends); // await is needed since there is a promise that this will be there 
         // the promise needs time to resolve itself 
-        
+
         console.log('after the function call');
         console.log('allaccptedfriends',allAcceptedFriends);
         console.log('friend info:',friendArray);
@@ -68,12 +68,12 @@ router.get('/get/pending', async (req, res) => {
         const allPendingFriends = await Friend.find({ user_id: userId, status: "pending" })
 
         // To be able to get the friend's name
-        const pendingfriendArray = getInfo(allPendingFriends);
+        const pendingfriendArray = await getInfo(allPendingFriends);
 
         console.log(allPendingFriends);
         console.log('friend info:',pendingfriendArray);
 
-        res.status(200).json({ allPendingFriends });
+        res.status(200).json({ pendingfriendArray });
     } catch (err) {
         console.log('Error getting all pending friends of user', err);
         res.status(500).json({ message: 'internal server error' })

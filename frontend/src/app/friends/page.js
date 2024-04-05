@@ -58,14 +58,21 @@ export default function FriendsPage() {
     const getPendingFriends = async () => {
         await friendService.getPendingFriends(USER_ID)
             .then(res => {
-                console.log("fetching pending friends:", res.allPendingFriends);
-                setPendingFriends(res.allPendingFriends);
+                console.log("fetching pending friends:", res.pendingfriendArray);
+                setPendingFriends(res.pendingfriendArray);
 
-                if (pendingFriendsLength === null || pendingFriendsLength === undefined){
-                    setpendingFriendsLength(0);
-                } else{
-                    setpendingFriendsLength (pendingFriendsLength.length);
-                }
+                setPendingFriends(prevState => {
+                    console.log("the pending friends:", prevState);
+                    console.log('the pending friends.legnth:', prevState.length);
+
+                    return res.pendingfriendArray;
+                });
+
+                // if (pendingFriendsLength === null || pendingFriendsLength === undefined){
+                //     setpendingFriendsLength(0);
+                // } else{
+                //     setpendingFriendsLength (pendingFriendsLength.length);
+                // }
             })
             .catch(error => console.error('Error fetching pending friends:', error));
     }
@@ -161,6 +168,17 @@ export default function FriendsPage() {
         console.log("it's length:", acceptedFriends.length);
     }, [acceptedFriends]);
 
+    useEffect(() => {
+        console.log("the pending friends:", pendingFriends);
+        console.log('the pending friends.length:', pendingFriends.length);
+        if (pendingFriends === null || pendingFriends === undefined) {
+            setpendingFriendsLength(0);
+        } else {
+            setpendingFriendsLength(pendingFriends.length);
+        }
+        console.log("it's length:", pendingFriendsLength);
+    }, [pendingFriends]);
+
     return (
         <div className="container" >
             <button className="add" onClick={() => add()}>Add Friend</button>
@@ -199,8 +217,8 @@ export default function FriendsPage() {
                     pendingFriends.map((friend, index) => (
                         <div key={index}>
                             <h4>{friend._id}</h4>
-                            <p>- {friend.user_id}</p>
-                            <p>- {friend.friend_id}</p>
+                            <p>- {friend.username}</p>
+                            <p>- {friend.fname} {friend.lname}</p>
                         </div>
                     ))
                 ) : null }
