@@ -88,7 +88,8 @@ router.get('/get/requests', async (req, res) => {
         const friendRequests = await Friend.find({ friend_id: userId, status: "pending" })
 
         // To be able to get the friend's name
-        const friendRequestArray = getInfo(friendRequests);
+        // might have to change this to have friend's info?
+        // const friendRequestArray = getInfo(friendRequests);
 
         console.log(friendRequestArray);
         console.log("Pending friend requests:", friendRequests);
@@ -168,7 +169,6 @@ router.delete('/delete/friend', async (req, res) => {
 
     try {
         const deletedFriend = await Friend.findByIdAndDelete(friendRequestId)
-            // .catch(err => console.error("Error deleting friend request sent by user:", err))
 
         if (deletedFriend) {
             console.log("Deleted friend request sent by user:", deletedFriend)

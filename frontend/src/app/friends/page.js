@@ -67,12 +67,6 @@ export default function FriendsPage() {
 
                     return res.pendingfriendArray;
                 });
-
-                // if (pendingFriendsLength === null || pendingFriendsLength === undefined){
-                //     setpendingFriendsLength(0);
-                // } else{
-                //     setpendingFriendsLength (pendingFriendsLength.length);
-                // }
             })
             .catch(error => console.error('Error fetching pending friends:', error));
     }
@@ -81,27 +75,9 @@ export default function FriendsPage() {
         await friendService.getAcceptedFriends(USER_ID)
             .then(res => {
 
-
-                // console.log("fetching accepted friends:", res.friendArray);
-                // setAcceptedFriends(res.friendArray);
-     
-
-          
-                // console.log("the accepted friends:", acceptedFriends);
-                // console.log('the accepted friends.legnth:', acceptedFriends.length);
-
-
                 setAcceptedFriends(prevState => {
                     console.log("the accepted friends:", prevState);
                     console.log('the accepted friends.legnth:', prevState.length);
-                    
-
-                    // if (acceptedFriends === null || acceptedFriends === undefined){
-                    //     setacceptedFriendsLength(0);
-                    // } else{
-                    //     setacceptedFriendsLength (acceptedFriends.length);
-                    // }
-                    // console.log("it's length:", acceptedFriends.length);
 
                     return res.friendArray;
                 });
@@ -222,14 +198,6 @@ export default function FriendsPage() {
                         </div>
                     ))
                 ) : null }
-
-                {/* {pendingFriends.map((friend, index) => (
-                    <div key={index}>
-                        <h4>{friend._id}</h4>
-                        <p>- {friend.user_id}</p>
-                        <p>- {friend.friend_id}</p>
-                    </div>
-                ))} */}
             </div>
 
             <div>
