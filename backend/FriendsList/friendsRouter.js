@@ -21,6 +21,7 @@ async function getInfo (idArray) {
         console.log('friend id:', friend.friend_id)
         const friendInfo = await User.findOne({ _id: friend.friend_id }, { username: 1, fname: 1, lname: 1, _id: 1 });
         console.log(friendInfo);
+
         if (friendInfo) {
             friendArray.push(friendInfo);
         }
@@ -41,12 +42,17 @@ router.get('/get/accepted', async (req, res) => {
         
 
         // To be able to get the friend's name
-        const friendArray = getInfo(allAcceptedFriends);
+        const friendArray = await getInfo(allAcceptedFriends); // await is needed since there is a promise that this will be there 
+        // the promise needs time to resolve itself 
         
-        console.log(allAcceptedFriends);
+        console.log('after the function call');
+        console.log('allaccptedfriends',allAcceptedFriends);
         console.log('friend info:',friendArray);
 
-        res.status(200).json({ allAcceptedFriends });
+        // const array = ['hi', 'bye'] // to test if it goes through
+        if ((await friendArray).length > 0){
+            res.status(200).json({ friendArray });
+        }
         
     } catch (err) {
         console.log('Error getting all accepted friends of user', err);

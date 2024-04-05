@@ -75,23 +75,33 @@ export default function FriendsPage() {
             .then(res => {
 
 
-                console.log("fetching accepted friends:", res.allAcceptedFriends);
-                setAcceptedFriends(res.allAcceptedFriends);
+                // console.log("fetching accepted friends:", res.friendArray);
+                // setAcceptedFriends(res.friendArray);
      
-                // // console.log("fetching accepted friends:", res.allAcceptedFriends);
-                // // setAcceptedFriends(res.allAcceptedFriends);
 
           
-                // // console.log("the accepted friends:", acceptedFriends);
-                // // console.log("it's length:", acceptedFriends.length);
-                if (acceptedFriends === null || acceptedFriends === undefined){
-                    setacceptedFriendsLength(0);
-                } else{
-                    setacceptedFriendsLength (acceptedFriends.length);
-                }
+                // console.log("the accepted friends:", acceptedFriends);
+                // console.log('the accepted friends.legnth:', acceptedFriends.length);
+
+
+                setAcceptedFriends(prevState => {
+                    console.log("the accepted friends:", prevState);
+                    console.log('the accepted friends.legnth:', prevState.length);
+                    
+
+                    // if (acceptedFriends === null || acceptedFriends === undefined){
+                    //     setacceptedFriendsLength(0);
+                    // } else{
+                    //     setacceptedFriendsLength (acceptedFriends.length);
+                    // }
+                    // console.log("it's length:", acceptedFriends.length);
+
+                    return res.friendArray;
+                });
             })
             .catch(error => console.error('Error fetching accepted friends:', error))
     }
+
 
     const getPendingFriendRequests = async () => {
         await axios.get(process.env.SERVER_URL + `/friends/get/requests?userId=${USER_ID}`)
@@ -139,6 +149,17 @@ export default function FriendsPage() {
         fetchFriends()
         getPendingFriendRequests()
     }, []);
+
+    useEffect(() => {
+        console.log("the accepted friends:", acceptedFriends);
+        console.log('the accepted friends.length:', acceptedFriends.length);
+        if (acceptedFriends === null || acceptedFriends === undefined) {
+            setacceptedFriendsLength(0);
+        } else {
+            setacceptedFriendsLength(acceptedFriends.length);
+        }
+        console.log("it's length:", acceptedFriends.length);
+    }, [acceptedFriends]);
 
     return (
         <div className="container" >
@@ -196,34 +217,16 @@ export default function FriendsPage() {
             <div>
                 <h2>Accepted Friends</h2>
 
-                {/* { acceptedFriendsLength > 0 ? (
-                    acceptedFriends.map((friend, index) => (
-                        <div key={index}>
-                            <h4>{friend._id}</h4>
-                            <p>- {friend.userName}</p>
-                            <p>- {friend.fname}</p>
-                        </div>
-                    ))
-                ) : null } */}
-
                 { acceptedFriendsLength > 0 ? (
                     acceptedFriends.map((friend, index) => (
                         <div key={index}>
                             <h4>{friend._id}</h4>
-                            <p>- {friend.user_id}</p>
-                            <p>- {friend.friend_id}</p>
+                            <p>- {friend.username}</p>
+                            <p>- {friend.fname} {friend.lname}</p>
                         </div>
                     ))
+                ) : null }
 
-                ) : null}
-
-                { acceptedFriends.map((friend, index) => (
-                        <div key={index}>
-                            <h4>{friend._id}</h4>
-                            <p>- {friend.user_id}</p>
-                            <p>- {friend.friend_id}</p>
-                        </div>
-                )) }
             </div>
         </div>
     );
