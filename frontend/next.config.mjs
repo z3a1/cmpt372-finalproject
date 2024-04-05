@@ -5,9 +5,14 @@ const nextConfig = {
         GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY
     },
     output: 'export',
-    // experimental: {
-    //     missingSuspenseWithCSRBailout: false,
-    // },
+    experimental: {
+        missingSuspenseWithCSRBailout: false,
+        optimizePackageImports: [
+            '@mantine/core',
+            '@mantine/hooks'
+        ],
+    },
+    trailingSlash: true,
     
 };
 

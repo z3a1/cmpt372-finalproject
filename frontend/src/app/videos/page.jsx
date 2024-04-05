@@ -2,13 +2,18 @@
 import Link from "next/link";
 import FavouriteVideos from "./components/FavouriteVideos";
 import VideoList from "./components/VideoList";
-import { useState } from "react";
 import {v4 as idGen} from "uuid"
+import { useSearchParams, useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import userService from "../services/user"
 
 export default function VideosPage() {
   const [location, setLocation] = useState("");
   //var location;
   const [submitState, setSubmitState] = useState(false);
+  const searchParams = useSearchParams()
+  const id = searchParams.get('id')
+  const router = useRouter()
 
   //TESTING WITH DIFFERENT USERS
   const userId = '65fa73b955410eecb776f5b1'
@@ -21,6 +26,16 @@ export default function VideosPage() {
   function updateLocation(e) {
      setLocation(e.target.value);
   }
+
+  useEffect(() => {
+    let getUser = async () => {
+      let res = await userService.getUserId(id)
+      if(!res){
+        router.push("/")
+      }
+    }
+    getUser()
+  },[])
 
   return (
     <div>

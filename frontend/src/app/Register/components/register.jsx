@@ -1,54 +1,68 @@
-import {FormEvent} from "react"
 import {v4 as idGen} from "uuid"
 import styles from "../registerStyle.module.css"
 import axios from "axios"
+import { TextInput, Box, PasswordInput, Title, Button } from '@mantine/core';
+import { useForm, matches, isEmail } from "@mantine/form"
+import { useRouter } from "next/navigation";
 
 export default function Registercomp(){
 
+    const router = useRouter()
+
+    const registerForm = useForm({
+        initialValues: {
+            fname: '',
+            lname: '',
+            user_name: '',
+            email: '',
+            password: ''
+        },
+        validate: {
+            fname: matches(/^[A-Za-z]+$/,"Invalid First Name!"),
+            lname: matches(/^[A-Za-z]+$/,"Invalid Last Name!"),
+            email: isEmail("Not a valid email!"),
+            password: matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,"The password is invalid!")
+        }
+    })
+
     const getFormData = async (event) => {
         event.preventDefault()
-        const userInput = new FormData(event.currentTarget)
+        registerForm.validate()
         const newUserId = idGen()
-        // console.log(newUserId)
-        // console.log(userInput.get('fname'))
-        // console.log(userInput.get('password'))
-        /*
-            TODO:
-            - Implement checking if user already exists
-            - Check if the user name exists already
-            - Will be handeled by the Express server
-        */
-      await axios.post(process.env.SERVER_URL + "/register",{
-        id: idGen(),
-        fname: userInput.get('fname'),
-        lname: userInput.get('lname'),
-        userName: userInput.get('userName'),
-        email: userInput.get('email'),
-        password: userInput.get('password')
+        let {fname,lname,user_name,email,password} = registerForm.values;
+        await axios.post(process.env.SERVER_URL + "/auth/register",{
+        id: newUserId,
+        fname: fname,
+        lname: lname,
+        user_name: user_name,
+        email: email,
+        password: password
        }).then(res => {
-        res.json()
+        console.log(res)
+        router.push(`/Landing?id=${res.data.user_id}`)
        })
-       .then(serverRes => {
-        console.log(serverRes)
+       .catch(err => {
+            alert(err)
        })
-      }
+    }
 
     return(
-        <section className={styles.componentContainer}>
-            <h2>Sign Up!</h2>
-            <form onSubmit={getFormData} className={styles.formComponent}>
-                <label>First Name: </label>
-                <input type = "text" name = "fname" required/>
-                <label>Last Name: </label>
-                <input type = "text" name = "lname" required/>
-                <label>User Name: </label>
-                <input type = "text" name = "userName" required/>
-                <label>Email: </label>
-                <input type = "email" name = "email" required/>
-                <label>Password: </label>
-                <input type = "password" name = "password" required/>
-                <button>Register</button>
+        <Box maw = {349} mx = "auto">
+            <Title order = {2}>Register Today For Free!</Title>
+            <form onSubmit={getFormData}>
+                <TextInput label = "First Name" placeholder="John" required = {true}
+                withAsterisk {...registerForm.getInputProps('fname')}/>
+                <TextInput label = "Last Name" placeholder="Doe" required = {true}
+                withAsterisk {...registerForm.getInputProps('lname')}/>
+                <TextInput label = "Username" placeholder="John444123" required = {true}
+                withAsterisk {...registerForm.getInputProps('user_name')}/>
+                <TextInput label = "Email: " placeholder="example@gmail.com"
+                required = {true} withAsterisk {...registerForm.getInputProps('email')}/>
+                <PasswordInput label = "Password: " 
+                required = {true}
+                    {...registerForm.getInputProps('password', {type: 'password'})}/>
+                <Button variant="gradient" gradient = {{from: 'cyan', to: 'green', deg: 0}} type="submit" mt={20}>Register!</Button>
             </form>
-        </section>
+        </Box>
     )
 }

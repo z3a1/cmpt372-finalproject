@@ -1,39 +1,55 @@
-import {FormEvent} from "react"
 import styles from "../registerStyle.module.css"
 import axios from "axios"
+import {TextInput, Button, Box, PasswordInput } from '@mantine/core';
+import { Title } from "@mantine/core";
+import { useForm, isEmail, matches } from '@mantine/form';
+import { useRouter } from "next/navigation";
 
 export default function Logincomp(){
 
+    const router = useRouter()
+
+    const loginForm = useForm({
+        initialValues: {
+            email: '',
+            password: '',
+        },
+        validate: {
+            email: isEmail("Not a valid email!"),
+        }
+    })
+
     const getFormData = async (event) => {
         event.preventDefault()
-        const userInput = new FormData(event.currentTarget)
-        const defaultRole = "Member"
-        console.log(userInput.get('email'))
-        console.log(userInput.get('password'))
-        /**
-         * Todo:
-         * -> Verification if user exists
-         * -> Session verification
-         * -> Redirect to main page
-         */
-        await axios.post(process.env.SERVER_URL + "/login",{
-            email: userInput.get('email'),
-            password: userInput.get('password')
+        loginForm.validate()
+        let {email, password} = loginForm.values
+        await axios.post(process.env.SERVER_URL + "/auth/login",{
+            email: email,
+            password: password
         }).then(res => {
             console.log(res)
-           })
+            router.push(`/Landing/?id=${res.data}`)
+        })
+        .catch(err => {
+            console.log(err)
+            alert(err.response.data.message)
+        })
       }
 
     return(
-        <section className={styles.componentContainer}>
-            <h2>Login To Existing Account</h2>
-            <form onSubmit={getFormData} className={styles.formComponent}>
-                <label>Email:</label>
-                <input type = "text" name = "email" required/>
-                <label>Password:</label>
-                <input type = "password" name = "password" required/>
-                <button>Login</button>
-            </form>
-        </section>
+        <Box maw={349} mx = "auto">
+            <Title order={2}>Sign In:</Title>
+            <Box maw={349} mx = "auto">
+                <form onSubmit={getFormData}>
+                    <TextInput label = "Email: " 
+                    placeholder="example@gmail.com" 
+                    required = {true} withAsterisk {...loginForm.getInputProps('email')}/>
+                    <PasswordInput label = "Password: " 
+                    required = {true}
+                     {...loginForm.getInputProps('password', {type: 'password'})}/>
+                    <Button variant="filled" color="green" type="submit" mt={20}>Login</Button>
+                </form>
+            </Box>
+        </Box>
     )
 }
