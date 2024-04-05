@@ -30,9 +30,9 @@ const friendService =  {
         .catch(error => console.error("Error getting accepted friends", error.message))
     },
 
-    deleteFriend: async(id) => {
+    deleteFriend: async(id, userId,friendId) => {
         console.log(id)
-        await axios.delete(process.env.SERVER_URL + `/friends/delete/friend?friendRequestId=${id}`)
+        await axios.delete(process.env.SERVER_URL + `/friends/delete/friend?friendRequestId=${id}&userId=${userId}&friendId=${friendId}`)
             .then(res => {
                 console.log(res)
             })

@@ -42,7 +42,7 @@ export default function FriendsPage() {
 
     const remove = async (id) => {
         try{
-            await friendService.deleteFriend(id);
+            await friendService.deleteFriend(id, USER_ID, FRIEND_ID);
             fetchFriends();
         } catch (error){
             console.error('Error deleting friend:', error);

@@ -42,14 +42,11 @@ router.get('/get/accepted', async (req, res) => {
         
 
         // To be able to get the friend's name
-        const friendArray = await getInfo(allAcceptedFriends); // await is needed since there is a promise that this will be there 
-        // the promise needs time to resolve itself 
+        const friendArray = await getInfo(allAcceptedFriends); 
 
-        console.log('after the function call');
         console.log('allaccptedfriends',allAcceptedFriends);
         console.log('friend info:',friendArray);
 
-        // const array = ['hi', 'bye'] // to test if it goes through
         if ((await friendArray).length > 0){
             res.status(200).json({ friendArray });
         }
@@ -165,7 +162,10 @@ router.post('/add', async (req, res) => {
 
 // Deletes a friend by id
 router.delete('/delete/friend', async (req, res) => {
-    const friendRequestId = req.query.friendRequestId // _id
+    const friendRequestId = req.query.friendRequestId; // _id
+
+    const userId = req.query.userId;
+    const friendId = req.query.friendId;
 
     try {
         const deletedFriend = await Friend.findByIdAndDelete(friendRequestId)
@@ -177,11 +177,34 @@ router.delete('/delete/friend', async (req, res) => {
             console.log("Error, no friend request found and deleted")
             res.status(200).json({ message: "Friend request does not exist" })
         }   
+        
+
         // TODO: edge case for when two people are friends - both friend relationships deleted
+
+        // to check that they both are friends
+        const checkingFriend = await Friend.findOne({
+            $or: [
+                { user_id: userId, friend_id: friendId },
+                { user_id: friendId, friend_id: userId }
+            ],
+            status: "accepted"
+        });
+
+        if (checkingFriend) {
+            await Friend.deleteMany({
+                $or: [
+                    { user_id: userId, friend_id: friendId },
+                    { user_id: friendId, friend_id: userId }
+                ],
+                status: "accepted"
+            });
+            console.log("Deleted friend relationships");
+        }
+        
 
     } catch (err) {
         console.error('Error deleting a pending friend request sent by the user:', err);
-        res.status(500).json({ message: 'internal server error' })
+        res.status(500).json({ message: 'internal server error' });
     }
 })
 
