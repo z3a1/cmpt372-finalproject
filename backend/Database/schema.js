@@ -19,22 +19,22 @@ var friendSchema = new Schema({
 })
 
 var locationSchema = new Schema({
-    // location_id: 'ObjectId',
     name: String,
-    address: String,
-    // city: String,
-    // stateProvince: String,
-    // country: String
+    address: String
 })
 
 var eventSchema = new Schema({
-    // event_id: 'ObjectId',
-    creator_id: {type: 'ObjectId', ref:'User'},
-    event_name: String,
-    // place_name: String, // TODO: maybe not needed
-    location_id: {type: 'ObjectId', ref:'Location'},
+    creator_id: {
+        type: 'ObjectId',
+        ref:'User'
+    },
+    name: String,
+    location_id: {
+        type: 'ObjectId',
+        ref:'Location'
+    },
     description: String,
-    event_date: Date,
+    date_time: Date, // ISO 8601 format 
     creation_date: {
         type: Date,
         default: Date.now
