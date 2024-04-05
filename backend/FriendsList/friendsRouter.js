@@ -1,10 +1,6 @@
 var express = require ('express')
 const router = express.Router()
-// var db = require('../Database/schema')
-const uuid = require('uuid');
 
-// const friends = db.Friend;
-// const user = db.User;
 
 const mongoose = require("mongoose");
 const Friend = mongoose.model("Friend");
@@ -17,19 +13,23 @@ TODO:
         make the names clickable - going to the profile of that user
 */
 
+async function getInfo (idArray) {
+    const friendArray = [];
 
-router.get('/get/all', async (req, res) => {
-    const userId = req.query.userId;
-
-    try {
-        const allFriends = await Friend.find({ user_id: userId })
-        console.log(allFriends)
-        res.status(200).send({ allFriends });
-    } catch (err) {
-        console.log('Error getting all friends of user', err);
-        res.status(500).send({ message: 'internal server error' })
+    for (const friend of idArray){
+        console.log('Friend:', friend);
+        console.log('friend id:', friend.friend_id)
+        const friendInfo = await User.findOne({ _id: friend.friend_id }, { username: 1, fname: 1, lname: 1, _id: 1 });
+        console.log(friendInfo);
+        if (friendInfo) {
+            friendArray.push(friendInfo);
+        }
     }
-})
+    console.log(idArray);
+    console.log('friend info:',friendArray);
+
+    return friendArray
+}
 
 
 // Get all accepted friends of user
@@ -41,21 +41,11 @@ router.get('/get/accepted', async (req, res) => {
         
 
         // To be able to get the friend's name
-        const friendArray = [];
-
-        for (const friend of allAcceptedFriends){
-            console.log('Friend:', friend);
-            console.log('friend id:', friend.friend_id)
-            const friendInfo = await User.findOne({ _id: friend.friend_id }, { username: 1, fname: 1, lname: 1, _id: 1 });
-            console.log(friendInfo);
-            if (friendInfo) {
-                friendArray.push(friendInfo);
-            }
-        }
+        const friendArray = getInfo(allAcceptedFriends);
+        
         console.log(allAcceptedFriends);
-        console.log(friendArray);
+        console.log('friend info:',friendArray);
 
-        // Should be sending the friendArray - to get their info sent through
         res.status(200).json({ allAcceptedFriends });
         
     } catch (err) {
@@ -72,19 +62,10 @@ router.get('/get/pending', async (req, res) => {
         const allPendingFriends = await Friend.find({ user_id: userId, status: "pending" })
 
         // To be able to get the friend's name
-        const pendingfriendArray = [];
+        const pendingfriendArray = getInfo(allPendingFriends);
 
-        for (const friend of allPendingFriends){
-            console.log('Friend:', friend);
-            console.log('friend id:', friend.friend_id)
-            const friendInfo = await User.findOne({ _id: friend.friend_id }, { username: 1, fname: 1, lname: 1, _id: 1 });
-            console.log(friendInfo);
-            if (friendInfo) {
-                pendingfriendArray.push(friendInfo);
-            }
-        }
-        console.log(pendingfriendArray);
         console.log(allPendingFriends);
+        console.log('friend info:',pendingfriendArray);
 
         res.status(200).json({ allPendingFriends });
     } catch (err) {
@@ -101,17 +82,8 @@ router.get('/get/requests', async (req, res) => {
         const friendRequests = await Friend.find({ friend_id: userId, status: "pending" })
 
         // To be able to get the friend's name
-        const friendRequestArray = [];
+        const friendRequestArray = getInfo(friendRequests);
 
-        for (const friend of friendRequests){
-            console.log('Friend:', friend);
-            console.log('friend id:', friend.friend_id)
-            const friendInfo = await User.findOne({ _id: friend.friend_id }, { username: 1, fname: 1, lname: 1, _id: 1 });
-            console.log(friendInfo);
-            if (friendInfo) {
-                friendRequestArray.push(friendInfo);
-            }
-        }
         console.log(friendRequestArray);
         console.log("Pending friend requests:", friendRequests);
 

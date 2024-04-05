@@ -4,7 +4,6 @@ var Schema = mongoose.Schema
 require('dotenv').config()
 
 var userSchema = new Schema({
-    // user_id: {type: 'UUID', default: () => uuidv4()},
     username: {type: String, unique: true, required: 'Username cannot be empty!'},
     fname: String,
     lname: String,
