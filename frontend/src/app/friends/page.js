@@ -18,7 +18,10 @@ export default function FriendsPage() {
     const [pendingFriends, setPendingFriends] = useState([]);
     const [acceptedFriends, setAcceptedFriends] = useState([]);
     const [pendingFriendRequests, setPendingFriendRequests] = useState([]);
+
     const [pendingFriendRequestsLength, setPendingFriendRequestsLength] = useState([]);
+    const [pendingFriendsLength, setpendingFriendsLength] = useState([]);
+    const [acceptedFriendsLength, setacceptedFriendsLength] = useState([]);
 
     const [userName, setUserName] = useState([]);
 
@@ -55,17 +58,37 @@ export default function FriendsPage() {
     const getPendingFriends = async () => {
         await friendService.getPendingFriends(USER_ID)
             .then(res => {
-                console.log("fetching pending friends:", res.allPendingFriends)
+                console.log("fetching pending friends:", res.allPendingFriends);
                 setPendingFriends(res.allPendingFriends);
+
+                if (pendingFriendsLength === null || pendingFriendsLength === undefined){
+                    setpendingFriendsLength(0);
+                } else{
+                    setpendingFriendsLength (pendingFriendsLength.length);
+                }
             })
-            .catch(error => console.error('Error fetching pending friends:', error))
+            .catch(error => console.error('Error fetching pending friends:', error));
     }
 
     const getAcceptedFriends = async () => {
         await friendService.getAcceptedFriends(USER_ID)
             .then(res => {
-                console.log("fetching accepted friends:", res.allAcceptedFriends)
+
+
+                console.log("fetching accepted friends:", res.allAcceptedFriends);
                 setAcceptedFriends(res.allAcceptedFriends);
+     
+                // // console.log("fetching accepted friends:", res.allAcceptedFriends);
+                // // setAcceptedFriends(res.allAcceptedFriends);
+
+          
+                // // console.log("the accepted friends:", acceptedFriends);
+                // // console.log("it's length:", acceptedFriends.length);
+                if (acceptedFriends === null || acceptedFriends === undefined){
+                    setacceptedFriendsLength(0);
+                } else{
+                    setacceptedFriendsLength (acceptedFriends.length);
+                }
             })
             .catch(error => console.error('Error fetching accepted friends:', error))
     }
@@ -150,24 +173,57 @@ export default function FriendsPage() {
 
             <div>
                 <h2>User's Pending</h2>
-                {pendingFriends.map((friend, index) => (
+
+                { pendingFriendsLength > 0 ? (
+                    pendingFriends.map((friend, index) => (
+                        <div key={index}>
+                            <h4>{friend._id}</h4>
+                            <p>- {friend.user_id}</p>
+                            <p>- {friend.friend_id}</p>
+                        </div>
+                    ))
+                ) : null }
+
+                {/* {pendingFriends.map((friend, index) => (
                     <div key={index}>
                         <h4>{friend._id}</h4>
                         <p>- {friend.user_id}</p>
                         <p>- {friend.friend_id}</p>
                     </div>
-                ))}
+                ))} */}
             </div>
 
             <div>
                 <h2>Accepted Friends</h2>
-                {acceptedFriends.map((friend, index) => (
-                    <div key={index}>
-                        <h4>{friend._id}</h4>
-                        <p>- {friend.user_id}</p>
-                        <p>- {friend.friend_id}</p>
-                    </div>
-                ))}
+
+                {/* { acceptedFriendsLength > 0 ? (
+                    acceptedFriends.map((friend, index) => (
+                        <div key={index}>
+                            <h4>{friend._id}</h4>
+                            <p>- {friend.userName}</p>
+                            <p>- {friend.fname}</p>
+                        </div>
+                    ))
+                ) : null } */}
+
+                { acceptedFriendsLength > 0 ? (
+                    acceptedFriends.map((friend, index) => (
+                        <div key={index}>
+                            <h4>{friend._id}</h4>
+                            <p>- {friend.user_id}</p>
+                            <p>- {friend.friend_id}</p>
+                        </div>
+                    ))
+
+                ) : null}
+
+                { acceptedFriends.map((friend, index) => (
+                        <div key={index}>
+                            <h4>{friend._id}</h4>
+                            <p>- {friend.user_id}</p>
+                            <p>- {friend.friend_id}</p>
+                        </div>
+                )) }
             </div>
         </div>
     );

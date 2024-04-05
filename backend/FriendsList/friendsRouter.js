@@ -162,7 +162,7 @@ router.delete('/delete/friend', async (req, res) => {
 
     try {
         const deletedFriend = await Friend.findByIdAndDelete(friendRequestId)
-            .catch(err => console.error("Error deleting friend request sent by user:", err))
+            // .catch(err => console.error("Error deleting friend request sent by user:", err))
 
         if (deletedFriend) {
             console.log("Deleted friend request sent by user:", deletedFriend)
@@ -178,25 +178,5 @@ router.delete('/delete/friend', async (req, res) => {
         res.status(500).json({ message: 'internal server error' })
     }
 })
-
-// router.delete('/delete', async (req, res) => {
-//     try {
-//         // NOTE: IDs are passed as string instead of UUID
-//         const userId = req.query.userId;
-//         const friendId = req.query.friendId;
-//         console.log("hi", userId, friendId) // TODO: remove later
-
-//         if (!userId || !friendId) {
-//             return res.status(400).json({ message: "userId and friendId are required in the request body" });
-//         }
-//         // if friend and not friendId then search for friend???
-//         // nvm only passing in the id bc what else would you passs
-//         await helper.delete(userId, friendId);
-//         res.status(200).json({ message: 'Friend deleted successfully' });
-//     } catch (error) {
-//         console.error('Error deleting friend:', error);
-//         res.status(500).json({message: 'internal server error'})
-//     }
-// })
 
 module.exports = router;
