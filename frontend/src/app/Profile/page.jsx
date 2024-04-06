@@ -1,6 +1,6 @@
 'use client'
 
-import {Loader, MantineProvider, Group, Title, SimpleGrid} from '@mantine/core'
+import {Loader, MantineProvider, Group, Title, SimpleGrid, Center} from '@mantine/core'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import "./user.modules.css"
@@ -43,7 +43,9 @@ export default function verifyUser(){
                     <Title order = {4}>Name: {user.fname} {user.lname}</Title>
                     <Title order = {4}>Email: {user.email}</Title>
                     <Title order = {4}>Password: {'*'.repeat(10)}</Title>
-                    <FavouriteVideos id = {id}/>
+                    <Center>
+                        <FavouriteVideos userId = {id}/>
+                    </Center>
                 </SimpleGrid>}
             </Group>
         </MantineProvider>
