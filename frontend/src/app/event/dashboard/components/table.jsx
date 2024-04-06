@@ -1,5 +1,5 @@
 import { useRouter, useSearchParams } from "next/navigation";
-import { ActionIcon, Table } from "@mantine/core";
+import { ActionIcon, Center, Loader, Table } from "@mantine/core";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { eyeIcon } from "../../lib/icon";
@@ -13,11 +13,15 @@ export default function EventTable({ eventType }) {
 
     const [createdEvents, setCreatedEvents] = useState([])
     const [invitedEvents, setInvitedEvents] = useState([])
+    const [isCreatedEventsLoaded, setIsCreatedEventsLoaded] = useState(false)
+    const [isInvitedEventsLoaded, setIsInvitedEventsLoaded] = useState(false)
+    const areBothEventsLoaded = isCreatedEventsLoaded && isInvitedEventsLoaded
 
     const getAllCreatedEvents = async () => {
         await axios.get(process.env.SERVER_URL + `/events/api/event/created?id=${userId}`)
             .then(res => {
-                setCreatedEvents(res.data.events)
+                setCreatedEvents(res.data.eventPackages)
+                setIsCreatedEventsLoaded(true)
             })
             .catch(error => console.error("Error getting all created events:", error.message))
     }
@@ -25,7 +29,8 @@ export default function EventTable({ eventType }) {
     const getAllInvitedEvents = async () => {
         await axios.get(process.env.SERVER_URL + `/events/api/event/invited?id=${userId}`)
             .then(res => {
-                setInvitedEvents(res.data.events)
+                setInvitedEvents(res.data.eventPackages)
+                setIsInvitedEventsLoaded(true)
             })
             .catch(error => console.error("Error getting all invited events:", error.message))
     }
@@ -40,27 +45,38 @@ export default function EventTable({ eventType }) {
     }
 
     const events = eventType === 'created' ? createdEvents : invitedEvents;
-    const rows = events?.map((event) => {
+
+    const rows = events?.map((eventStruct) => {
         return (
-            <Table.Tr key={event._id}>
-                <Table.Td>{event.name}</Table.Td>
-                <Table.Td>{event.creator_id}</Table.Td>
-                <Table.Td>{event.location_id}</Table.Td>
-                <Table.Td>{dayjs(event.date_time).format("MMM D, YYYY h:mm A").toString()}</Table.Td>
+            <Table.Tr key={eventStruct.event._id}>
+                <Table.Td>{eventStruct.event.name}</Table.Td>
+                <Table.Td>{eventStruct.user.username}</Table.Td>
+                <Table.Td>{eventStruct.location.name}</Table.Td>
+                <Table.Td>{dayjs(eventStruct.event.date_time).format("MMM D, YYYY h:mm A").toString()}</Table.Td>
                 <Table.Td>
-                    <VisibilityBadge visibility={event.visibility} />
+                    <VisibilityBadge visibility={eventStruct.event.visibility} />
                 </Table.Td>
                 <Table.Td>
                     <ActionIcon 
                         variant="transparent" 
                         color="black" 
-                        onClick={() => handleClick(event._id)}
+                        onClick={() => handleClick(eventStruct.event._id)}
                     >
                         {eyeIcon}
                     </ActionIcon>
                 </Table.Td>
             </Table.Tr>
     )});
+
+    const loader = (
+        <Table.Tr>
+            <Table.Td colSpan={6}>
+                <Center>
+                    <Loader />
+                </Center>
+            </Table.Td>
+        </Table.Tr>
+    )
 
     return (
         <Table highlightOnHover withTableBorder>
@@ -75,7 +91,8 @@ export default function EventTable({ eventType }) {
                 </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
-                {rows}
+                {!areBothEventsLoaded && loader}
+                {areBothEventsLoaded && rows}
             </Table.Tbody>
         </Table>
     )

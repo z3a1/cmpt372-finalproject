@@ -6,8 +6,8 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import axios from 'axios';
 import { DateTimePicker } from '@mantine/dates';
-import { Container, TextInput, MultiSelect, Switch, Textarea, Button, Group, Title, ActionIcon, Card, Flex, Popover, Text } from '@mantine/core';
-import { chevronDownIcon, chevronUpIcon, lockIcon, unlockIcon } from '../lib/icon';
+import { Container, TextInput, MultiSelect, Textarea, Button, Group, Title, ActionIcon, Card, Flex, Popover, Text, LoadingOverlay, Radio } from '@mantine/core';
+import { chevronDownIcon, chevronUpIcon } from '../lib/icon';
 import dayjs from 'dayjs';
 import Map from './components/map'
 
@@ -18,7 +18,6 @@ export default function EditEvent() {
     const userId = searchParams.get('id')
 
     const [event, setEvent] = useState({})
-    const [location, setLocation] = useState({})
     const [dateTime, setDateTime] = useState(new Date())
 
     // For when address button is used
@@ -30,6 +29,9 @@ export default function EditEvent() {
     // Map selection
     const [selectedPlaceName, setSelectedPlaceName] = useState("");
     const [selectedAddress, setSelectedAddress] = useState("No address selected");
+
+    // Loading overlay
+    const [isLoaded, setIsLoaded] = useState(false)
 
     const [formData, setFormData] = useState({
         eventName: "",
@@ -47,13 +49,13 @@ export default function EditEvent() {
                 console.log(res.data.event)
                 console.log(res.data.location)
                 setEvent(res.data.event)
-                setLocation(res.data.location)
                 setFriends(event.friends)
                 setSelectedPlaceName(res.data.location.name)
                 setSelectedAddress(res.data.location.address)
                 setDateTime(new Date(res.data.event.date_time))
+                setIsLoaded(true)
             })
-            .catch(error => console.error("Error retrieving event:", error.message));
+            .catch(error => console.error("Error retrieving event:", error.message))
     }
     
     const setFormField = (fieldName, fieldValue) => {
@@ -61,20 +63,19 @@ export default function EditEvent() {
             ...prevState,
             [fieldName]: fieldValue
         }));
+        event[fieldName] = fieldValue
     }
 
     const handleInput = (e) => {
         const fieldName = e.target.name;
         let fieldValue = e.target.value;
 
-        if (fieldName == "visibility") {
-            if (fieldValue == "on") {
-                fieldValue = "public"
-            } else {
-                fieldValue = "private"
-            }
-        }
+        console.log(fieldName, fieldValue)
         setFormField(fieldName, fieldValue);
+    }
+
+    const handleRadioInput = (val) => {
+        setFormField('visibility', val)
     }
 
     const handleAddressClick = () => {
@@ -84,13 +85,18 @@ export default function EditEvent() {
     const submitForm = async (e) => {
         e.preventDefault();
 
-        formData.visibility = formData.visibility ? 'public' : 'private'
+        // For when user doesn't change information
+        formData.visibility = event.visibility === "public" ? 'public' : 'private'
         formData.dateTime = dateTime
         formData.address = selectedAddress
         formData.placeName = selectedPlaceName
+        formData.eventName = event.name
+        formData.description = event.description
+        formData.friends = event.friends
         
         await axios.post(process.env.SERVER_URL + `/events/api/event/edit?id=${eventId}`, formData)
             .then(() => {
+                console.log("Event edited successfully", formData)
                 // Reset form
                 setFormData({
                     eventName: "",
@@ -129,6 +135,7 @@ export default function EditEvent() {
         />
         <Card shadow="sm" padding="lg" radius="md" withBorder style={{ width: '25vw' }}>
             <form method="POST" onSubmit={submitForm}>  
+                <LoadingOverlay visible={!isLoaded} size={50} />
                 <Container size="xs" my={20}>
                     <Title order={1}>Edit Event</Title>
                 </Container>
@@ -150,7 +157,10 @@ export default function EditEvent() {
                         defaultValue={selectedPlaceName}
                         placeholder='Place name'
                         name="placeName"
-                        onChange={handleInput}
+                        onChange={(e) => {
+                            handleInput(e)
+                            setSelectedPlaceName(e.target.value)
+                        }}
                         size="md"
                         withAsterisk={false}
                         required
@@ -195,17 +205,24 @@ export default function EditEvent() {
                         clearable
                     />
                 </Container>
-                <Container size="xs" my={20}>       
-                    <Switch 
+                <Container size="xs" my={20}>
+                    <Radio.Group 
+                        name='visibility'
                         label="👀 Visibility"
-                        labelPosition="left"
-                        name="visibility"
-                        onChange={handleInput}
-                        size="md"
-                        onLabel={unlockIcon} 
-                        offLabel={lockIcon} 
-                        defaultChecked={event.visibility === 'public' ? true : false}
-                    />
+                        defaultValue={event.visibility === "public" ? "public" : "private"}
+                        onChange={handleRadioInput}
+                    >
+                        <Group>
+                            <Radio
+                                value="public"
+                                label="Public"
+                            />
+                            <Radio
+                                value="private"
+                                label="Private"
+                            />
+                        </Group>
+                    </Radio.Group>                    
                 </Container>
                 <Container size="xs" my={20}>
                     <Textarea

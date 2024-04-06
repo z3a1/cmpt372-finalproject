@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const Event = mongoose.model("Event");
 const Location = mongoose.model("Location");
 const Attendee = mongoose.model("Attendee");
+const User = mongoose.model("User");
 
 // Returns the location id if it exists, otherwise creates and returns a new location
 async function getOrCreateLocation(location) {
@@ -80,6 +81,18 @@ router.post("/api/event/create", async (req, res) => {
     }
 })
 
+// Create a package containing event, user, and location
+const getEventPackages = async (events) => {
+    let eventPackages = []
+    for (let event of events) {
+        const user = await User.findById(event.creator_id);
+        const location = await Location.findById(event.location_id)
+        const package = { event, user, location }
+        eventPackages.push(package)
+    }
+    return eventPackages
+}
+
 // Get the list of created events for user
 router.get("/api/event/created", async (req, res) => {
     const userId = req.query.id
@@ -87,7 +100,8 @@ router.get("/api/event/created", async (req, res) => {
 
     try {
         const events = await Event.find({ creator_id: creatorId });
-        res.status(200).json({ events })
+        const eventPackages = await getEventPackages(events)
+        res.status(200).json({ eventPackages })
     } catch (err) {
         console.error('Error retrieving created events:', err);
         res.status(500).json({ err: 'Failed to fetch created events for user' });
@@ -100,11 +114,9 @@ router.get("/api/event/invited", async (req, res) => {
 
     try {
         const invitedEvents = await Attendee.find({ user_id: userId });
-        let events = [];
-        invitedEvents.forEach(async (invitedEvent) => {
-            events.push(await Event.findById(invitedEvent._id))
-        })
-        res.status(200).json({ events })
+        let events = invitedEvents.map(async (invitedEvent) => await Event.findById(invitedEvent.event_id))
+        const eventPackages = await getEventPackages(events)
+        res.status(200).json({ eventPackages })
     } catch (err) {
         console.error('Error retrieving invited events:', err);
         res.status(500).json({ err: 'Failed to fetch invited events for user' });
@@ -141,7 +153,7 @@ router.post("/api/event/edit", async (req, res) => {
             description: description
         }
 
-        // Update friends
+        // TODO: Update friends
 
         // Update event
         await Event.findByIdAndUpdate(event_id, editedEvent)

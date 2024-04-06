@@ -12,7 +12,7 @@ export default function Dashboard() {
     }
 
     return (
-        <Container mt={100}>
+        <Container mt={60}>
             <Group justify="space-between">
                 <Title order={1} mb="xs">Events</Title>
                 <Group justify="flex-end" mb="lg" gap="xs">
