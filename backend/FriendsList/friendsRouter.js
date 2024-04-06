@@ -17,17 +17,20 @@ async function getInfo (idArray) {
     const friendArray = [];
 
     for (const friend of idArray){
-        console.log('Friend:', friend);
-        console.log('friend id:', friend.friend_id)
-        const friendInfo = await User.findOne({ _id: friend.friend_id }, { username: 1, fname: 1, lname: 1, _id: 1 });
-        console.log(friendInfo);
+        // console.log('Friend:', friend);
+        // console.log('friend id:', friend.friend_id)
+        let friendInfo = await User.findOne({ _id: friend.friend_id }, { username: 1, fname: 1, lname: 1, _id: 1 });
+        // console.log(friendInfo);
 
         if (friendInfo) {
+            console.log('qqq friend:', friend._id)
+            friendInfo.friendRequestId = friend._id;
+            console.log('friend info:',friendInfo)
             friendArray.push(friendInfo);
         }
     }
-    console.log(idArray);
-    console.log('friend info:',friendArray);
+    // console.log(idArray);
+    // console.log('friend info:',friendArray);
 
     return friendArray
 }
@@ -40,17 +43,13 @@ router.get('/get/accepted', async (req, res) => {
     try {
         const allAcceptedFriends = await Friend.find({ user_id: userId, status: "accepted" })
         
-
         // To be able to get the friend's name
         const friendArray = await getInfo(allAcceptedFriends); 
 
         console.log('allaccptedfriends',allAcceptedFriends);
         console.log('friend info:',friendArray);
 
-        if ((await friendArray).length > 0){
-            res.status(200).json({ friendArray });
-        }
-        
+        res.status(200).json({ friendArray });
     } catch (err) {
         console.log('Error getting all accepted friends of user', err);
         res.status(500).json({ message: 'internal server error' })
@@ -86,12 +85,11 @@ router.get('/get/requests', async (req, res) => {
 
         // To be able to get the friend's name
         // might have to change this to have friend's info?
-        // const friendRequestArray = getInfo(friendRequests);
+        const friendRequestArray = await getInfo(friendRequests); // NOTE: was commented out
 
-        console.log(friendRequestArray);
         console.log("Pending friend requests:", friendRequests);
 
-        res.status(200).json({ friendRequests });
+        res.status(200).json({ friendRequestArray });
     } catch (err) {
         console.log('Error getting all pending friend requests of user:', err);
         res.status(500).json({ message: 'internal server error' })
@@ -172,7 +170,20 @@ router.delete('/delete/friend', async (req, res) => {
 
         if (deletedFriend) {
             console.log("Deleted friend request sent by user:", deletedFriend)
-            res.status(200).json({ message: "Successfully deleted pending friend request sent by user" })
+
+            // Edge case: other friend should other be deleted
+            const otherFriend = await Friend.findOneAndDelete({
+                user_id: deletedFriend.friend_id,
+                friend_id: deletedFriend.user_id,
+                status: "accepted"
+            });
+
+            if (otherFriend) {
+                console.log("Deleted other friend relation", otherFriend);
+                res.status(200).json({ message: "Successfully removed all friend relationships between user and friend" })
+            } else {
+                res.status(200).json({ message: "Successfully deleted pending friend request sent by user" })
+            }
         } else {
             console.log("Error, no friend request found and deleted")
             res.status(200).json({ message: "Friend request does not exist" })
@@ -182,26 +193,24 @@ router.delete('/delete/friend', async (req, res) => {
         // TODO: edge case for when two people are friends - both friend relationships deleted
 
         // to check that they both are friends
-        const checkingFriend = await Friend.findOne({
-            $or: [
-                { user_id: userId, friend_id: friendId },
-                { user_id: friendId, friend_id: userId }
-            ],
-            status: "accepted"
-        });
+        // const checkingFriend = await Friend.findOne({
+        //     $or: [
+        //         { user_id: userId, friend_id: friendId },
+        //         { user_id: friendId, friend_id: userId }
+        //     ],
+        //     status: "accepted"
+        // });
 
-        if (checkingFriend) {
-            await Friend.deleteMany({
-                $or: [
-                    { user_id: userId, friend_id: friendId },
-                    { user_id: friendId, friend_id: userId }
-                ],
-                status: "accepted"
-            });
-            console.log("Deleted friend relationships");
-        }
-        
-
+        // if (checkingFriend) {
+        //     await Friend.deleteMany({
+        //         $or: [
+        //             { user_id: userId, friend_id: friendId },
+        //             { user_id: friendId, friend_id: userId }
+        //         ],
+        //         status: "accepted"
+        //     });
+        //     console.log("Deleted friend relationships");
+        // }
     } catch (err) {
         console.error('Error deleting a pending friend request sent by the user:', err);
         res.status(500).json({ message: 'internal server error' });
