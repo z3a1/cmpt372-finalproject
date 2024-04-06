@@ -5,6 +5,8 @@ import {IconUserCircle,
     IconLogout,
     IconLogin} from "@tabler/icons-react"
 
+import "./navbar.css"
+
 
 export default function NavBar(params){
 

@@ -2,22 +2,31 @@
 import Link from "next/link";
 import FavouriteVideos from "./components/FavouriteVideos";
 import VideoList from "./components/VideoList";
-import {v4 as idGen} from "uuid"
-import { useSearchParams, useRouter } from 'next/navigation'
-import { useState, useEffect } from 'react'
-import userService from "../services/user"
+import { v4 as idGen } from "uuid";
+import {
+  Title,
+  Container,
+  Button,
+  TextInput,
+  rem,
+  ActionIcon,
+  Grid,
+  Center
+} from "@mantine/core";
+import { IconSearch, IconArrowRight } from "@tabler/icons-react";
+import "./VideoPage.css";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import userService from "../services/user";
+import { IconArrowBackUp, IconArrowForwardUp } from "@tabler/icons-react";
 
 export default function VideosPage() {
   const [location, setLocation] = useState("");
   //var location;
   const [submitState, setSubmitState] = useState(false);
-  const searchParams = useSearchParams()
-  const id = searchParams.get('id')
-  const router = useRouter()
-
   const searchParams = useSearchParams();
-
-  const userId = searchParams.get("id");
+  const id = searchParams.get("id");
+  const router = useRouter();
 
   function onSubmit(e) {
     setSubmitState(true);
@@ -32,21 +41,24 @@ export default function VideosPage() {
 
   useEffect(() => {
     let getUser = async () => {
-      let res = await userService.getUserId(id)
-      if(!res){
-        router.push("/")
+      let res = await userService.getUserId(id);
+      if (!res) {
+        router.push("/");
       }
-    }
-    getUser()
-  },[])
+    };
+    getUser();
+  }, []);
 
   return (
     <>
       <Grid>
-        <Grid.Col span={4}>
-          <div className="search-container">
+        <Grid.Col span={5}>
+          <Container className="search-container">
+            <Center>
+              <Title className = "video-title" size = "h2">Search</Title>
+            </Center>
             <form onSubmit={onSubmit}>
-              <label htmlFor="location">Enter City: </label>
+              <label htmlFor="location"></label>
               <TextInput
                 radius="xl"
                 size="md"
@@ -80,17 +92,34 @@ export default function VideosPage() {
                 onKeyDown={resetSubmitState}
               />
             </form>
-            <Link href={`/videos/favourites?id=${userId}`}>
+            <Link className="link" href={`/videos/favourites?id=${id}`}>
               Favourites Page
+              <IconArrowForwardUp
+                className="icon-arrow"
+                size={32}
+                strokeWidth={2}
+                color={"black"}
+              />
             </Link>
             <br></br>
-            <Link href={`/?id=${userId}`}>Return to Homepage</Link>
-          </div>
+            <Link className="link" href={`/Landing/?id=${id}`}>
+              Return to Homepage{" "}
+              <IconArrowBackUp
+                className="icon-arrow"
+                size={32}
+                strokeWidth={2}
+                color={"black"}
+              />
+            </Link>
+          </Container>
         </Grid.Col>
-        <Grid.Col span={8}>
-          <div className="video-container">
-            {submitState && <VideoList location={location} userId={userId} />}
-          </div>
+        <Grid.Col span={7}>
+          <Container className="video-container">
+          <Center>
+              <Title className = "video-title" size = "h2">Video Results</Title>
+            </Center>
+            {submitState && <VideoList location={location} userId={id} />}
+          </Container>
         </Grid.Col>
       </Grid>
     </>

@@ -5,6 +5,7 @@ import "../VideoList.css";
 import React, { useState, useEffect } from "react";
 import "@mantine/carousel/styles.css";
 import { Carousel } from "@mantine/carousel";
+import { Container, rem } from "@mantine/core";
 
 export default function VideoList({ location, userId }) {
   const [videoIds, setVideoIds] = useState([]);
@@ -36,14 +37,23 @@ export default function VideoList({ location, userId }) {
   }
 
   return (
-    <div className="videolist-container">
-      <Carousel slideSize="70%" height={300} slideGap="md">
-        {videoIds.map((id) => (
+    <Container className="videolist-container">
+      <Carousel
+        withIndicators
+        slideSize="100%"
+        height={270}
+        slideGap="md"
+        align="start"
+        controlsPosition="outside"
+      >
+        {videoIds.map((vidId) => (
           <Carousel.Slide>
-            <VideoPlayer key={id} videoId={id} userId={userId} />
+            <Container className = "videoplayer-contaner" size ="xs">
+              <VideoPlayer key={vidId} videoId={vidId} userId={userId} />
+            </Container>
           </Carousel.Slide>
         ))}
       </Carousel>
-    </div>
+    </Container>
   );
 }

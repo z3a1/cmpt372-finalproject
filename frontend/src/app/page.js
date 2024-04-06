@@ -1,6 +1,5 @@
 'use client'
 import "@mantine/core/styles.css";
-import "./landing.css";
 import EntryPage from './Register/page';
 
 
