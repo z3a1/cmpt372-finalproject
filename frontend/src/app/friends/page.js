@@ -119,6 +119,15 @@ export default function FriendsPage() {
         }
     }
 
+    //TODO: complete this function
+    const declineFriendRequest = (request) => {
+        try {
+
+        } catch (error) {
+            console.error('Error deleting friend request:', error.message)
+        }
+    }
+
     const handleInputChange = (event) =>{
         setUserName(event.target.value);
     }
@@ -164,45 +173,65 @@ export default function FriendsPage() {
                 <button type="search" className='search'>Search</button>
             </form>
             
-            <ul className="friendsList">
+            {/* <ul className="friendsList">
                 {friends.map((friend, index) => (
                     <li key={index} className="friend">
                         {friend.friend_id} 
                         <button className="remove" onClick={() => remove(friend._id)}>Remove</button>
                     </li>
                 ))}
-            </ul>
+            </ul> */}
 
             <div>
-                <h2>Pending Friend Requests</h2>
+                <div className="friend-request-heading">
+                    <h2 className='PendingFriendRequestHeading'>Pending Friend Requests</h2>
+                    { pendingFriendRequestsLength > 0 ? (
+                        <h3 className='pendingFriendRequestsLength'>({pendingFriendRequestsLength} Request(s))</h3>
+                    ): null}
+                </div>
+
                 { pendingFriendRequestsLength > 0 ? (
                     pendingFriendRequests.map((request, index) => (
                         <div key={index}>
                             <h4>{request._id}</h4>
                             <p>- {request.username} ({request.fname} {request.lname})</p>
                             <button onClick={() => acceptFriendRequest(request)}>Accept</button>
+                            {/* <button onClick={() => declineFriendRequest(request)}>Decline</button> */}
                         </div>
                     ))
-                ) : null }
+                ) : 
+                <p>You Have No Pending Friend Requests</p> }
             </div>
 
             <div>
-                <h2>User's Pending</h2>
+                <div className="friend-request-heading">
+                    <h2 className='FriendRequestHeading'>User's Pending</h2>
+                    { pendingFriendsLength > 0 ? (
+                        <h3 className='FriendRequestsLength'>({pendingFriendsLength} Request(s) Sent)</h3>
+                    ) : null }
+                </div>
 
                 { pendingFriendsLength > 0 ? (
                     pendingFriends.map((friend, index) => (
-                        <div key={index}>
-                            <h4>{friend._id}</h4>
-                            <p>- {friend.username}</p>
-                            <p>- {friend.fname} {friend.lname}</p>
+                        
+                        <div key={index} className="friend-container">
+                            {/* <h4>{friend._id}</h4>
+                            <p>- {friend.username}</p> */}
+                            <p>{friend.fname} {friend.lname}</p> 
                             <button className="remove" onClick={() => remove(friend._id)}>Remove</button>
                         </div>
                     ))
-                ) : null }
+                ) : 
+                <p>You Have No Outgoing Friend Requests</p> }
             </div>
 
             <div>
-                <h2>Accepted Friends</h2>
+                <div className="friend-request-heading">
+                    <h2 className='FriendsHeading'>Accepted Friends</h2>
+                    { acceptedFriendsLength > 0 ? (
+                        <h3 className='acceptedFriendsLength'>({acceptedFriendsLength} Friends!)</h3>
+                    ) : null }
+                </div>
 
                 { acceptedFriendsLength > 0 ? (
                     acceptedFriends.map((friend, index) => (
@@ -213,7 +242,8 @@ export default function FriendsPage() {
                             <button className="remove" onClick={() => remove(friend._id)}>Remove</button>
                         </div>
                     ))
-                ) : null }
+                ) : 
+                <p>Invite Some of Your Friends to Join Socializer or Meet New People at Events!!!</p> }
 
             </div>
         </div>
