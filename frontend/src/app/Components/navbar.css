@@ -1,0 +1,42 @@
+
+
+
+.navbar {
+    display: flex;
+    flex-direction: column;
+  
+    width: 100%;
+    padding: var(--mantine-spacing-sm);
+    border-bottom: rem(1px) solid var(--mantine-color-gray-4);
+  }
+  
+  .navbar-container {
+    /* flex:1; */
+  }
+  
+  .icon {
+    height: rem(22);
+    vertical-align:text-bottom; 
+    margin-right: rem(2px);
+  }
+  
+  #login,
+  #logout {
+    float: right;
+    padding-top: rem(0px);
+    padding-bottom: rem(0px);
+  }
+  .link {
+    text-decoration: none;
+    font-size: var(--mantine-font-size-md);
+    color: var(--mantine-color-gray-7);
+    padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+    border-radius: var(--mantine-radius-sm);
+    font-weight: 600;
+  }
+  
+  a:hover {
+    color: var(--mantine-color-black);
+    background-color: var(--mantine-color-gray-0);
+  }
+  
