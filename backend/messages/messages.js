@@ -1,6 +1,5 @@
-
 const socketio = require('socket.io');
-// const db = require('./Database/db'); 
+const { storeUserSocket, getUserSocket, removeUserSocket } = require('./userSocket');
 
 module.exports = function (server) {
     const io = socketio(server);
@@ -16,25 +15,19 @@ module.exports = function (server) {
             return;
         }
 
-        //TODO: completee
-        db.storeUserSocket(userId, socket.id)
+        storeUserSocket(userId, socket.id)
             .then(() => {
-                recipientSocket.emit('message', {
-                    senderId: userId,
-                    message: message
-                })
+                console.log(`User socket stored for user ID ${userId}`);
             })
             .catch((err) => {
                 console.error('Error storing user socket:', err);
                 socket.disconnect(true); 
             });
 
-        //TODO: add storeUserSocket, getUserSocket, and removeUserSocket functions
-
         socket.on('sendMessage', (data) => {
             const recipientId = data.recipientId;
             const message = data.message;
-            db.getUserSocket(recipientId)
+            getUserSocket(recipientId)
                 .then((recipientSocketId) => {
                     if (recipientSocketId) {
                         io.to(recipientSocketId).emit('message', {
@@ -47,13 +40,15 @@ module.exports = function (server) {
                 })
                 .catch((err) => {
                     console.error('Error retrieving recipient socket:', err);
-
                 });
         });
 
         socket.on('disconnect', () => {
             console.log(`Socket disconnected for user ID ${userId}`);
-            db.removeUserSocket(userId)
+            removeUserSocket(userId)
+                .then(() => {
+                    console.log(`User socket removed for user ID ${userId}`);
+                })
                 .catch((err) => {
                     console.error('Error removing user socket:', err);
                 });
