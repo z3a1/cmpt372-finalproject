@@ -5,6 +5,7 @@ const axios = require("axios")
 const app = express()
 const db = require('./Database/schema')
 const session = require('express-session')
+const createSocketConnection = require('./messages/messages'); 
 app.use(session({
     secret: process.env.APP_SECRET,
     resave: true,
@@ -40,6 +41,8 @@ app.use('/auth',UserAuth)
 
 db.initializeDB()
 
-app.listen(process.env.PORT, () => {
+const server = app.listen(process.env.PORT, () => {
     console.log("Server is up and running on specified port")
 })
+
+createSocketConnection(server);
