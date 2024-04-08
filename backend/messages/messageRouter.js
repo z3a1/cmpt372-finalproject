@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Message = require('./Database/schema');
+const Message = require('../Database/schema');
 const { storeUserSocket, getUserSocket, removeUserSocket } = require('./userSocket');
 
 router.post('/sendMessage', async (req, res) => {

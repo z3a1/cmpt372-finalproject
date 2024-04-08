@@ -133,7 +133,7 @@ export default function FriendsPage() {
             // const userId = getUserId(); 
     
             // Redirect to another page with user ID and friend ID as query parameters
-            window.location.href = `/messaging?userId=${encodeURIComponent(USER_ID)}&friendId=${encodeURIComponent(friendId)}`;
+            window.location.href = `/Messaging?userId=${encodeURIComponent(USER_ID)}&friendId=${encodeURIComponent(friendId)}`;
         } catch(error) {
             console.error("Error:", error);
         }
