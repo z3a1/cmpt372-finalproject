@@ -4,12 +4,6 @@ require('dotenv').config()
 const axios = require("axios")
 const app = express()
 const db = require('./Database/schema')
-const session = require('express-session')
-app.use(session({
-    secret: process.env.APP_SECRET,
-    resave: true,
-    saveUninitialized: true
-}))
 
 // CORS
 const corsOptions = cors({

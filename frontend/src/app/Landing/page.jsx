@@ -13,13 +13,14 @@ import "./landing.css";
 export default function LandingPage() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
+  const sessionId = searchParams.get("sessionId")
   const router = useRouter();
   const [userLoaded, setUserLoadState] = useState(false);
   const [user, setCurrentUser] = useState(null);
 
   useEffect(() => {
     let setUser = async () => {
-      let res = await userService.getUserId(id);
+      let res = await userService.getcurrentSession(id);
       if (res) {
         setUserLoadState(true);
         setCurrentUser(res);
@@ -33,7 +34,7 @@ export default function LandingPage() {
 
   return (
     <>
-      <NavBar id={id} />
+      <NavBar id={id} sessionId = {sessionId}/>
       <Container fluid h={"100%"}>
         <Grid justify="flex-start" align="stretch">
           <Grid.Col span={3} style={{ height: rem(120) }}>

@@ -6,6 +6,8 @@ import {IconUserCircle,
     IconLogin} from "@tabler/icons-react"
 
 import "./navbar.css"
+import { Button } from "@mantine/core";
+import userService from "../services/user"
 
 
 export default function NavBar(params){
@@ -24,11 +26,19 @@ export default function NavBar(params){
         </a>
       ));
 
+    let debugNav = async () => {
+        await userService.getcurrentSession(params.sessionId)
+        .then(res => {
+            console.log(res)
+        })
+    }
+
     return(
         <>
             <nav className="navbar">
                 <div className="navbar-container">
                 {links}
+                <Button onClick={debugNav}>Session Debug</Button>
                 <a href="/Register" id="logout" className="link">
                     <IconLogout className="icon" />
                     <span>Logout</span>

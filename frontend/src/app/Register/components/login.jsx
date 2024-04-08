@@ -28,11 +28,17 @@ export default function Logincomp(){
             password: password
         }).then(res => {
             console.log(res)
-            router.push(`/Landing/?id=${res.data}`)
+            router.push(`/Landing/?id=${res.data.sessionId}`)
         })
         .catch(err => {
             console.log(err)
-            alert(err.response.data.message)
+            //alert(err.response.data.message)
+            if(err.response.data.message){
+                alert(err.response.data.message)
+            }
+            else{
+                alert(err.response)
+            }
         })
       }
 

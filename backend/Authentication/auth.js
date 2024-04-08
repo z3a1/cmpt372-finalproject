@@ -6,7 +6,7 @@ var db = require('../Database/schema')
 passport.serializeUser((user,done) => done(null,user))
 passport.deserializeUser((user,done) => done(null,user))
 
-passport.use(new LocalStrategy({usernameField: 'email', session: false},
+passport.use(new LocalStrategy({usernameField: 'email', session: true},
 async function(email,pass,done) {
     await db.User.findOne({email: email}).then((user,err) => {
         if(err){
