@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { eyeIcon } from "../../lib/icon";
 import dayjs from 'dayjs';
 import VisibilityBadge from "../../components/visibilityBadge"; 
+import StatusBadge from "./statusBadge";
 
 export default function EventTable({ eventType }) {
     const router = useRouter()
@@ -30,6 +31,7 @@ export default function EventTable({ eventType }) {
         await axios.get(process.env.SERVER_URL + `/events/api/event/invited?id=${userId}`)
             .then(res => {
                 setInvitedEvents(res.data.eventPackages)
+                console.log(res.data.eventPackages)
                 setIsInvitedEventsLoaded(true)
             })
             .catch(error => console.error("Error getting all invited events:", error.message))
@@ -41,7 +43,12 @@ export default function EventTable({ eventType }) {
     }, [])
 
     const handleClick = (id) => {
-        router.push(`/event/view?eventId=${id}&id=${userId}`)
+        if (eventType === 'created') {
+            router.push(`/event/view/created?eventId=${id}&id=${userId}`)
+        } else {
+            router.push(`/event/view/invited?eventId=${id}&id=${userId}`)
+
+        }
     }
 
     const events = eventType === 'created' ? createdEvents : invitedEvents;
@@ -56,6 +63,11 @@ export default function EventTable({ eventType }) {
                 <Table.Td>
                     <VisibilityBadge visibility={eventStruct.event.visibility} />
                 </Table.Td>
+                {eventType === 'invited' && (
+                    <Table.Td>
+                        <StatusBadge status={eventStruct.attendee.status} />
+                    </Table.Td>
+                )}
                 <Table.Td>
                     <ActionIcon 
                         variant="transparent" 
@@ -87,6 +99,9 @@ export default function EventTable({ eventType }) {
                     <Table.Th>Location</Table.Th>
                     <Table.Th>Date/Time</Table.Th>
                     <Table.Th>Visibility</Table.Th>
+                    {eventType === 'invited' && (
+                        <Table.Th>Status</Table.Th>
+                    )}
                     <Table.Th></Table.Th>
                 </Table.Tr>
             </Table.Thead>

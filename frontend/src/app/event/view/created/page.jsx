@@ -6,9 +6,9 @@ import axios from "axios"
 import { Button, Card, Container, Group, LoadingOverlay, Text, Textarea, Title } from "@mantine/core"
 import Link from "next/link"
 import dayjs from 'dayjs';
-import FriendList from "./components/FriendList"
+import FriendList from ".././components/FriendList"
 import DeleteButton from "./components/deleteButton"
-import VisibilityBadge from "../components/visibilityBadge"
+import VisibilityBadge from "../../components/visibilityBadge"
 
 export default function EventView() {
     const router = useRouter()
