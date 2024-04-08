@@ -3,6 +3,8 @@ const cors = require("cors")
 require('dotenv').config()
 const axios = require("axios")
 const app = express()
+const http = require("http");
+const socketio = require('socket.io'); 
 const db = require('./Database/schema')
 const session = require('express-session')
 app.use(session({
@@ -38,14 +40,22 @@ app.use('/friends', friends);
 const UserAuth = require('./Authentication/user')
 app.use('/auth',UserAuth)
 
-const server = app.listen(process.env.PORT, () => {
-    console.log("Server is up and running on specified port")
-})
+// Messaging 
+// const messaging = require('./messages/messages'); 
+// app.use('/messaging', messaging);
 
+const initializeSocket = require('./messages/messages');
+const server = http.createServer(app); 
+const io = socketio(server);
 
-// Messaging system
-const messaging = require('./messages/messages'); 
-messaging(server);
+initializeSocket(io);
 
 db.initializeDB()
 
+// app.listen(process.env.PORT, () => {
+//     console.log("Server is up and running on specified port")
+// })
+
+server.listen(process.env.PORT, () => {
+    console.log("Server is up and running on specified port");
+});

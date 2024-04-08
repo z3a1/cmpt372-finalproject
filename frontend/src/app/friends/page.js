@@ -128,6 +128,17 @@ export default function FriendsPage() {
         }
     }
 
+    const message = async (friendId) => {
+        try {
+            // const userId = getUserId(); 
+    
+            // Redirect to another page with user ID and friend ID as query parameters
+            window.location.href = `/messaging?userId=${encodeURIComponent(USER_ID)}&friendId=${encodeURIComponent(friendId)}`;
+        } catch(error) {
+            console.error("Error:", error);
+        }
+    };
+
     const handleInputChange = (event) =>{
         setUserName(event.target.value);
     }
@@ -239,6 +250,7 @@ export default function FriendsPage() {
                             <h4>{friend._id}</h4>
                             <p>- {friend.username}</p>
                             <p>- {friend.fname} {friend.lname}</p>
+                            {/* <button className='message' onClick={() => message(friend._id)}>Message</button> */}
                             <button className="remove" onClick={() => remove(friend._id)}>Remove</button>
                         </div>
                     ))
@@ -246,6 +258,8 @@ export default function FriendsPage() {
                 <p>Invite Some of Your Friends to Join Socializer or Meet New People at Events!!!</p> }
 
             </div>
+            {/* Just to test */}
+            <button className='message' onClick={() => message(FRIEND_ID)}>Message</button>
         </div>
     );
 } 

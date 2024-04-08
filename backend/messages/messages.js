@@ -1,8 +1,8 @@
 const socketio = require('socket.io');
 const { storeUserSocket, getUserSocket, removeUserSocket } = require('./userSocket');
 
-module.exports = function (server) {
-    const io = socketio(server);
+function initializeSocket(io) {
+    // const io = socketio(server);
 
     io.on('connection', (socket) => {
         console.log('New socket connection');
@@ -54,4 +54,6 @@ module.exports = function (server) {
                 });
         });
     });
-};
+}
+
+module.exports = initializeSocket;
