@@ -34,6 +34,10 @@ app.use('/maps', googleMaps)
 const events = require('./Events/events')
 app.use('/events', events)
 
+// Friends List 
+const friends = require('./FriendsList/friendsRouter');
+app.use('/friends', friends);
+
 // User Auth and Account Login,Creation
 const UserAuth = require('./Authentication/user')
 app.use('/auth',UserAuth)
