@@ -21,7 +21,7 @@ export default function Registercomp(){
             fname: matches(/^[A-Za-z]+$/,"Invalid First Name!"),
             lname: matches(/^[A-Za-z]+$/,"Invalid Last Name!"),
             email: isEmail("Not a valid email!"),
-            password: matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,"The password is invalid!")
+            password: matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,"The password is invalid!")
         }
     })
 
@@ -42,6 +42,7 @@ export default function Registercomp(){
         router.push(`/Landing?id=${res.data.user_id}`)
        })
        .catch(err => {
+            console.log(err)
             alert(err)
        })
     }

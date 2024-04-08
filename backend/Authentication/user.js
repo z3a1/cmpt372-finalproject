@@ -11,8 +11,8 @@ const router = express.Router()
 const MongoStore = require('connect-mongo')
 
 let Schema = mongoose.Schema
-const SessionSchema = new Schema({_id: String})
-const Session = mongoose.model('sessions', SessionSchema)
+const SessionSchema = new Schema({_id: String}, {strict: false, versionKey: false})
+const Session = mongoose.model('sessions', SessionSchema, "sessions")
 const expirationDate = new Date(Date.now() + 3600000)
 
 router.use(session({
@@ -22,9 +22,7 @@ router.use(session({
     cookie: {secure: true},
     store: MongoStore.create({
         mongoUrl: process.env.CONNECTION_SECRET,
-        autoRemove: 'native',
-        autoRemoveInterval: 100,
-        touchAfter: 24 * 3600
+        maxAge: 3600000,
     })
 }))
 router.use(passport.authenticate('session'));
@@ -43,63 +41,47 @@ router.post('/login',passport.authenticate('local',{failureRedirect: '/auth/erro
     res.status(200).json({userId: req.user._id, sessionId: req.session.id})
 })
 
-router.post('/register',(req,res) => {
-    req.session.save(async (err) => {
-        if(err){
-            console.log(err)
-            res.status(500).json(err)
+router.post('/register',async (req,res) => {
+    await bcrypt.hash(req.body.password,saltRounds,async (dbErr,hash) => {
+        if(!dbErr){
+            let newUser = {
+                user_id: req.body.id,
+                username: req.body.user_name,
+                fname: req.body.fname,
+                lname: req.body.lname,
+                email: req.body.email,
+                password: hash,
+                role: 'Member'
+            }
+            let newDocument = new db.User(newUser)
+            await newDocument.save().then(async dbRes => {
+                req.session.cookie.expires = expirationDate
+                req.session.passport = dbRes
+                res.status(200).json({user_id: req.session.id})
+            })
+            .catch(err => {
+                res.status(500).json(err)
+            })
         }
         else{
-            await bcrypt.hash(req.body.password,saltRounds,async (dbErr,hash) => {
-                if(!dbErr){
-                    let newUser = {
-                        user_id: req.body.id,
-                        username: req.body.user_name,
-                        fname: req.body.fname,
-                        lname: req.body.lname,
-                        email: req.body.email,
-                        password: hash,
-                        role: 'Member'
-                    }
-                    let newDocument = new db.User(newUser)
-                    await newDocument.save().then(dbRes => {
-                        console.log(dbRes)
-                        console.log(req.session.id)
-                        req.session.cookie.expires = expirationDate
-                        console.log(req.session)
-                        console.log(new Date(Date.now()))
-                        let newSession = {
-                            _id: req.session.id,
-                            expires: expirationDate,
-                            session: JSON.stringify({cookie: req.session, passport: {user: dbRes}})
-                        }
-                        let newSessionDoc = new Session(newSession)
-                        newSessionDoc.save().then(sessionRes => {
-                            console.log(sessionRes)
-                        })
-                    })
-                }
-                else{
-                    res.status(500).json({message: err})
-                }
-            })
+            res.status(500).json(dbErr)
         }
     })
 })
 
 router.post('/getSessionById', async(req,res) => {
     let id = req.body.id
-    console.log(req.session)
     Session.findById({_id: id}).then(dbRes => {
+        console.log("Get session id route")
         console.log(dbRes)
-        //console.log(JSON.parse(dbRes.session))
         let foundSession = JSON.parse(dbRes.session)
-        console.log(foundSession)
         req.session.cookie = foundSession.cookie
+        console.log(foundSession.passport)
         req.session.user = foundSession.passport.user
         res.status(200).json(req.session.user)
     })
     .catch(err => {
+        console.log(err)
         res.status(500).json(err)
     })
 })
