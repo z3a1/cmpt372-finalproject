@@ -18,6 +18,7 @@ const corsOptions = cors({
     origin: ["https://backend-tmmf5kaaqa-uw.a.run.app", "http://localhost:8080", "http://localhost:3000", "http://146.148.99.120"],
     allowedHeaders: ["*"],
     credentials: true, 
+    optionSuccessStatus:200
 })
 app.use(corsOptions);
 app.options('*', corsOptions)
@@ -46,7 +47,16 @@ app.use('/auth',UserAuth)
 
 const initializeSocket = require('./messages/messages');
 const server = http.createServer(app); 
-const io = socketio(server);
+// const io = socketio(server);
+
+const io = require("socket.io")(server, {
+    cors: {
+        origin: ["https://backend-tmmf5kaaqa-uw.a.run.app", "http://localhost:8080", "http://localhost:3000", "http://146.148.99.120"],
+        allowedHeaders: ["*"],
+        credentials: true, 
+        optionSuccessStatus:200
+    }
+  });
 
 initializeSocket(io);
 
