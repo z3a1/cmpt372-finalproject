@@ -14,23 +14,28 @@ const MessagePage = () => {
     const socket = io(SERVER_URL);
 
     useEffect(() => {
-        // Listen for incoming messages
+        // for the connection to the backened 
+        const socket = io(SERVER_URL);
+    
+        // incoming messages
         socket.on('message', (data) => {
             setMessages((prevMessages) => [...prevMessages, data]);
         });
-
-        // Clean up event listener when component unmounts
+    
         return () => {
-            socket.off('message');
+            // Close socket only if it's open
+            if (socket.connected) {
+                socket.disconnect();
+            }
         };
-    }, [socket]);
+    }, []); 
 
     const sendMessage = () => {
-        // Emit message to the server
-        socket.emit('sendMessage', { message: inputMessage, recipientId: FRIEND_ID }); // replace with the friend's id 
-        setInputMessage('');
+        // sends message to the server
+        socket.emit('sendMessage', { message: inputMessage, recipientId: FRIEND_ID }); 
     };
 
+    // made a display for previous messages 
     return (
         <div>
             <h1>Message Page</h1>
