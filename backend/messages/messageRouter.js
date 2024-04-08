@@ -1,26 +1,23 @@
+const express = require('express');
+const router = express.Router();
+const { storeUserSocket, getUserSocket, removeUserSocket } = require('./userSocket');
 
-/// might not actually need this file 
+router.post('/sendMessage', (req, res) => {
+    // SENDING MESSAGES 
+    const { userId, recipientId, message } = req.body;
 
-// const express = require('express');
-// const router = express.Router();
+    // to be able to send messages 
 
+    res.status(200).json({ success: true });
+});
 
-// const helper = {
-//     async sendMessage (req, res) {
-//         try {
-//             const { senderId, recipientId, message } = req.body;
-//             // Implement logic to send message here
-//             // For example, use your socket.io logic or any other messaging service
-//             res.status(200).json({ success: true, message: 'Message sent successfully' });
-//         } catch (error) {
-//             console.error('Error sending message:', error);
-//             res.status(500).json({ success: false, message: 'Failed to send message' });
-//         }
-//     }
+router.get('/messages', (req, res) => {
+    // getting messages 
+    const { userId, friendId } = req.query;
 
-// }
+    //to be able to get all the messages
 
-// // Route to send a message
-// router.post('/send', helper.sendMessage);
+    res.status(200).json({ messages: [] }); 
+});
 
-// module.exports = router;
+module.exports = router;

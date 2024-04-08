@@ -6,6 +6,7 @@ const app = express()
 const http = require("http");
 const socketio = require('socket.io'); 
 const db = require('./Database/schema')
+const messageRouter = require('./messages/messageRouter');
 const session = require('express-session')
 app.use(session({
     secret: process.env.APP_SECRET,
@@ -44,6 +45,8 @@ app.use('/auth',UserAuth)
 // Messaging 
 // const messaging = require('./messages/messages'); 
 // app.use('/messaging', messaging);
+
+app.use('/messages', messageRouter);
 
 const initializeSocket = require('./messages/messages');
 const server = http.createServer(app); 
