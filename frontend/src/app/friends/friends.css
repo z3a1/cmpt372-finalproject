@@ -18,6 +18,26 @@
     background-color: #0056b3;
 }
 
+.searchFriend {
+    width: 80%;
+    padding: 10px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+}
+
+.search{
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+}
+
+.search:hover {
+    background-color: #0056b3;
+}
+
 ul {
     list-style-type: none;
     padding: 0;
@@ -43,9 +63,29 @@ li {
     padding: 5px 10px;
     border-radius: 3px;
     cursor: pointer;
+    margin: 8px 16px;
 }
   
 .remove:hover {
     background-color: #bd2130;
 }
+
+.friend-container {
+    display: flex;
+    align-items: center;
+}
+
+
+.friend-request-heading {
+    display: flex;
+    align-items: center; 
+}
+
+.FriendRequestHeading, .PendingFriendRequestHeading, .FriendsHeading {
+    margin-right: 10px; 
+}
+
+
+
+
   

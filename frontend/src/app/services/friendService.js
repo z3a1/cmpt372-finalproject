@@ -1,33 +1,68 @@
 
 // saving to local storage for now!
+
+import axios from 'axios';
+
+
 const friendService =  {
-
-    friends: [],
-
-    getAllFriends: () => {
-        const friends = JSON.parse(localStorage.UserArray);
-        return friends || '[]';
+    getAllFriends: async(userId) => {
+        return await axios.get(process.env.SERVER_URL + `/friends/get/all?userId=${userId}`)
+            .then(res => {
+                return res.data
+            })
+        .catch(error => console.error("Error getting all friends", error.message))
     },
 
-    deleteFriend: (id) => {
-        friendService.friends = friendService.friends.filter((p) =>{
-            return p.id != id
+    getPendingFriends: async(userId) => {
+        return await axios.get(process.env.SERVER_URL + `/friends/get/pending?userId=${userId}`)
+            .then(res => {
+                console.log(res.data);
+                return res.data
+            })
+        .catch(error => console.error("Error getting pending friends", error.message))
+    },
+
+    getAcceptedFriends: async(userId) => {
+        return await axios.get(process.env.SERVER_URL + `/friends/get/accepted?userId=${userId}`)
+            .then(res => {
+                return res.data
+            })
+        .catch(error => console.error("Error getting accepted friends", error.message))
+    },
+
+    deleteFriend: async(id, userId,friendId) => {
+        console.log(id)
+        await axios.delete(process.env.SERVER_URL + `/friends/delete/friend?friendRequestId=${id}&userId=${userId}&friendId=${friendId}`)
+            .then(res => {
+                console.log(res)
+            })
+            .catch(error => console.error("Error deleting friend", error.message))
+    },
+
+    addFriend: async(friend) =>{
+        await axios.post(process.env.SERVER_URL + `/friends/add?userId=${friend.userId}&friendId=${friend.friendId}`)
+        .then(res => {
+            console.log(res)
         })
-        localStorage.UserArray = JSON.stringify(friendService.friends);   
-        return;
+        .catch(error => console.error("Error adding friend", error.message))
     },
 
-    addFriend: (f) =>{
-        friendService.friends.push(f);
-        localStorage.UserArray = JSON.stringify(friendService.friends);     
-        return;
+    getFriendsCount: async(id) => {
+        await axios.get(process.env.SERVER_URL + `/friends/get/count?userId=${userId}`)
+        .then(res => {
+            return res.data
+        })
+        .catch(error => console.error("Error getting number of friends", error.message))
     },
 
-    getFriendCount: () => {
-        const r = friendService.friends.length;
-        return r
+    searchPeople: async(userName) => {
+        await axios.get(process.env.SERVER_URL + `/friends/get/people?userName=${userName}`)
+        .then(res => {
+            return res.data
+            // use the data to go to a new page -> user profile
+        })
+        .catch(error => console.error("Error getting people", error.message))
     }
-
 }
 
 export default friendService

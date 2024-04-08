@@ -30,6 +30,10 @@ app.use('/videos', videos)
 const googleMaps = require('./GoogleMaps/googleMaps')
 app.use('/maps', googleMaps)
 
+// Friends List 
+const friends = require('./FriendsList/friendsRouter');
+app.use('/friends', friends);
+
 // User Auth and Account Login,Creation
 const UserAuth = require('./Authentication/user')
 app.use('/auth',UserAuth)
