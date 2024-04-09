@@ -8,9 +8,6 @@ const Location = mongoose.model("Location");
 const Attendee = mongoose.model("Attendee");
 const User = mongoose.model("User");
 const Friend = mongoose.model("Friend");
-
-
-const axios = require("axios")
 const EventController = require('./eventController')
 
 // Create an event with location and attendees
@@ -67,16 +64,11 @@ router.post("/api/event/create", async (req, res) => {
 // Get the list of created events for user
 router.get("/api/event/created", async (req, res) => {
     const userId = req.query.id
-
-    await axios.get("http://localhost:8080/auth/getsession")
-        .then(response => console.log("response:", response.data))
-
-    console.log("userId:", req.session)
-    // const creatorId = new mongoose.Types.ObjectId(userId)
+    const creatorId = new mongoose.Types.ObjectId(userId)
 
     try {
-        // const events = await Event.find({ creator_id: creatorId });
-        // const eventPackages = await EventController.getEventPackages(events)
+        const events = await Event.find({ creator_id: creatorId });
+        const eventPackages = await EventController.getEventPackages(events)
         res.status(200).json({ "eventPackages": [] })
     } catch (err) {
         console.error('Error retrieving created events:', err);

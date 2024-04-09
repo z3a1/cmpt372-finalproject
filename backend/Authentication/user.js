@@ -1,37 +1,15 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const saltRounds = 10;
-const auth = require('./auth')
 const bcrypt = require('bcrypt')
-const axios = require('axios')
 const db = require('../Database/schema')
 var passport = require('passport')
-const session = require('express-session')
 const router = express.Router()
-const MongoStore = require('connect-mongo')
 
 let Schema = mongoose.Schema
 const SessionSchema = new Schema({_id: String}, {strict: false, versionKey: false})
 const Session = mongoose.model('sessions', SessionSchema, "sessions")
 const expirationDate = new Date(Date.now() + 3600000)
-
-// const initialize = require('.././Authentication/auth')
-// initialize(passport)
-
-// router.use(session({
-//     secret: process.env.APP_SECRET,
-//     resave: true,
-//     saveUninitialized: true,
-//     cookie: {secure: true},
-//     store: MongoStore.create({
-//         mongoUrl: process.env.CONNECTION_SECRET,
-//         maxAge: 3600000,
-//     })
-// }))
-// router.use(passport.authenticate('session'));
-
-// router.use(passport.initialize())
-// router.use(passport.session())
 
 router.get('/error', (req,res) => {
     res.status(500).json({message: "Could not authenticate user!"})
@@ -41,6 +19,7 @@ router.post('/login',passport.authenticate('local',{failureRedirect: '/auth/erro
     req.session.cookie.expires = expirationDate
     console.log("req.user:", req.user)
     console.log("req.session:", req.session)
+    req.session.save()
     res.status(200).json({userId: req.user._id, sessionId: req.session.id})
 })
 
@@ -60,6 +39,7 @@ router.post('/register',async (req,res) => {
             await newDocument.save().then(async dbRes => {
                 req.session.cookie.expires = expirationDate
                 req.session.passport = {user : dbRes}
+                req.session.save()
                 res.status(200).json({user_id: req.session.id})
             })
             .catch(err => {
@@ -72,22 +52,12 @@ router.post('/register',async (req,res) => {
     })
 })
 
-router.get("/getsession", async(req, res) => {
-    console.log("session frm getsess:", req.session)
-    res.status(200).json(req.session)
-})
-
 router.post('/getSessionById', async(req,res) => {
     let id = req.body.id
     Session.findById({_id: id}).then(dbRes => {
         let foundSession = JSON.parse(dbRes.session)
         req.session.cookie = foundSession.cookie
         req.session.user = foundSession.passport.user
-
-        console.log("cookie:", req.session.cookie)
-        console.log("sesion uesr:", req.session.user)
-        console.log("foundsession:", foundSession.passport.user)
-
         res.status(200).json(foundSession.passport.user)
     })
     .catch(err => {

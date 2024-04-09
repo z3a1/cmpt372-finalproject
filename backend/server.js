@@ -5,7 +5,6 @@ const axios = require("axios")
 axios.defaults.withCredentials = true
 const app = express()
 const db = require('./Database/schema')
-const events = require('./Events/events')
 
 // CORS
 const corsOptions = cors({
@@ -23,14 +22,15 @@ const session = require('express-session')
 
 var passport = require('passport')
 
+// Initialize passport authentication functions
 const initialize = require('./Authentication/auth')
 initialize(passport)
 
+// Set up session and passport
 app.use(session({
     secret: process.env.APP_SECRET,
     resave: false,
     saveUninitialized: true,
-    // cookie: {secure: false},
     httpOnly: false,
     store: MongoStore.create({
         mongoUrl: process.env.CONNECTION_SECRET,
@@ -40,10 +40,6 @@ app.use(session({
 app.use(passport.authenticate('session'));
 app.use(passport.initialize())
 app.use(passport.session())
-
-
-
-
 
 // User Auth and Account Login,Creation
 const UserAuth = require('./Authentication/user')
@@ -58,15 +54,14 @@ const googleMaps = require('./GoogleMaps/googleMaps')
 app.use('/maps', googleMaps)
 
 // Events
-
+const events = require('./Events/events')
 app.use('/events', events)
 
 // Friends List 
 const friends = require('./FriendsList/friendsRouter');
 app.use('/friends', friends);
 
-
-
+// Database
 db.initializeDB()
 
 app.listen(process.env.PORT, () => {

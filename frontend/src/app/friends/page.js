@@ -25,7 +25,6 @@ export default function FriendsPage() {
 
     const [userName, setUserName] = useState([]);
 
-
     // To be deleted 
     const add = async () => {
         let newFriend = { userId: USER_ID, friendId: FRIEND_ID };
