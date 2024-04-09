@@ -1,12 +1,11 @@
 'use client'
 
 import {Loader, MantineProvider, Group, Title, SimpleGrid, Center} from '@mantine/core'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import "./user.modules.css"
 import FavouriteVideos from '../videos/components/FavouriteVideos'
 import NavBar from '../Components/navbar'
-import axios from 'axios'
 import { getUserInfo } from '../services/user'
 
 export default function verifyUser(){

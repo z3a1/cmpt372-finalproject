@@ -1,4 +1,4 @@
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { ActionIcon, Center, Loader, Table } from "@mantine/core";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -9,8 +9,6 @@ import StatusBadge from "../../components/statusBadge";
 
 export default function EventTable({ eventType }) {
     const router = useRouter()
-    const searchParams = useSearchParams();
-    const userId = searchParams.get('id')
 
     const [createdEvents, setCreatedEvents] = useState([])
     const [invitedEvents, setInvitedEvents] = useState([])
@@ -44,9 +42,9 @@ export default function EventTable({ eventType }) {
 
     const handleClick = (id) => {
         if (eventType === 'created') {
-            router.push(`/event/view/created?eventId=${id}&id=${userId}`)
+            router.push(`/event/view/created?eventId=${id}`)
         } else {
-            router.push(`/event/view/invited?eventId=${id}&id=${userId}`)
+            router.push(`/event/view/invited?eventId=${id}`)
 
         }
     }

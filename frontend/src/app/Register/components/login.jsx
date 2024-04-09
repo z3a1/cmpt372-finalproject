@@ -27,8 +27,8 @@ export default function Logincomp(){
             { email: email, password: password },
             { withCredentials: true }
         ).then(res => {
-            console.log("login:", res)
-            router.push(`/Landing/?id=${res.data.sessionId}`)
+            console.log("Session id:", res)
+            router.push(`/Landing`)
         })
         .catch(err => {
             console.log(err)

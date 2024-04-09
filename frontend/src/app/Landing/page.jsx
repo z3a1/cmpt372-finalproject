@@ -1,7 +1,7 @@
 "use client";
 import { Button, Drawer, Grid, Container, rem, Stack } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import NavBar from "../Components/navbar";
 import userService from "../services/user";
@@ -10,26 +10,25 @@ import VideosPage from "../videos/page";
 import axios from 'axios'
 import "@mantine/core/styles.css";
 import "./landing.css";
+import { getUserInfo } from '../services/user'
 
 export default function LandingPage() {
   const router = useRouter();
+  // TODO: remove?
   const [userLoaded, setUserLoadState] = useState(false);
   const [user, setCurrentUser] = useState(null);
 
-  useEffect(() => {
-    // Check if user is logged in
-    const getUser = async () => {
-      await axios.get(process.env.SERVER_URL + "/auth/user/info", {withCredentials: true})
-        .then(res => {
-            if (res.data.user) {
-                setCurrentUser(res.data.user)
-                setUserLoadState(true)
-            } else {
-                router.push('/')
-            }
-        })
-        .catch(error => console.log(error.message))
+  const getUser = async () => {
+    const userInfo = await getUserInfo()
+    if (userInfo) {
+      setCurrentUser(userInfo)
+      setUserLoadState(true)
+    } else {
+      router.push('/')
     }
+  }
+
+  useEffect(() => {
     getUser()
   }, []);
 

@@ -13,7 +13,6 @@ export default function CreateEvent() {
     const searchParams = useSearchParams()
     const placeName = searchParams.get('placeName')
     const address = searchParams.get('address')
-    // const userId = searchParams.get('id')
 
     const [formData, setFormData] = useState({
         creatorId: "",
@@ -73,7 +72,7 @@ export default function CreateEvent() {
             .then(() => {
                 // Reset form
                 setFormData({
-                    userId: "",
+                    creatorId: "",
                     eventName: "",
                     placeName: placeName,
                     address: address,
@@ -84,7 +83,7 @@ export default function CreateEvent() {
                 });
             })
             .catch(error => console.log(error.message))
-        router.push(`/event/dashboard?id=${userId}`)
+        router.push(`/event/dashboard`)
     }
 
     useEffect(() => {
@@ -98,7 +97,7 @@ export default function CreateEvent() {
         fetchUser();
 
         const fetchFriends = async () => {
-            await axios.get(process.env.SERVER_URL + `/friends/get/accepted?userId=${userId}`, {withCredentials: true})
+            await axios.get(process.env.SERVER_URL + `/friends/get/accepted`, {withCredentials: true})
                 .then((res) => {
                     console.log(res.data.friendArray)
                     setFriends(res.data.friendArray.map((friend) => friend.username))

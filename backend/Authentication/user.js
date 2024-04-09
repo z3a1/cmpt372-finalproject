@@ -25,7 +25,7 @@ router.post('/register',async (req,res) => {
     await bcrypt.hash(req.body.password,saltRounds,async (dbErr,hash) => {
         if(!dbErr){
             let newUser = {
-                user_id: req.body.id,
+                // user_id: req.body.id,
                 username: req.body.user_name,
                 fname: req.body.fname,
                 lname: req.body.lname,

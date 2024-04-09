@@ -9,16 +9,20 @@ import dayjs from 'dayjs';
 import AttendeeList from ".././components/FriendList"
 import DeleteButton from "./components/deleteButton"
 import VisibilityBadge from "../../components/visibilityBadge"
+import { getUserInfo } from '../../../services/user'
 
 export default function CreatedEventView() {
     const router = useRouter()
     const searchParams = useSearchParams()
     const eventId = searchParams.get('eventId')
-    const userId = searchParams.get('id')
 
     const [event, setEvent] = useState({})
     const [location, setLocation] = useState({})
     const [attendees, setAttendees] = useState([])
+
+    // TODO: may not need
+    const [currentUser, setCurrentUser] = useState({})
+    const [userLoaded, setUserLoadState] = useState(false)
 
     // Loader
     const [isLoaded, setIsLoaded] = useState(false)
@@ -38,19 +42,13 @@ export default function CreatedEventView() {
     }
 
     const getUser = async () => {
-        await axios.get(process.env.SERVER_URL + "/auth/user/info", {withCredentials: true})
-            .then(res => {
-                if (res.data.user) {
-                    userId = res.data.user._id
-                }
-
-                if (!res.data.user) {
-                    router.push('/')
-                }
-            })
-            .catch(err => {
-                alert(err)
-            })
+        const userInfo = getUserInfo()
+        if (userInfo) {
+            setCurrentUser(userInfo)
+            setUserLoadState(true)
+        } else {
+            router.push('/')
+        }
     }
 
     useEffect(() => {
@@ -96,11 +94,11 @@ export default function CreatedEventView() {
                         </Card.Section>
                         <Card.Section p="md">
                             <Group justify="space-between" mt="xl">
-                                <Button component={Link} href={`/event/dashboard?id=${userId}`} variant="default">Back</Button>
+                                <Button component={Link} href={`/event/dashboard`} variant="default">Back</Button>
                                 <Group>
                                     <DeleteButton eventId={eventId} />
                                     <Button 
-                                        onClick={() => router.push(`/event/edit?eventId=${eventId}&id=${userId}`)} 
+                                        onClick={() => router.push(`/event/edit?eventId=${eventId}`)} 
                                         variant='default'
                                     >
                                         Edit

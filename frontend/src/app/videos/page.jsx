@@ -15,9 +15,8 @@ import {
 } from "@mantine/core";
 import { IconSearch, IconArrowRight } from "@tabler/icons-react";
 import "./VideoPage.css";
-import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import userService from "../services/user";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { IconArrowBackUp, IconArrowForwardUp } from "@tabler/icons-react";
 
 export default function VideosPage() {

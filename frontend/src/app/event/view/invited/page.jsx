@@ -12,7 +12,6 @@ import VisibilityBadge from "../../components/visibilityBadge"
 export default function InvitedEventView() {
     const searchParams = useSearchParams()
     const eventId = searchParams.get('eventId')
-    const userId = searchParams.get('id')
 
     const [event, setEvent] = useState({})
     const [location, setLocation] = useState({})
@@ -95,7 +94,7 @@ export default function InvitedEventView() {
                         </Card.Section>
                         <Card.Section p="md">
                             <Group justify="space-between" mt="xl">
-                                <Button component={Link} href={`/event/dashboard?id=${userId}`} variant="default">Back</Button>
+                                <Button component={Link} href={`/event/dashboard`} variant="default">Back</Button>
                                 <Group>
                                     <SegmentedControl 
                                         color="green" 
