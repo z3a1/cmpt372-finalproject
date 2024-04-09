@@ -15,7 +15,7 @@ import {
 import { IconSearch, IconArrowRight } from "@tabler/icons-react";
 import "./VideoPage.css";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IconArrowBackUp, IconArrowForwardUp } from "@tabler/icons-react";
 import { getUserInfo } from '../services/user'
 
