@@ -9,8 +9,9 @@ const db = require('./Database/schema')
 // CORS
 const corsOptions = cors({
     origin: ["https://backend-tmmf5kaaqa-uw.a.run.app", "http://localhost:8080", "http://localhost:3000", "http://146.148.99.120"],
-    allowedHeaders: ["*"],
-    credentials: true, 
+    // allowedHeaders: ["*"],
+    credentials: true,
+    sameSite: "none" 
 })
 app.use(corsOptions);
 app.options('*', corsOptions)
@@ -53,6 +54,10 @@ app.use('/videos', videos)
 const googleMaps = require('./GoogleMaps/googleMaps')
 app.use('/maps', googleMaps)
 
+// Events
+const events = require('./Events/events')
+app.use('/events', events)
+
 // Friends List 
 const friends = require('./FriendsList/friendsRouter');
 app.use('/friends', friends);
@@ -67,3 +72,5 @@ db.initializeDB()
 app.listen(process.env.PORT, () => {
     console.log("Server is up and running on specified port")
 })
+
+exports.app = app

@@ -3,20 +3,24 @@ import {IconUserCircle,
     IconMapPin, 
     IconBrandYoutube, 
     IconLogout,
-    IconLogin} from "@tabler/icons-react"
+    IconLogin,
+    IconCalendarEvent,
+    IconSettings
+} from "@tabler/icons-react"
 
 import "./navbar.css"
 import { Button } from "@mantine/core";
-import userService from "../services/user"
 
 
 export default function NavBar(params){
 
     const dataLinks = [
-        { link: `/Profile?id=${params.id}`, label: "Profile", icon: IconUserCircle },
-        { link: `/friends?id=${params.id}`, label: "Friends", icon: IconFriends },
-        { link: `/events?id=${params.id}`, label: "Create Event", icon: IconMapPin },
-        { link: `/videos?id=${params.id}`, label: "Event Suggestions", icon: IconBrandYoutube },
+        { link: `/Profile`, label: "Profile", icon: IconUserCircle },
+        { link: `/friends`, label: "Friends", icon: IconFriends },
+        { link: `/event/map`, label: "Create Event", icon: IconMapPin },
+        { link: `/event/dashboard`, label: "Event Dashboard", icon: IconCalendarEvent },
+        { link: `/videos`, label: "Event Suggestions", icon: IconBrandYoutube },
+        { link: `/Settings`, label: "Settings", icon: IconSettings}
       ];
 
     const links = dataLinks.map((data, index) => (

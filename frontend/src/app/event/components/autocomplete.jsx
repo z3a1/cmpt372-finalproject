@@ -2,7 +2,12 @@ import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocom
 import useOnclickOutside from "react-cool-onclickoutside";
 import autocompleteStyle from "./autocomplete.module.css"
 
-export default function PlacesAutocomplete({ setMapCenter, setSelectedCoordinates, setSelectedPlaceName, processSelectedAddress }) {
+export default function PlacesAutocomplete({ 
+    setMapCenter, 
+    setSelectedCoordinates, 
+    setSelectedPlaceName, 
+    processSelectedAddress 
+}) {
     const {
         ready,
         value,
