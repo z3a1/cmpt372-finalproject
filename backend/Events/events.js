@@ -69,7 +69,7 @@ router.get("/api/event/created", async (req, res) => {
     try {
         const events = await Event.find({ creator_id: creatorId });
         const eventPackages = await EventController.getEventPackages(events)
-        res.status(200).json({ "eventPackages": [] })
+        res.status(200).json({ eventPackages })
     } catch (err) {
         console.error('Error retrieving created events:', err);
         res.status(500).json({ err: 'Failed to fetch created events for user' });
@@ -81,17 +81,17 @@ router.get("/api/event/invited", async (req, res) => {
     const userId = req.query.id
 
     try {
-        // const invitedEvents = await Attendee.find({ user_id: userId });
+        const invitedEvents = await Attendee.find({ user_id: userId });
 
-        // // Get events
-        // let events = []
-        // for (let invitedEvent of invitedEvents) {
-        //     const event = await Event.findById(invitedEvent.event_id)
-        //     events.push(event)
-        // }
+        // Get events
+        let events = []
+        for (let invitedEvent of invitedEvents) {
+            const event = await Event.findById(invitedEvent.event_id)
+            events.push(event)
+        }
 
-        // const eventPackages = await EventController.getEventPackagesWithAttendee(events, userId)
-        res.status(200).json({ "eventPackages": [] })
+        const eventPackages = await EventController.getEventPackagesWithAttendee(events, userId)
+        res.status(200).json({ eventPackages })
     } catch (err) {
         console.error('Error retrieving invited events:', err);
         res.status(500).json({ err: 'Failed to fetch invited events for user' });
