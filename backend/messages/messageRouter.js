@@ -44,6 +44,8 @@ router.get('/messages', async (req, res) => {
             ]
         });
 
+        console.log(m);
+
         //TODO: sort 
 
         res.status(200).json({ m });

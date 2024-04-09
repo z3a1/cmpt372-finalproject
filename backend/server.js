@@ -61,6 +61,9 @@ const io = require("socket.io")(server, {
     }
 });
 
+// console.log('server', server)
+
+// console.log("io object:", io);
 initializeSocket(io);
 
 db.initializeDB()

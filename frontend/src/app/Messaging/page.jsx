@@ -4,8 +4,12 @@ import { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 
 // FOR TESTING
-const USER_ID = '65fcabc9668f4f329e89992a';
-const FRIEND_ID = '65fa73b955410eecb776f5b1';
+// const USER_ID = '65fcabc9668f4f329e89992a';
+// const FRIEND_ID = '65fa73b955410eecb776f5b1';
+
+const FRIEND_ID = '65fcabc9668f4f329e89992a';
+const USER_ID = '65fa73b955410eecb776f5b1';
+
 
 const MessagePage = () => {
     const [messages, setMessages] = useState([]);
@@ -21,12 +25,13 @@ const MessagePage = () => {
             fetch(`${SERVER_URL}/messages/messages?userId=${USER_ID}&friendId=${FRIEND_ID}`)
                 .then(response => response.json())
                 .then(data => {
-                    setMessages(data.messages);
-                    if (data.messages === null || data.messages === undefined){
+                    console.log(data.m);
+                    setMessages(data.m);
+                    if (data.m === null || data.m === undefined){
                         setMessages([]);
                         setMessagesLength(0);
                     } else{
-                        setMessagesLength (data.messages.length);
+                        setMessagesLength (data.m.length);
                     }
                 })
                 .catch(error => console.error('Error fetching messages:', error));
