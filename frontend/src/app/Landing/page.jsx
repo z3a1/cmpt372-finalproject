@@ -41,7 +41,6 @@ export default function LandingPage() {
         <Grid justify="flex-start" align="stretch">
           <Grid.Col span={3} style={{ height: rem(120) }}>
             <Container id="friends-container">
-              <FriendsPage />
             </Container>
           </Grid.Col>
           <Grid.Col span={9} style={{ height: rem(80) }}>

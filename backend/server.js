@@ -16,6 +16,10 @@ app.options('*', corsOptions)
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 
+// User Auth and Account Login,Creation
+const UserAuth = require('./Authentication/user')
+app.use('/auth',UserAuth)
+
 //Youtube videos
 const videos = require('./Videos/videos')
 app.use('/videos', videos)
@@ -28,9 +32,8 @@ app.use('/maps', googleMaps)
 const friends = require('./FriendsList/friendsRouter');
 app.use('/friends', friends);
 
-// User Auth and Account Login,Creation
-const UserAuth = require('./Authentication/user')
-app.use('/auth',UserAuth)
+const Data = require('./Data/populate')
+app.use('/data',Data)
 
 db.initializeDB()
 
