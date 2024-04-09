@@ -43,14 +43,11 @@ const UserAuth = require('./Authentication/user')
 app.use('/auth',UserAuth)
 
 // Messaging 
-// const messaging = require('./messages/messages'); 
-// app.use('/messaging', messaging);
 
 app.use('/messages', messageRouter);
 
 const initializeSocket = require('./messages/messages');
 const server = http.createServer(app); 
-// const io = socketio(server);
 
 const io = require("socket.io")(server, {
     cors: {
@@ -61,9 +58,6 @@ const io = require("socket.io")(server, {
     }
 });
 
-// console.log('server', server)
-
-// console.log("io object:", io);
 initializeSocket(io);
 
 db.initializeDB()

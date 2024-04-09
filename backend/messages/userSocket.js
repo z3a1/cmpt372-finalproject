@@ -20,7 +20,6 @@ const userSocketSchema = new mongoose.Schema({
 const UserSocket = mongoose.model('UserSocket', userSocketSchema);
 
 const storeUserSocket = async (userId, socketId, recipientId) => {
-    // console.log(socketId);
     try {
         let userSocket = await UserSocket.findOne({ userId, recipientId });
 

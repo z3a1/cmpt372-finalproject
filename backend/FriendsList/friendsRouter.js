@@ -9,7 +9,6 @@ const User = mongoose.model("User");
 /*
 TODO: 
     make sure that all backend works with the front end 
-        adding a count 
         make the names clickable - going to the profile of that user
 */
 
@@ -17,10 +16,7 @@ async function getInfo (idArray) {
     const friendArray = [];
 
     for (const friend of idArray){
-        // console.log('Friend:', friend);
-        // console.log('friend id:', friend.friend_id)
         let friendInfo = await User.findOne({ _id: friend.friend_id }, { username: 1, fname: 1, lname: 1, _id: 1 });
-        // console.log(friendInfo);
 
         if (friendInfo) {
             console.log('qqq friend:', friend._id)
@@ -29,8 +25,6 @@ async function getInfo (idArray) {
             friendArray.push(friendInfo);
         }
     }
-    // console.log(idArray);
-    // console.log('friend info:',friendArray);
 
     return friendArray
 }

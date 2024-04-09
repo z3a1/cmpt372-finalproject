@@ -22,6 +22,12 @@ const MessagePage = () => {
         const socket = io(SERVER_URL);
     
         socket.on('connect', () => {
+            fetch(`${SERVER_URL}/messages/friendInfo?friendId=${FRIEND_ID}`)
+                .then (response => response.json())
+                .then (data => {
+                    console.log(data.friend)
+                })
+
             fetch(`${SERVER_URL}/messages/messages?userId=${USER_ID}&friendId=${FRIEND_ID}`)
                 .then(response => response.json())
                 .then(data => {
@@ -68,8 +74,16 @@ const MessagePage = () => {
                     ))
                 ) : null } */}
                 {messages.map((message, index) => (
-                    <div key={index} className={message.senderId === USER_ID ? 'sent' : 'received'}>
-                        <div>{message.message}</div>
+                    <div key={index} >
+                        {message.senderId === USER_ID ? (
+                            <div>
+                                <strong>You:</strong> {message.message}
+                            </div>
+                        ) : (
+                            <div>
+                                <strong>Friend:</strong> {message.message}
+                            </div>
+                        )}
                     </div>
                 ))}
             </div>
