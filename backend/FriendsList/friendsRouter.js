@@ -31,7 +31,7 @@ async function getInfo (idArray) {
 
 // Get all accepted friends of user
 router.get('/get/accepted', async (req, res) => {
-    const userId = req.query.userId;
+    const userId = req.session.passport.user._id
 
     try {
         const allAcceptedFriends = await Friend.find({ user_id: userId, status: "accepted" })
@@ -45,7 +45,7 @@ router.get('/get/accepted', async (req, res) => {
 
 // Get all pending friends of user
 router.get('/get/pending', async (req, res) => {
-    const userId = req.query.userId;
+    const userId = req.session.passport.user._id
 
     try {
         const allPendingFriends = await Friend.find({ user_id: userId, status: "pending" })
@@ -61,7 +61,7 @@ router.get('/get/pending', async (req, res) => {
 
 // Get all pending friend requests
 router.get('/get/requests', async (req, res) => {
-    const userId = req.query.userId;
+    const userId = req.session.passport.user._id
 
     try {
         const friendRequests = await Friend.find({ friend_id: userId, status: "pending" })
@@ -91,7 +91,7 @@ router.get('/get/people', async (req, res) => {
 // Handles all friend additions
 // Includes accepting pending friend requests sent by others
 router.post('/add', async (req, res) => {
-    const userId = req.query.userId;
+    const userId = req.session.passport.user._id
     const friendId = req.query.friendId;
 
     try {
@@ -132,7 +132,7 @@ router.post('/add', async (req, res) => {
 router.delete('/delete/friend', async (req, res) => {
     const friendRequestId = req.query.friendRequestId; // _id
 
-    const userId = req.query.userId;
+    const userId = req.session.passport.user._id
     const friendId = req.query.friendId;
 
     try {
@@ -154,29 +154,6 @@ router.delete('/delete/friend', async (req, res) => {
         } else {
             res.status(200).json({ message: "Friend request does not exist" })
         }   
-        
-
-        // TODO: edge case for when two people are friends - both friend relationships deleted
-
-        // to check that they both are friends
-        // const checkingFriend = await Friend.findOne({
-        //     $or: [
-        //         { user_id: userId, friend_id: friendId },
-        //         { user_id: friendId, friend_id: userId }
-        //     ],
-        //     status: "accepted"
-        // });
-
-        // if (checkingFriend) {
-        //     await Friend.deleteMany({
-        //         $or: [
-        //             { user_id: userId, friend_id: friendId },
-        //             { user_id: friendId, friend_id: userId }
-        //         ],
-        //         status: "accepted"
-        //     });
-        //     console.log("Deleted friend relationships");
-        // }
     } catch (err) {
         res.status(500).json({ message: 'internal server error' });
     }
