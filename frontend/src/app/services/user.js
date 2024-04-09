@@ -28,17 +28,4 @@ let getcurrentSession = async(sessionID) => {
     })
     return res
 }
-
-let debugRoute = async (id) => {
-    await axios.post(process.env.SERVER_URL + "/auth/debugRoute", {
-        id: id
-    })
-    .then(res => {
-        console.log(res)
-    })
-    .catch(err => {
-        alert(err)
-    })
-}
-
-module.exports = {getUserId, debugRoute, getcurrentSession}
+module.exports = {getUserId, getcurrentSession}

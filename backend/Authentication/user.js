@@ -35,9 +35,7 @@ router.get('/error', (req,res) => {
 })
 
 router.post('/login',passport.authenticate('local',{failureRedirect: '/auth/error', failureMessage: true}), (req,res) => {
-    console.log(req.session.id)
     req.session.cookie.expires = expirationDate
-    console.log(req.session)
     res.status(200).json({userId: req.user._id, sessionId: req.session.id})
 })
 
@@ -56,7 +54,7 @@ router.post('/register',async (req,res) => {
             let newDocument = new db.User(newUser)
             await newDocument.save().then(async dbRes => {
                 req.session.cookie.expires = expirationDate
-                req.session.passport = dbRes
+                req.session.passport = {user : dbRes}
                 res.status(200).json({user_id: req.session.id})
             })
             .catch(err => {
@@ -72,16 +70,12 @@ router.post('/register',async (req,res) => {
 router.post('/getSessionById', async(req,res) => {
     let id = req.body.id
     Session.findById({_id: id}).then(dbRes => {
-        console.log("Get session id route")
-        console.log(dbRes)
         let foundSession = JSON.parse(dbRes.session)
         req.session.cookie = foundSession.cookie
-        console.log(foundSession.passport)
         req.session.user = foundSession.passport.user
-        res.status(200).json(req.session.user)
+        res.status(200).json(foundSession.passport.user)
     })
     .catch(err => {
-        console.log(err)
         res.status(500).json(err)
     })
 })

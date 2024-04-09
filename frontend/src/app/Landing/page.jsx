@@ -22,6 +22,8 @@ export default function LandingPage() {
     let setUser = async () => {
       let res = await userService.getcurrentSession(id);
       if (res) {
+        console.log(res)
+        console.log(`User ID: ${res.data._id}`)
         setUserLoadState(true);
         setCurrentUser(res);
       } else {
@@ -34,7 +36,7 @@ export default function LandingPage() {
 
   return (
     <>
-      <NavBar id={id} sessionId = {sessionId}/>
+      <NavBar id={id}/>
       <Container fluid h={"100%"}>
         <Grid justify="flex-start" align="stretch">
           <Grid.Col span={3} style={{ height: rem(120) }}>
