@@ -7,36 +7,36 @@ import NavBar from "../Components/navbar";
 import userService from "../services/user";
 import FriendsPage from "../friends/page";
 import VideosPage from "../videos/page";
+import axios from 'axios'
 import "@mantine/core/styles.css";
 import "./landing.css";
 
 export default function LandingPage() {
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id");
-  const sessionId = searchParams.get("sessionId")
   const router = useRouter();
   const [userLoaded, setUserLoadState] = useState(false);
   const [user, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    let setUser = async () => {
-      let res = await userService.getcurrentSession(id);
-      if (res) {
-        console.log(res)
-        console.log(`User ID: ${res.data._id}`)
-        setUserLoadState(true);
-        setCurrentUser(res);
-      } else {
-        router.push("/");
-      }
-    };
-    setUser();
+    // Check if user is logged in
+    const getUser = async () => {
+      await axios.get(process.env.SERVER_URL + "/auth/user/info", {withCredentials: true})
+        .then(res => {
+            if (res.data.user) {
+                setCurrentUser(res.data.user)
+                setUserLoadState(true)
+            } else {
+                router.push('/')
+            }
+        })
+        .catch(error => console.log(error.message))
+    }
+    getUser()
   }, []);
 
 
   return (
     <>
-      <NavBar id={id}/>
+      <NavBar/>
       <Container fluid h={"100%"}>
         <Grid justify="flex-start" align="stretch">
           <Grid.Col span={3} style={{ height: rem(120) }}>
@@ -50,9 +50,7 @@ export default function LandingPage() {
             </Stack>
           </Grid.Col>
         </Grid>
-      
       </Container>
-      
     </>
   );
 }

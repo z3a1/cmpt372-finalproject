@@ -19,7 +19,7 @@ export default function EventTable({ eventType }) {
     const areBothEventsLoaded = isCreatedEventsLoaded && isInvitedEventsLoaded
 
     const getAllCreatedEvents = async () => {
-        await axios.get(process.env.SERVER_URL + `/events/api/event/created?id=${userId}`, {withCredentials: true})
+        await axios.get(process.env.SERVER_URL + `/events/api/event/created`, {withCredentials: true})
             .then(res => {
                 setCreatedEvents(res.data.eventPackages)
                 setIsCreatedEventsLoaded(true)
@@ -28,7 +28,7 @@ export default function EventTable({ eventType }) {
     }
 
     const getAllInvitedEvents = async () => {
-        await axios.get(process.env.SERVER_URL + `/events/api/event/invited?id=${userId}`, {withCredentials: true})
+        await axios.get(process.env.SERVER_URL + `/events/api/event/invited`, {withCredentials: true})
             .then(res => {
                 setInvitedEvents(res.data.eventPackages)
                 console.log(res.data.eventPackages)

@@ -63,13 +63,11 @@ router.post("/api/event/create", async (req, res) => {
 
 // Get the list of created events for user
 router.get("/api/event/created", async (req, res) => {
-    const userId = req.query.id
-    const creatorId = new mongoose.Types.ObjectId(userId)
-
     try {
-        const events = await Event.find({ creator_id: creatorId });
+        console.log("req session from event", req.session.passport.user)
+        const events = await Event.find({ creator_id: req.session.passport.user._id });
         const eventPackages = await EventController.getEventPackages(events)
-        res.status(200).json({ "eventPackages": [] })
+        res.status(200).json({ eventPackages })
     } catch (err) {
         console.error('Error retrieving created events:', err);
         res.status(500).json({ err: 'Failed to fetch created events for user' });
@@ -78,20 +76,19 @@ router.get("/api/event/created", async (req, res) => {
 
 // Get the list of invited events for user
 router.get("/api/event/invited", async (req, res) => {
-    const userId = req.query.id
-
     try {
-        // const invitedEvents = await Attendee.find({ user_id: userId });
+        const userId = req.session.passport.user._id
+        const invitedEvents = await Attendee.find({ user_id: userId });
 
-        // // Get events
-        // let events = []
-        // for (let invitedEvent of invitedEvents) {
-        //     const event = await Event.findById(invitedEvent.event_id)
-        //     events.push(event)
-        // }
+        // Get events
+        let events = []
+        for (let invitedEvent of invitedEvents) {
+            const event = await Event.findById(invitedEvent.event_id)
+            events.push(event)
+        }
 
-        // const eventPackages = await EventController.getEventPackagesWithAttendee(events, userId)
-        res.status(200).json({ "eventPackages": [] })
+        const eventPackages = await EventController.getEventPackagesWithAttendee(events, userId)
+        res.status(200).json({ eventPackages })
     } catch (err) {
         console.error('Error retrieving invited events:', err);
         res.status(500).json({ err: 'Failed to fetch invited events for user' });
@@ -100,7 +97,7 @@ router.get("/api/event/invited", async (req, res) => {
 
 // Get all public events of friends where the user is not invited
 router.get("/api/event/friends/public", async (req, res) => {
-    const userId = req.query.id
+    const userId = req.session.passport.user._id
 
     try {
         const allAcceptedFriends = await Friend.find({ user_id: userId, status: "accepted" })
@@ -225,7 +222,8 @@ router.delete("/api/event/delete", async (req, res) => {
 
 // Update attendee status
 router.post("/api/event/attendee/status", async (req, res) => {
-    const { eventId, userId, status } = req.body
+    const { eventId, status } = req.body
+    const userId = req.session.passport.user._id
 
     try {
         const attendee = await Attendee.findOne({ event_id: eventId, user_id: userId })
@@ -240,7 +238,8 @@ router.post("/api/event/attendee/status", async (req, res) => {
 
 // Get attendee
 router.get("/api/event/attendee", async (req, res) => {
-    const { eventId, userId } = req.query
+    const { eventId } = req.query
+    const userId = req.session.passport.user._id
 
     try {
         const attendee = await Attendee.findOne({ 

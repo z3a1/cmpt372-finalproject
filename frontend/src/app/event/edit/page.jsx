@@ -48,7 +48,7 @@ export default function EditEvent() {
     })
 
     const getEvent = async () => {
-        await axios.get(process.env.SERVER_URL + `/events/api/event?id=${eventId}`)
+        await axios.get(process.env.SERVER_URL + `/events/api/event?id=${eventId}`, {withCredentials: true})
             .then(res => {
                 console.log("Event retrieved successfully", res.data)
 
@@ -66,7 +66,7 @@ export default function EditEvent() {
     }
 
     const getFriends = async () => {
-        await axios.get(process.env.SERVER_URL + `/friends/get/accepted?userId=${userId}`)
+        await axios.get(process.env.SERVER_URL + `/friends/get/accepted?userId=${userId}`, {withCredentials: true})
             .then(res => {
                 console.log("Friends retrieved successfully", res.data.friendArray)
 
@@ -112,7 +112,7 @@ export default function EditEvent() {
         formData.description = event.description
         formData.attendees = currentAttendees
         
-        await axios.post(process.env.SERVER_URL + `/events/api/event/edit?id=${eventId}`, formData)
+        await axios.post(process.env.SERVER_URL + `/events/api/event/edit?id=${eventId}`, formData, {withCredentials: true})
             .then(() => {
                 console.log("Event edited successfully", formData)
                 // Reset form

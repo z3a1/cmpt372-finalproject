@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import axios from "axios"
-import { Button, Card, Container, Group, LoadingOverlay, ScrollArea, Text, Textarea, Title } from "@mantine/core"
+import { Button, Card, Container, Group, LoadingOverlay, Text, Textarea, Title } from "@mantine/core"
 import Link from "next/link"
 import dayjs from 'dayjs';
 import AttendeeList from ".././components/FriendList"
@@ -24,7 +24,7 @@ export default function CreatedEventView() {
     const [isLoaded, setIsLoaded] = useState(false)
 
     const getEvent = async () => {
-        await axios.get(process.env.SERVER_URL + `/events/api/event?id=${eventId}`)
+        await axios.get(process.env.SERVER_URL + `/events/api/event?id=${eventId}`, {withCredentials: true})
             .then(res => {
                 console.log(res.data.event)
                 console.log(res.data.location)
@@ -37,7 +37,24 @@ export default function CreatedEventView() {
             .catch(error => console.error("Error retrieving event:", error.message))
     }
 
+    const getUser = async () => {
+        await axios.get(process.env.SERVER_URL + "/auth/user/info", {withCredentials: true})
+            .then(res => {
+                if (res.data.user) {
+                    userId = res.data.user._id
+                }
+
+                if (!res.data.user) {
+                    router.push('/')
+                }
+            })
+            .catch(err => {
+                alert(err)
+            })
+    }
+
     useEffect(() => {
+        getUser()
         getEvent()        
     }, [])
 

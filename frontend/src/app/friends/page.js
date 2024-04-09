@@ -72,7 +72,7 @@ export default function FriendsPage() {
 
 
     const getPendingFriendRequests = async () => {
-        await axios.get(process.env.SERVER_URL + `/friends/get/requests?userId=${USER_ID}`)
+        await axios.get(process.env.SERVER_URL + `/friends/get/requests?userId=${USER_ID}`, {withCredentials: true})
             .then(res => {
                 setPendingFriendRequests(res.data.friendRequestArray);
                 if (res.data.friendRequestArray === null || res.data.friendRequestArray === undefined){

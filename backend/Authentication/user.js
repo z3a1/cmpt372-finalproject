@@ -79,4 +79,21 @@ router.post('/getUserId', async(req,res) => {
     })
 })
 
+router.get('/user/info', (req, res) => {
+    try {
+        console.log("session", req.session)
+        console.log("session passport", req.session.passport)
+        const user = req.session.passport.user
+        console.log("user info", user)
+        if (user) {
+            res.status(200).json({ user })
+        } else {
+            res.status(404).json({message: "User could not be found!"})
+        }
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({ message: "Could not authenticate user!" })
+    }
+})
+
 module.exports = router;

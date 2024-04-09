@@ -4,33 +4,33 @@ import {Loader, MantineProvider, Group, Title, SimpleGrid, Center} from '@mantin
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import "./user.modules.css"
-import userService from "../services/user"
 import FavouriteVideos from '../videos/components/FavouriteVideos'
 import NavBar from '../Components/navbar'
-
+import axios from 'axios'
 
 export default function verifyUser(){
     //This page either redirects the user to the landing page or back to the sign in and register page
-    const searchParams = useSearchParams()
-    const id = searchParams.get('id')
     const router = useRouter()
     const [userLoaded,setUserLoadState] = useState(false)
     const [user,setCurrentUser] = useState(null)
 
+
+    const getUser = async () => {
+        await axios.get(process.env.SERVER_URL + "/auth/user/info", {withCredentials: true})
+            .then(res => {
+                if (res.data.user) {
+                    setCurrentUser(res.data.user)
+                    setUserLoadState(true)
+                } else {
+                    router.push('/')
+                }
+            })
+            .catch(error => console.log(error.message))
+    }
+
     useEffect(() => {
-        let setUser = async () => {
-            let res = await userService.getUserId(id)
-            if(res){
-                console.log(res)
-                setUserLoadState(true)
-                setCurrentUser(res)
-            }
-            else{
-                router.push("/")
-            }
-        }
-        setUser()
-    },[])
+        getUser()
+    }, [])
 
     return(
         <MantineProvider>
@@ -39,12 +39,12 @@ export default function verifyUser(){
                 {!userLoaded && <Loader color = "cyan" size = {500}/>}
                 {userLoaded && 
                 <SimpleGrid bg="var(--mantine-color-blue-light)" cols = {1}>
-                    <Title order={3}>Current User: {user.username}</Title>
+                    <Title order = {3}>Current User: {user.username}</Title>
                     <Title order = {4}>Name: {user.fname} {user.lname}</Title>
                     <Title order = {4}>Email: {user.email}</Title>
                     <Title order = {4}>Password: {'*'.repeat(10)}</Title>
                     <Center>
-                        <FavouriteVideos userId = {id}/>
+                        <FavouriteVideos/>
                     </Center>
                 </SimpleGrid>}
             </Group>

@@ -37,7 +37,7 @@ export default function Registercomp(){
         user_name: user_name,
         email: email,
         password: password
-       }).then(res => {
+       }, {withCredentials: true}).then(res => {
         console.log(res)
         router.push(`/Landing?id=${res.data.user_id}`)
        })

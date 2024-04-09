@@ -24,8 +24,6 @@ export default function VideosPage() {
   const [location, setLocation] = useState("");
   //var location;
   const [submitState, setSubmitState] = useState(false);
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id");
   const router = useRouter();
 
   function onSubmit(e) {
@@ -38,16 +36,6 @@ export default function VideosPage() {
   function resetSubmitState() {
     setSubmitState(false);
   }
-
-  useEffect(() => {
-    let getUser = async () => {
-      let res = await userService.getUserId(id);
-      if (!res) {
-        router.push("/");
-      }
-    };
-    getUser();
-  }, []);
 
   return (
     <>
@@ -92,7 +80,7 @@ export default function VideosPage() {
                 onKeyDown={resetSubmitState}
               />
             </form>
-            <Link className="link" href={`/videos/favourites?id=${id}`}>
+            <Link className="link" href={`/videos/favourites`}>
               Favourites Page
               <IconArrowForwardUp
                 className="icon-arrow"
@@ -102,7 +90,7 @@ export default function VideosPage() {
               />
             </Link>
             <br></br>
-            <Link className="link" href={`/Landing/?id=${id}`}>
+            <Link className="link" href={`/Landing`}>
               Return to Homepage{" "}
               <IconArrowBackUp
                 className="icon-arrow"
@@ -118,7 +106,7 @@ export default function VideosPage() {
           <Center>
               <Title className = "video-title" size = "h2">Video Results</Title>
             </Center>
-            {submitState && <VideoList location={location} userId={id} />}
+            {submitState && <VideoList location={location} />}
           </Container>
         </Grid.Col>
       </Grid>
