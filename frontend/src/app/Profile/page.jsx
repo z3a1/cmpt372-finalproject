@@ -7,6 +7,7 @@ import "./user.modules.css"
 import FavouriteVideos from '../videos/components/FavouriteVideos'
 import NavBar from '../Components/navbar'
 import axios from 'axios'
+import { getUserInfo } from '../services/user'
 
 export default function verifyUser(){
     //This page either redirects the user to the landing page or back to the sign in and register page
@@ -14,18 +15,14 @@ export default function verifyUser(){
     const [userLoaded,setUserLoadState] = useState(false)
     const [user,setCurrentUser] = useState(null)
 
-
     const getUser = async () => {
-        await axios.get(process.env.SERVER_URL + "/auth/user/info", {withCredentials: true})
-            .then(res => {
-                if (res.data.user) {
-                    setCurrentUser(res.data.user)
-                    setUserLoadState(true)
-                } else {
-                    router.push('/')
-                }
-            })
-            .catch(error => console.log(error.message))
+        const userInfo = await getUserInfo()
+        if (userInfo) {
+            setCurrentUser(userInfo)
+            setUserLoadState(true)
+        } else {
+            router.push('/') 
+        }
     }
 
     useEffect(() => {

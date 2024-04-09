@@ -29,14 +29,11 @@ let getcurrentSession = async(sessionID) => {
     return res
 }
 
+// Get the user info from the server
 const getUserInfo = async () => {
     const user =  await axios.get(process.env.SERVER_URL + "/auth/user/info", {withCredentials: true})
         .then(res => {
-            if (res.data.user) {
-                return res.data.user
-            } else {
-                router.push('/')
-            }
+            return res.data.user
         })
         .catch(err => {
             alert(err)
