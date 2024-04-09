@@ -4,13 +4,10 @@ import {IconUserCircle,
     IconBrandYoutube, 
     IconLogout,
     IconLogin,
-    IconCalendarEvent
+    IconCalendarEvent,
+    IconSettings
 } from "@tabler/icons-react"
-
 import "./navbar.css"
-import { Button } from "@mantine/core";
-import userService from "../services/user"
-
 
 export default function NavBar(params){
 
@@ -20,6 +17,7 @@ export default function NavBar(params){
         { link: `/event/map`, label: "Create Event", icon: IconMapPin },
         { link: `/event/dashboard`, label: "Event Dashboard", icon: IconCalendarEvent },
         { link: `/videos`, label: "Event Suggestions", icon: IconBrandYoutube },
+        { link: `/Settings`, label: "Settings", icon: IconSettings}
       ];
 
     const links = dataLinks.map((data, index) => (

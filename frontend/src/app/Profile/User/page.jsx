@@ -13,23 +13,18 @@ export default function verifyUser(){
     const [userLoaded,setUserLoadState] = useState(false)
     const [user,setUser] = useState(null)
 
-    let getUserId = async () => {
-        await axios.get(process.env.SERVER_URL + "/auth/user/info", {withCredentials: true})
-            .then(res => {
-                if (res.data.user) {
-                    setUser(res.data.user)
-                    setUserLoadState(true)
-                } else {
-                    router.push('/')
-                }
-            })
-            .catch(err => {
-                alert(err)
-            })
+    const getUser = async () => {
+        let user = await getUserInfo()
+        if (user) {
+            setUser(user)
+            setUserLoadState(true)
+        } else {
+            router.push('/')
+        }
     }
 
     useEffect(() => {
-        getUserId()
+        getUser()
     }, [])
 
     return(

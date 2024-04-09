@@ -2,7 +2,6 @@
 import Link from "next/link";
 import FavouriteVideos from "./components/FavouriteVideos";
 import VideoList from "./components/VideoList";
-import { v4 as idGen } from "uuid";
 import {
   Title,
   Container,
@@ -18,10 +17,10 @@ import "./VideoPage.css";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { IconArrowBackUp, IconArrowForwardUp } from "@tabler/icons-react";
+import { getUserInfo } from '../services/user'
 
 export default function VideosPage() {
   const [location, setLocation] = useState("");
-  //var location;
   const [submitState, setSubmitState] = useState(false);
   const router = useRouter();
 
@@ -35,6 +34,17 @@ export default function VideosPage() {
   function resetSubmitState() {
     setSubmitState(false);
   }
+
+  const getUser = async () => {
+    let user = await getUserInfo();
+    if (!user) {
+      router.push("/");
+    }
+  }
+
+  useEffect(() => {
+    getUser();
+  }, []);
 
   return (
     <>
