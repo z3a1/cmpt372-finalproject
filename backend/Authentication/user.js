@@ -17,8 +17,6 @@ router.get('/error', (req,res) => {
 
 router.post('/login',passport.authenticate('local',{failureRedirect: '/auth/error', failureMessage: true}), (req,res) => {
     req.session.cookie.expires = expirationDate
-    console.log("req.user:", req.user)
-    console.log("req.session:", req.session)
     req.session.save()
     res.status(200).json({userId: req.user._id, sessionId: req.session.id})
 })

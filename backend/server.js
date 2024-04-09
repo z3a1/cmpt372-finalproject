@@ -61,6 +61,10 @@ app.use('/events', events)
 const friends = require('./FriendsList/friendsRouter');
 app.use('/friends', friends);
 
+// Data population for testing
+const Data = require('./Data/populate')
+app.use('/data', Data)
+
 // Database
 db.initializeDB()
 
