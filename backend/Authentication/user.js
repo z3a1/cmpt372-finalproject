@@ -25,7 +25,7 @@ router.post('/register',async (req,res) => {
     await bcrypt.hash(req.body.password,saltRounds,async (dbErr,hash) => {
         if(!dbErr){
             let newUser = {
-                user_id: req.body.id,
+                // user_id: req.body.id,
                 username: req.body.user_name,
                 fname: req.body.fname,
                 lname: req.body.lname,
@@ -77,6 +77,23 @@ router.post('/getUserId', async(req,res) => {
     .catch(err => {
         res.status(500).json(err)
     })
+})
+
+router.get('/user/info', (req, res) => {
+    try {
+        console.log("session", req.session)
+        console.log("session passport", req.session.passport)
+        const user = req.session.passport.user
+        console.log("user info", user)
+        if (user) {
+            res.status(200).json({ user })
+        } else {
+            res.status(404).json({message: "User could not be found!"})
+        }
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({ message: "Could not authenticate user!" })
+    }
 })
 
 router.post('/changeInfo', async (req,res) => {

@@ -10,7 +10,7 @@ export default function DeleteButton({ eventId }) {
 
     const handleDelete = async () => {
         console.log(eventId)
-        await axios.delete(process.env.SERVER_URL + `/events/api/event/delete?id=${eventId}`)
+        await axios.delete(process.env.SERVER_URL + `/events/api/event/delete?id=${eventId}`, {withCredentials: true})
             .then(res => {
                 console.log("Event has been deleted:", res.data.event)
             })
