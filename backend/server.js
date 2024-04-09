@@ -53,6 +53,10 @@ app.use('/videos', videos)
 const googleMaps = require('./GoogleMaps/googleMaps')
 app.use('/maps', googleMaps)
 
+// Events
+const events = require('./Events/events')
+app.use('/events', events)
+
 // Friends List 
 const friends = require('./FriendsList/friendsRouter');
 app.use('/friends', friends);
@@ -67,3 +71,5 @@ db.initializeDB()
 app.listen(process.env.PORT, () => {
     console.log("Server is up and running on specified port")
 })
+
+exports.app = app
