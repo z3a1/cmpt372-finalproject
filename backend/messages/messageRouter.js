@@ -15,16 +15,15 @@ module.exports = function(server) {
     router.post('/sendMessage', async (req, res) => {
         try {
             const { userId, recipientId, message } = req.body;
-
+    
             const newMessage = new Message({
                 senderId: userId,
                 recipientId,
                 message
             });
-
+    
             await newMessage.save();
-
-            // if they are online
+    
             const recipientSocketId = await getUserSocket(recipientId);
             if (recipientSocketId) {
                 io.to(recipientSocketId).emit('message', {
@@ -32,7 +31,7 @@ module.exports = function(server) {
                     message
                 });
             }
-
+    
             res.status(200).json({ success: true });
         } catch (error) {
             console.error('Error sending message:', error);

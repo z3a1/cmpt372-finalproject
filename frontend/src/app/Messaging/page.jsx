@@ -14,7 +14,6 @@ const MessagePage = () => {
     const socket = io(SERVER_URL);
 
     useEffect(() => {
-        // Fetch previous messages from the server
         fetch(`${SERVER_URL}/messages?userId=${USER_ID}&friendId=${FRIEND_ID}`)
             .then(response => response.json())
             .then(data => {
@@ -22,7 +21,6 @@ const MessagePage = () => {
             })
             .catch(error => console.error('Error fetching messages:', error));
 
-        // Listen for incoming messages
         socket.on('message', (data) => {
             setMessages((prevMessages) => [...prevMessages, data]);
         });
@@ -35,7 +33,10 @@ const MessagePage = () => {
     }, []); 
 
     const sendMessage = () => {
-        socket.emit('sendMessage', { message: inputMessage, recipientId: FRIEND_ID }); 
+        if (inputMessage.trim() === '') return;
+        setMessages(prevMessages => [...prevMessages, { senderId: USER_ID, message: inputMessage }]); 
+        socket.emit('sendMessage', { message: inputMessage, recipientId: FRIEND_ID });
+        setInputMessage(''); 
     };
 
     return (
