@@ -21,11 +21,9 @@ export default function LandingPage() {
   useEffect(() => {
     let setUser = async () => {
       let res = await userService.getcurrentSession(id);
-      if (res) {
-        console.log(res)
-        console.log(`User ID: ${res.data._id}`)
+      if (res.data) {
         setUserLoadState(true);
-        setCurrentUser(res);
+        setCurrentUser(res.data);
       } else {
         router.push("/");
       }

@@ -1,13 +1,12 @@
-import { Box, Grid, Group } from "@mantine/core";
+"use client"
+import { Container, Grid, Button, TextInput, Text, Modal, PasswordInput  } from "@mantine/core";
 import NavBar from "../Components/navbar";
 import { useDisclosure } from '@mantine/hooks';
 import { useForm } from "@mantine/form";
-import { Dialog, Group, Button, TextInput, Text } from '@mantine/core';
 import { useRouter, useSearchParams } from "next/navigation";
 import {useState, useEffect} from "react"
 import userService from "../services/user"
 import axios from "axios";
-
 
 export default function SettingsPage(){
 
@@ -24,13 +23,14 @@ export default function SettingsPage(){
 
     useEffect(() => {
         let getCurrentUser = async () => {
+            console.log("Getting current user")
             let res = await userService.getcurrentSession(session_id)
             if(!res){
                 alert("Could not fetch the given user!")
                 router.push("/")
             }
             else{
-                setUser(res)
+                setUser(res.data)
             }
         }
         getCurrentUser()
@@ -38,60 +38,64 @@ export default function SettingsPage(){
 
     let changeUsername = () => {
         setChoice('username')
-        toggle
+        toggle()
     }
 
     let changeEmail = () => {
         setChoice('email')
-        toggle
+        toggle()
     }
 
-    let updateUserInfo = async () => {
+    let updateUserInfo = async (event) => {
+        event.preventDefault()
         if(changeForm.validate()){
             let {inputData, password} = changeForm.values
+            axios.defaults.withCredentials = true
             await axios.post(process.env.SERVER_URL + "/auth/changeInfo", {
                 status: settingsChoice,
-                id: user._id,
+                id: currentUser._id,
                 password: password,
                 inputData: inputData
-            })
+            }, {withCredentials: true})
             .then(res => {
                 alert("Sucessfully changed!")
-                console.log(res)
                 //Response should override the new user item now
-                setUser(res)
+                setUser(res.data)
+                toggle()
             })
             .catch(err => {
+                console.log("Error")
                 alert(err)
             })
+        }
+        else{
+            alert("Error!")
         }
     }
 
     return(
-    <Box>
+    <Container fluid>
         <NavBar/>
-        <Group>
-            <Grid>
-                <Grid.Col span = {4}>
+            <Grid justify = "center" align = "flex-start" mt = {100}>
+                <Grid.Col span = {1}>
                     <Text size = "xl">Username: </Text>
-                    <Text size = "xl">Email: </Text>
+                    <Text size = "xl" mt = {10}>Email: </Text>
                 </Grid.Col>
-                <Grid.Col span = {4}>
+                <Grid.Col span = {2.5}>
                     <Text>{currentUser.username}</Text>
-                    <Text>{currentUser.email}</Text>
+                    <Text mt = {20}>{currentUser.email}</Text>
                 </Grid.Col>
-                <Grid.Col>
+                <Grid.Col span = {1}>
                     <Button onClick={changeUsername}>Change username</Button>
-                    <Button onClick={changeEmail}>Change email</Button>
+                    <Button onClick={changeEmail} mt = {20}>Change email</Button>
                 </Grid.Col>
             </Grid>
-            <Dialog opened = {opened} withCloseButton onClose = {close} size = "lg" radius = "md">
-                <form onClick={updateUserInfo}>
-                    <TextInput mt = "sm" label = "Enter the password" {...form.getInputProps('email')}/>
-                    <TextInput mt = "sm" label = "Enter the new info: " {...form.getInputProps('inputData')}/>
+            <Modal opened = {opened} onClose = {close} title = {`Changing: ${settingsChoice}`} centered>
+                <form onSubmit={updateUserInfo}>
+                    <PasswordInput mt = "sm" label = "Enter the password" {...changeForm.getInputProps('password')}/>
+                    <TextInput mt = "sm" label = {`Enter the new ${settingsChoice}: `} {...changeForm.getInputProps('inputData')}/>
                     <Button type = "submit">Submit Changes!</Button>
                 </form>
-            </Dialog>
-        </Group>
-    </Box>)
+            </Modal>
+    </Container>)
 }

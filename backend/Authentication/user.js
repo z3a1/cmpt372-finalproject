@@ -52,15 +52,18 @@ router.post('/register',async (req,res) => {
 
 router.post('/getSessionById', async(req,res) => {
     let id = req.body.id
-    Session.findById({_id: id}).then(dbRes => {
-        let foundSession = JSON.parse(dbRes.session)
-        req.session.cookie = foundSession.cookie
-        req.session.user = foundSession.passport.user
-        res.status(200).json(foundSession.passport.user)
-    })
-    .catch(err => {
-        res.status(500).json(err)
-    })
+    console.log(req.session.passport.user)
+    res.status(200).json(req.session.passport.user)
+    // Session.findById({_id: id}).then(dbRes => {
+    //     let foundSession = JSON.parse(dbRes.session)
+    //     req.session.cookie = foundSession.cookie
+    //     req.session.user = foundSession.passport.user
+    //     req.session.save()
+    //     res.status(200).json(foundSession.passport.user)
+    // })
+    // .catch(err => {
+    //     res.status(500).json(err)
+    // })
 })
 
 router.post('/getUserId', async(req,res) => {
@@ -76,6 +79,48 @@ router.post('/getUserId', async(req,res) => {
     })
     .catch(err => {
         res.status(500).json(err)
+    })
+})
+
+router.post('/changeInfo', async (req,res) => {
+    let id = req.body.id
+    let givenPassword = req.body.password
+    if(!req.body.inputData) res.status(404).json({message: "The new change field is empty!"});
+
+    await db.User.findById({_id: id}).then(async (user) => {
+        console.log(user)
+        await bcrypt.compare(givenPassword,user.password).then(async result => {
+            if(result){
+                let changeSetting = req.body.status
+                if(changeSetting == 'username'){
+                    await db.User.findOneAndUpdate({_id: id}, {username: req.body.inputData}, {new: true})
+                    .then(newUser => {
+                        req.session.passport.user = newUser
+                        req.session.save()
+                        res.status(200).json(newUser)
+                    })
+                }
+                if(changeSetting == 'email'){
+                    await db.User.findOneAndUpdate({_id: id}, {email: req.body.inputData}, {new: true})
+                    .then(newUser => {
+                        req.session.passport.user = newUser
+                        req.session.save()
+                        res.status(200).json(newUser)
+                    })
+                }
+
+            }
+            else{
+                res.status(200).json({message: "The password is invalid!"})
+            }
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(404).json(err)
+        })
+    })
+    .catch(err => {
+        res.status(404).json(err)
     })
 })
 

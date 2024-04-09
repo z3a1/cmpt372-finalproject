@@ -1,6 +1,6 @@
 'use client'
 
-import {Loader, MantineProvider, Group, Title, SimpleGrid, Center} from '@mantine/core'
+import {Loader, MantineProvider, Group, Title, SimpleGrid, Center, Text, Avatar, Paper, Button} from '@mantine/core'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import "./user.modules.css"
@@ -19,11 +19,10 @@ export default function verifyUser(){
 
     useEffect(() => {
         let setUser = async () => {
-            let res = await userService.getUserId(id)
-            if(res){
-                console.log(res)
+            let res = await userService.getcurrentSession(id)
+            if(res.data){
                 setUserLoadState(true)
-                setCurrentUser(res)
+                setCurrentUser(res.data)
             }
             else{
                 router.push("/")
@@ -38,7 +37,18 @@ export default function verifyUser(){
             <Group justify='center' mx = "auto" maw = {500} className='loaderStyles'>
                 {!userLoaded && <Loader color = "cyan" size = {500}/>}
                 {userLoaded && 
-                <SimpleGrid bg="var(--mantine-color-blue-light)" cols = {1}>
+                <Paper radius="md" withBorder p="lg" bg="var(--mantine-color-body)">
+                    <Avatar radius= {120} size = {120}mx = "auto"/>
+                    <Text ta="center" fz="lg" fw={500} mt="md"> {user.username}</Text>
+                    <Text fz = "md" c = "dimmed" ta = "center">{`${user.fname} ${user.lname}`}</Text>
+                </Paper>}
+            </Group>
+        </MantineProvider>
+    )
+}
+
+/**
+ * <SimpleGrid bg="var(--mantine-color-blue-light)" cols = {1}>
                     <Title order={3}>Current User: {user.username}</Title>
                     <Title order = {4}>Name: {user.fname} {user.lname}</Title>
                     <Title order = {4}>Email: {user.email}</Title>
@@ -46,8 +56,5 @@ export default function verifyUser(){
                     <Center>
                         <FavouriteVideos userId = {id}/>
                     </Center>
-                </SimpleGrid>}
-            </Group>
-        </MantineProvider>
-    )
-}
+                </SimpleGrid>
+ */

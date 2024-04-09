@@ -19,7 +19,7 @@ let getUserId = async (id) => {
 
 let getcurrentSession = async(sessionID) => {
     let res = {}
-    await axios.post(process.env.SERVER_URL + "/auth/getSessionById", {id: sessionID}).then(serverRes => {
+    await axios.post(process.env.SERVER_URL + "/auth/getSessionById", {id: sessionID}, {withCredentials: true}).then(serverRes => {
         res = serverRes
     })
     .catch(err => {
