@@ -2,6 +2,7 @@ const express = require("express")
 const cors = require("cors")
 require('dotenv').config()
 const axios = require("axios")
+axios.defaults.withCredentials = true
 const app = express()
 const db = require('./Database/schema')
 
@@ -15,6 +16,30 @@ app.use(corsOptions);
 app.options('*', corsOptions)
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
+
+const MongoStore = require('connect-mongo')
+const session = require('express-session')
+
+var passport = require('passport')
+
+// Initialize passport authentication functions
+const initialize = require('./Authentication/auth')
+initialize(passport)
+
+// Set up session and passport
+app.use(session({
+    secret: process.env.APP_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    httpOnly: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.CONNECTION_SECRET,
+        maxAge: 3600000,
+    })
+}))
+app.use(passport.authenticate('session'));
+app.use(passport.initialize())
+app.use(passport.session())
 
 // User Auth and Account Login,Creation
 const UserAuth = require('./Authentication/user')
@@ -32,9 +57,11 @@ app.use('/maps', googleMaps)
 const friends = require('./FriendsList/friendsRouter');
 app.use('/friends', friends);
 
+// Data population for testing
 const Data = require('./Data/populate')
-app.use('/data',Data)
+app.use('/data', Data)
 
+// Database
 db.initializeDB()
 
 app.listen(process.env.PORT, () => {
