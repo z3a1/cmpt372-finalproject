@@ -6,7 +6,7 @@ let getUserId = async (id) => {
         return null
     }
     else{
-        await axios.post(process.env.SERVER_URL + "/auth/getUserId", {id: id}, {withCredentials: true})
+        await axios.post(process.env.SERVER_URL + "/auth/getUserId", {id: id})
         .then(serverRes => {
             data = serverRes.data
         })
@@ -28,18 +28,4 @@ let getcurrentSession = async(sessionID) => {
     })
     return res
 }
-
-// Get the user info from the server
-const getUserInfo = async () => {
-    const user =  await axios.get(process.env.SERVER_URL + "/auth/user/info", {withCredentials: true})
-        .then(res => {
-            return res.data.user
-        })
-        .catch(err => {
-            alert(err)
-            return null
-        })
-    return user
-}
-
-module.exports = {getUserId, getcurrentSession, getUserInfo}
+module.exports = {getUserId, getcurrentSession}

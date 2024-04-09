@@ -26,7 +26,7 @@ export default function Map() {
     const processPlaceName = async (e) => {
         if (e.placeId) {
             // Get specific place name
-            await axios.get(process.env.SERVER_URL + `/maps/api/places/marker/search?placeId=${e.placeId}`, {withCredentials: true})
+            await axios.get(process.env.SERVER_URL + `/maps/api/places/marker/search?placeId=${e.placeId}`)
                 .then(res => {
                     console.log(res.data.displayName.text)
                     setSelectedPlaceName(res.data.displayName.text)
@@ -41,7 +41,7 @@ export default function Map() {
     }
 
     const processSelectedAddress = async (lat, lng) => {
-        await axios.get(process.env.SERVER_URL + `/maps/api/places/selected/address?lat=${lat}&lng=${lng}`, {withCredentials: true})
+        await axios.get(process.env.SERVER_URL + `/maps/api/places/selected/address?lat=${lat}&lng=${lng}`)
             .then(res => {
                 // Get the first result
                 console.log(res.data.results[0])
@@ -71,7 +71,7 @@ export default function Map() {
     const handleMarkerDoubleClick = async () => {
         setAreNearbyPlacesLoaded(false)
         console.log("Getting nearby places...", selectedCoordinates.lat, selectedCoordinates.lng)
-        await axios.get(process.env.SERVER_URL + `/maps/api/places/nearby/search?lat=${selectedCoordinates.lat}&lng=${selectedCoordinates.lng}`, {withCredentials: true})
+        await axios.get(process.env.SERVER_URL + `/maps/api/places/nearby/search?lat=${selectedCoordinates.lat}&lng=${selectedCoordinates.lng}`)
             .then(res => {
                 console.log(res.data)
                 setNearbyPlaces(res.data)

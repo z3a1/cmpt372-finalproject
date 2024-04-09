@@ -22,7 +22,7 @@ export default function Map({ selectedPlaceName, setSelectedPlaceName, setSelect
     const processPlaceName = async (e) => {
         if (e.placeId) {
             // Get specific place name
-            await axios.get(process.env.SERVER_URL + `/maps/api/places/marker/search?placeId=${e.placeId}`, {withCredentials: true})
+            await axios.get(process.env.SERVER_URL + `/maps/api/places/marker/search?placeId=${e.placeId}`)
                 .then(res => {
                     console.log(res.data.displayName.text)
                     setSelectedPlaceName(res.data.displayName.text)
@@ -37,7 +37,7 @@ export default function Map({ selectedPlaceName, setSelectedPlaceName, setSelect
     }
 
     const processSelectedAddress = async (lat, lng) => {
-        await axios.get(process.env.SERVER_URL + `/maps/api/places/selected/address?lat=${lat}&lng=${lng}`, {withCredentials: true})
+        await axios.get(process.env.SERVER_URL + `/maps/api/places/selected/address?lat=${lat}&lng=${lng}`)
             .then(res => {
                 console.log(res.data.results[0])
                 console.log(res.data.results[0].formatted_address)
@@ -65,7 +65,7 @@ export default function Map({ selectedPlaceName, setSelectedPlaceName, setSelect
     // On double click, spawn nearby places around a given radius
     const handleMarkerDoubleClick = async () => {
         console.log("Getting nearby places...", selectedCoordinates.lat, selectedCoordinates.lng)
-        await axios.get(process.env.SERVER_URL + `/maps/api/places/nearby/search?lat=${selectedCoordinates.lat}&lng=${selectedCoordinates.lng}`, {withCredentials: true})
+        await axios.get(process.env.SERVER_URL + `/maps/api/places/nearby/search?lat=${selectedCoordinates.lat}&lng=${selectedCoordinates.lng}`)
             .then(res => {
                 console.log(res.data)
                 setNearbyPlaces(res.data)

@@ -7,7 +7,10 @@ import {IconUserCircle,
     IconCalendarEvent,
     IconSettings
 } from "@tabler/icons-react"
+
 import "./navbar.css"
+import { Button } from "@mantine/core";
+
 
 export default function NavBar(params){
 

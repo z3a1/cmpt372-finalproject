@@ -1,4 +1,4 @@
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ActionIcon, Center, Loader, Table } from "@mantine/core";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -9,6 +9,8 @@ import StatusBadge from "../../components/statusBadge";
 
 export default function EventTable({ eventType }) {
     const router = useRouter()
+    const searchParams = useSearchParams();
+    const userId = searchParams.get('id')
 
     const [createdEvents, setCreatedEvents] = useState([])
     const [invitedEvents, setInvitedEvents] = useState([])
@@ -17,7 +19,7 @@ export default function EventTable({ eventType }) {
     const areBothEventsLoaded = isCreatedEventsLoaded && isInvitedEventsLoaded
 
     const getAllCreatedEvents = async () => {
-        await axios.get(process.env.SERVER_URL + `/events/api/event/created`, {withCredentials: true})
+        await axios.get(process.env.SERVER_URL + `/events/api/event/created?id=${userId}`, {withCredentials: true})
             .then(res => {
                 setCreatedEvents(res.data.eventPackages)
                 setIsCreatedEventsLoaded(true)
@@ -26,7 +28,7 @@ export default function EventTable({ eventType }) {
     }
 
     const getAllInvitedEvents = async () => {
-        await axios.get(process.env.SERVER_URL + `/events/api/event/invited`, {withCredentials: true})
+        await axios.get(process.env.SERVER_URL + `/events/api/event/invited?id=${userId}`, {withCredentials: true})
             .then(res => {
                 setInvitedEvents(res.data.eventPackages)
                 console.log(res.data.eventPackages)
@@ -42,9 +44,9 @@ export default function EventTable({ eventType }) {
 
     const handleClick = (id) => {
         if (eventType === 'created') {
-            router.push(`/event/view/created?eventId=${id}`)
+            router.push(`/event/view/created?eventId=${id}&id=${userId}`)
         } else {
-            router.push(`/event/view/invited?eventId=${id}`)
+            router.push(`/event/view/invited?eventId=${id}&id=${userId}`)
 
         }
     }

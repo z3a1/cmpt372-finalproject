@@ -12,6 +12,7 @@ import VisibilityBadge from "../../components/visibilityBadge"
 export default function InvitedEventView() {
     const searchParams = useSearchParams()
     const eventId = searchParams.get('eventId')
+    const userId = searchParams.get('id')
 
     const [event, setEvent] = useState({})
     const [location, setLocation] = useState({})
@@ -23,7 +24,7 @@ export default function InvitedEventView() {
     const [isAttendeeLoaded, setIsAttendeeLoaded] = useState(false)
 
     const getEvent = async () => {
-        await axios.get(process.env.SERVER_URL + `/events/api/event?id=${eventId}`, {withCredentials: true})
+        await axios.get(process.env.SERVER_URL + `/events/api/event?id=${eventId}`)
             .then(res => {
                 setEvent(res.data.event)
                 setLocation(res.data.location)
@@ -34,7 +35,7 @@ export default function InvitedEventView() {
     }
 
     const getAttendee = async () => {
-        await axios.get(process.env.SERVER_URL + `/events/api/event/attendee?eventId=${eventId}`, {withCredentials: true})
+        await axios.get(process.env.SERVER_URL + `/events/api/event/attendee?eventId=${eventId}&userId=${userId}`)
             .then(res => {
                 console.log(res.data.attendee)
                 setAttendee(res.data.attendee)
@@ -51,8 +52,9 @@ export default function InvitedEventView() {
     const handleStatus = async (status) => {
         await axios.post(process.env.SERVER_URL + '/events/api/event/attendee/status', {
             eventId: eventId,
+            userId: userId,
             status: status
-        }, {withCredentials: true})
+        })
             .catch(error => console.error("Error updating status:", error.message))
     }
 
@@ -94,7 +96,7 @@ export default function InvitedEventView() {
                         </Card.Section>
                         <Card.Section p="md">
                             <Group justify="space-between" mt="xl">
-                                <Button component={Link} href={`/event/dashboard`} variant="default">Back</Button>
+                                <Button component={Link} href={`/event/dashboard?id=${userId}`} variant="default">Back</Button>
                                 <Group>
                                     <SegmentedControl 
                                         color="green" 

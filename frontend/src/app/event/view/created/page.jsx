@@ -3,32 +3,28 @@
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import axios from "axios"
-import { Button, Card, Container, Group, LoadingOverlay, Text, Textarea, Title } from "@mantine/core"
+import { Button, Card, Container, Group, LoadingOverlay, ScrollArea, Text, Textarea, Title } from "@mantine/core"
 import Link from "next/link"
 import dayjs from 'dayjs';
 import AttendeeList from ".././components/FriendList"
 import DeleteButton from "./components/deleteButton"
 import VisibilityBadge from "../../components/visibilityBadge"
-import { getUserInfo } from '../../../services/user'
 
 export default function CreatedEventView() {
     const router = useRouter()
     const searchParams = useSearchParams()
     const eventId = searchParams.get('eventId')
+    const userId = searchParams.get('id')
 
     const [event, setEvent] = useState({})
     const [location, setLocation] = useState({})
     const [attendees, setAttendees] = useState([])
 
-    // TODO: may not need
-    const [currentUser, setCurrentUser] = useState({})
-    const [userLoaded, setUserLoadState] = useState(false)
-
     // Loader
     const [isLoaded, setIsLoaded] = useState(false)
 
     const getEvent = async () => {
-        await axios.get(process.env.SERVER_URL + `/events/api/event?id=${eventId}`, {withCredentials: true})
+        await axios.get(process.env.SERVER_URL + `/events/api/event?id=${eventId}`)
             .then(res => {
                 console.log(res.data.event)
                 console.log(res.data.location)
@@ -41,18 +37,7 @@ export default function CreatedEventView() {
             .catch(error => console.error("Error retrieving event:", error.message))
     }
 
-    const getUser = async () => {
-        const userInfo = getUserInfo()
-        if (userInfo) {
-            setCurrentUser(userInfo)
-            setUserLoadState(true)
-        } else {
-            router.push('/')
-        }
-    }
-
     useEffect(() => {
-        getUser()
         getEvent()        
     }, [])
 
@@ -94,11 +79,11 @@ export default function CreatedEventView() {
                         </Card.Section>
                         <Card.Section p="md">
                             <Group justify="space-between" mt="xl">
-                                <Button component={Link} href={`/event/dashboard`} variant="default">Back</Button>
+                                <Button component={Link} href={`/event/dashboard?id=${userId}`} variant="default">Back</Button>
                                 <Group>
                                     <DeleteButton eventId={eventId} />
                                     <Button 
-                                        onClick={() => router.push(`/event/edit?eventId=${eventId}`)} 
+                                        onClick={() => router.push(`/event/edit?eventId=${eventId}&id=${userId}`)} 
                                         variant='default'
                                     >
                                         Edit

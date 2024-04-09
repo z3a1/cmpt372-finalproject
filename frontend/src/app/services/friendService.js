@@ -6,7 +6,7 @@ import axios from 'axios';
 
 const friendService =  {
     getAllFriends: async(userId) => {
-        return await axios.get(process.env.SERVER_URL + `/friends/get/all?userId=${userId}`, {withCredentials: true})
+        return await axios.get(process.env.SERVER_URL + `/friends/get/all?userId=${userId}`)
             .then(res => {
                 return res.data
             })
@@ -14,7 +14,7 @@ const friendService =  {
     },
 
     getPendingFriends: async(userId) => {
-        return await axios.get(process.env.SERVER_URL + `/friends/get/pending?userId=${userId}`, {withCredentials: true})
+        return await axios.get(process.env.SERVER_URL + `/friends/get/pending?userId=${userId}`)
             .then(res => {
                 console.log(res.data);
                 return res.data
@@ -23,7 +23,7 @@ const friendService =  {
     },
 
     getAcceptedFriends: async(userId) => {
-        return await axios.get(process.env.SERVER_URL + `/friends/get/accepted?userId=${userId}`, {withCredentials: true})
+        return await axios.get(process.env.SERVER_URL + `/friends/get/accepted?userId=${userId}`)
             .then(res => {
                 return res.data
             })
@@ -31,7 +31,7 @@ const friendService =  {
     },
 
     deleteFriend: async(id, userId,friendId) => {
-        await axios.delete(process.env.SERVER_URL + `/friends/delete/friend?friendRequestId=${id}&userId=${userId}&friendId=${friendId}`, {withCredentials: true})
+        await axios.delete(process.env.SERVER_URL + `/friends/delete/friend?friendRequestId=${id}&userId=${userId}&friendId=${friendId}`)
             .then(res => {
                 console.log(res)
             })
@@ -39,7 +39,7 @@ const friendService =  {
     },
 
     addFriend: async(friend) =>{
-        await axios.post(process.env.SERVER_URL + `/friends/add?userId=${friend.userId}&friendId=${friend.friendId}`, {withCredentials: true})
+        await axios.post(process.env.SERVER_URL + `/friends/add?userId=${friend.userId}&friendId=${friend.friendId}`)
         .then(res => {
             console.log(res)
         })
@@ -47,7 +47,7 @@ const friendService =  {
     },
 
     getFriendsCount: async(id) => {
-        await axios.get(process.env.SERVER_URL + `/friends/get/count?userId=${userId}`, {withCredentials: true})
+        await axios.get(process.env.SERVER_URL + `/friends/get/count?userId=${userId}`)
         .then(res => {
             return res.data
         })
@@ -55,7 +55,7 @@ const friendService =  {
     },
 
     searchPeople: async(userName) => {
-        await axios.get(process.env.SERVER_URL + `/friends/get/people?userName=${userName}`, {withCredentials: true})
+        await axios.get(process.env.SERVER_URL + `/friends/get/people?userName=${userName}`)
         .then(res => {
             return res.data
             // use the data to go to a new page -> user profile

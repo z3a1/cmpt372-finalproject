@@ -13,9 +13,10 @@ export default function CreateEvent() {
     const searchParams = useSearchParams()
     const placeName = searchParams.get('placeName')
     const address = searchParams.get('address')
+    const userId = searchParams.get('id')
 
     const [formData, setFormData] = useState({
-        creatorId: "",
+        creatorId: userId,
         eventName: "",
         placeName: placeName,
         address: address,
@@ -68,11 +69,11 @@ export default function CreateEvent() {
 
         e.preventDefault();
 
-        await axios.post(process.env.SERVER_URL + "/events/api/event/create", formData, {withCredentials: true}) 
+        await axios.post(process.env.SERVER_URL + "/events/api/event/create", formData) 
             .then(() => {
                 // Reset form
                 setFormData({
-                    creatorId: "",
+                    userId: userId,
                     eventName: "",
                     placeName: placeName,
                     address: address,
@@ -83,21 +84,12 @@ export default function CreateEvent() {
                 });
             })
             .catch(error => console.log(error.message))
-        router.push(`/event/dashboard`)
+        router.push(`/event/dashboard?id=${userId}`)
     }
 
     useEffect(() => {
-        const fetchUser = async () => {
-            await axios.get(process.env.SERVER_URL + "/auth/user/info", {withCredentials: true})
-                .then(res => {
-                    setFormField("creatorId", res.data.user._id)
-                })
-                .catch(error => console.log(error.message))
-        }
-        fetchUser();
-
         const fetchFriends = async () => {
-            await axios.get(process.env.SERVER_URL + `/friends/get/accepted`, {withCredentials: true})
+            await axios.get(process.env.SERVER_URL + `/friends/get/accepted?userId=${userId}`)
                 .then((res) => {
                     console.log(res.data.friendArray)
                     setFriends(res.data.friendArray.map((friend) => friend.username))
@@ -196,7 +188,7 @@ export default function CreateEvent() {
                             <Group justify="space-between">
                                 <Button 
                                     component={Link} 
-                                    href={`/event/map`}
+                                    href={`/event/map?id=${userId}`}
                                     variant='default'
                                     type="button"
                                 >
