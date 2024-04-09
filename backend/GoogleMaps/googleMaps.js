@@ -17,7 +17,6 @@ router.get('/api/places/nearby/search', async (req, res) => {
                 key: process.env.GOOGLE_MAPS_API_KEY
               }
         }) 
-        console.log(result.data.results)
         res.status(200).send(result.data.results)
     } catch (err) {
         console.error('Error fetching nearby places:', err);
@@ -31,7 +30,6 @@ router.get('/api/places/marker/search', async (req, res) => {
     
     try {
         const result = await axios.get(`https://places.googleapis.com/v1/places/${placeId}?fields=id,displayName&key=${process.env.GOOGLE_MAPS_API_KEY}`)
-        console.log(result.data)
         res.status(200).send(result.data)
     } catch (err) {
         console.error('Error fetching marked place:', err);
@@ -46,7 +44,6 @@ router.get('/api/places/selected/address', async (req, res) => {
 
     try {
         const result = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.GOOGLE_MAPS_API_KEY}`)
-        console.log(result.data)
         res.status(200).send(result.data)
     } catch (err) {
         console.error('Error fetching marked place:', err);
