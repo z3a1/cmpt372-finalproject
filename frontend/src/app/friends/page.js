@@ -30,23 +30,21 @@ export default function FriendsPage() {
     const add = async () => {
         let newFriend = { userId: USER_ID, friendId: FRIEND_ID };
         try {
-            console.log('adding new friend', newFriend);
             await friendService.addFriend(newFriend)
             
             fetchFriends();
             getPendingFriendRequests();
         } catch (error){
-            console.error('Error adding friend:', error)
+            alert(error)
         }
     };
 
     const remove = async (id) => {
         try{
-            console.log("deleting friend:", id)
             await friendService.deleteFriend(id, USER_ID, FRIEND_ID);
             fetchFriends();
         } catch (error){
-            console.error('Error deleting friend:', error);
+            alert(error)
         }
 
     };
@@ -61,36 +59,22 @@ export default function FriendsPage() {
             .then(res => {
                 console.log("fetching pending friends:", res.pendingfriendArray);
                 setPendingFriends(res.pendingfriendArray);
-
-                setPendingFriends(prevState => {
-                    console.log("the pending friends:", prevState);
-                    console.log('the pending friends.legnth:', prevState.length);
-
-                    return res.pendingfriendArray;
-                });
             })
-            .catch(error => console.error('Error fetching pending friends:', error.message));
+            .catch(error => alert(error.message));
     }
 
     const getAcceptedFriends = async () => {
         await friendService.getAcceptedFriends(USER_ID)
             .then(res => {
-
-                setAcceptedFriends(prevState => {
-                    console.log("the accepted friends:", prevState);
-                    console.log('the accepted friends.legnth:', prevState.length);
-
-                    return res.friendArray;
-                });
+                setAcceptedFriends(res.friendArray)
             })
-            .catch(error => console.error('Error fetching accepted friends:', error.message))
+            .catch(error => alert(error.message))
     }
 
 
     const getPendingFriendRequests = async () => {
         await axios.get(process.env.SERVER_URL + `/friends/get/requests?userId=${USER_ID}`)
             .then(res => {
-                console.log("fetching pending friend requests:", res.data.friendRequestArray)
                 setPendingFriendRequests(res.data.friendRequestArray);
                 if (res.data.friendRequestArray === null || res.data.friendRequestArray === undefined){
                     setPendingFriendRequestsLength(0);
@@ -98,11 +82,10 @@ export default function FriendsPage() {
                     setPendingFriendRequestsLength (res.data.friendRequestArray.length);
                 }
             })
-            .catch(error => console.error('Error fetching pending friend requests:', error.message))
+            .catch(error => alert(error.message))
     }
 
     const acceptFriendRequest = async (request) => {
-        console.log(request)
         let newFriend = { userId: request.friend_id, friendId: request.user_id };
         await friendService.addFriend(newFriend)
         fetchFriends();
@@ -111,22 +94,14 @@ export default function FriendsPage() {
 
     const searchPeople = async (userName) =>{    
         try {
-            console.log('Searching for a new friend', userName);
             await friendService.searchPeople(userName)
             
         } catch (error){
-            console.error('Error finding friend:', error.message)
+            alert(err)
         }
     }
 
     //TODO: complete this function
-    const declineFriendRequest = (request) => {
-        try {
-
-        } catch (error) {
-            console.error('Error deleting friend request:', error.message)
-        }
-    }
 
     const handleInputChange = (event) =>{
         setUserName(event.target.value);
@@ -144,25 +119,19 @@ export default function FriendsPage() {
     }, []);
 
     useEffect(() => {
-        console.log("the accepted friends:", acceptedFriends);
-        console.log('the accepted friends.length:', acceptedFriends.length);
         if (acceptedFriends === null || acceptedFriends === undefined) {
             setacceptedFriendsLength(0);
         } else {
             setacceptedFriendsLength(acceptedFriends.length);
         }
-        console.log("it's length:", acceptedFriends.length);
     }, [acceptedFriends]);
 
     useEffect(() => {
-        console.log("the pending friends:", pendingFriends);
-        console.log('the pending friends.length:', pendingFriends.length);
         if (pendingFriends === null || pendingFriends === undefined) {
             setpendingFriendsLength(0);
         } else {
             setpendingFriendsLength(pendingFriends.length);
         }
-        console.log("it's length:", pendingFriendsLength);
     }, [pendingFriends]);
 
     return (
