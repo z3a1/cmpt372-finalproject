@@ -8,7 +8,6 @@ const Location = mongoose.model("Location");
 const Attendee = mongoose.model("Attendee");
 const User = mongoose.model("User");
 const Friend = mongoose.model("Friend");
-
 const EventController = require('./eventController')
 
 // Create an event with location and attendees

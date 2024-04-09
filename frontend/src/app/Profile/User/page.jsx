@@ -17,7 +17,7 @@ export default function verifyUser(){
 
     let getUserId = async () => {
         if(id == undefined || id == null){
-            router.back
+            router.back()
         }
         else{
             console.log(id)
