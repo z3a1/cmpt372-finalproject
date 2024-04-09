@@ -25,8 +25,8 @@ export default function Logincomp(){
         let {email, password} = loginForm.values
         await axios.post(process.env.SERVER_URL + "/auth/login",{
             email: email,
-            password: password
-        }).then(res => {
+            password: password, 
+        }, {withCredentials: true}).then(res => {
             console.log(res)
             router.push(`/Landing/?id=${res.data.sessionId}`)
         })
