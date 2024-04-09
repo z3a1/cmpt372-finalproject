@@ -94,6 +94,7 @@ const Video = mongoose.model('Video', videoSchema)
 const LikedVideo = mongoose.model('LikedVideo', likedVideoSchema)
 const Messages = mongoose.model('Messages', messages)
 
+
 const initializeDB = () => {
     mongoose.connect(process.env.CONNECTION_SECRET)
         .then(() => console.log('Connected to MongoDB'))

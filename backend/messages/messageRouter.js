@@ -1,61 +1,56 @@
 const express = require('express');
 const router = express.Router();
-const Message = require('../Database/schema');
+const mongoose = require("mongoose");
+const Messages = mongoose.model("Messages");
 const { getUserSocket } = require('./userSocket');
-const socketio = require('socket.io');
 
-module.exports = function(server) {
-    const io = socketio(server);
+router.post('/sendMessage', async (req, res) => {
+    try {
+        const { userId, recipientId, message } = req.body;
 
-    io.on('connection', (server) => {
-        console.log('New socket connection - message router');
-        ////
-    });
+        const newMessage = new Message({
+            senderId: userId,
+            recipientId,
+            message
+        });
 
-    router.post('/sendMessage', async (req, res) => {
-        try {
-            const { userId, recipientId, message } = req.body;
+        await newMessage.save();
+
+        const recipientSocketId = await getUserSocket(recipientId);
+        if (recipientSocketId) {
     
-            const newMessage = new Message({
+            req.io.to(recipientSocketId).emit('message', {
                 senderId: userId,
-                recipientId,
                 message
             });
-    
-            await newMessage.save();
-    
-            const recipientSocketId = await getUserSocket(recipientId);
-            if (recipientSocketId) {
-                io.to(recipientSocketId).emit('message', {
-                    senderId: userId,
-                    message
-                });
-            }
-    
-            res.status(200).json({ success: true });
-        } catch (error) {
-            console.error('Error sending message:', error);
-            res.status(500).json({ success: false, error: 'Failed to send message' });
         }
-    });
 
-    router.get('/messages', async (req, res) => {
-        try {
-            const { userId, friendId } = req.query;
+        res.status(200).json({ success: true });
+    } catch (error) {
+        console.error('Error sending message:', error);
+        res.status(500).json({ success: false, error: 'Failed to send message' });
+    }
+});
 
-            const messages = await Message.find({
-                $or: [
-                    { senderId: userId, recipientId: friendId },
-                    { senderId: friendId, recipientId: userId }
-                ]
-            });
+router.get('/messages', async (req, res) => {
+    console.log("hi");
+    try {
+        const { userId, friendId } = req.query;
 
-            res.status(200).json({ messages });
-        } catch (error) {
-            console.error('Error fetching messages:', error);
-            res.status(500).json({ error: 'Failed to fetch messages' });
-        }
-    });
+        const m = await Messages.find({
+            $or: [
+                { senderId: userId, recipientId: friendId },
+                { senderId: friendId, recipientId: userId }
+            ]
+        });
 
-    return router;
-};
+        //TODO: sort 
+
+        res.status(200).json({ m });
+    } catch (error) {
+        console.error('Error fetching messages:', error);
+        res.status(500).json({ error: 'Failed to fetch messages' });
+    }
+});
+
+module.exports = router;

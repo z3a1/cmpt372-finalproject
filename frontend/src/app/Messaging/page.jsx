@@ -9,40 +9,59 @@ const FRIEND_ID = '65fa73b955410eecb776f5b1';
 
 const MessagePage = () => {
     const [messages, setMessages] = useState([]);
+    const [messagesLength, setMessagesLength] = useState([]);
     const [inputMessage, setInputMessage] = useState('');
     const SERVER_URL = process.env.SERVER_URL || 'http://localhost:8080';
     const socket = io(SERVER_URL);
 
     useEffect(() => {
-        fetch(`${SERVER_URL}/messages?userId=${USER_ID}&friendId=${FRIEND_ID}`)
-            .then(response => response.json())
-            .then(data => {
-                setMessages(data.messages);
-            })
-            .catch(error => console.error('Error fetching messages:', error));
-
+        const socket = io(SERVER_URL);
+    
+        socket.on('connect', () => {
+            fetch(`${SERVER_URL}/messages/messages?userId=${USER_ID}&friendId=${FRIEND_ID}`)
+                .then(response => response.json())
+                .then(data => {
+                    setMessages(data.messages);
+                    if (data.messages === null || data.messages === undefined){
+                        setMessages([]);
+                        setMessagesLength(0);
+                    } else{
+                        setMessagesLength (data.messages.length);
+                    }
+                })
+                .catch(error => console.error('Error fetching messages:', error));
+        });
+    
         socket.on('message', (data) => {
             setMessages((prevMessages) => [...prevMessages, data]);
         });
-
+    
         return () => {
-            if (socket.connected) {
-                socket.disconnect();
-            }
+            socket.disconnect();
         };
-    }, []); 
+    }, []);
 
     const sendMessage = () => {
-        if (inputMessage.trim() === '') return;
-        setMessages(prevMessages => [...prevMessages, { senderId: USER_ID, message: inputMessage }]); 
-        socket.emit('sendMessage', { message: inputMessage, recipientId: FRIEND_ID });
-        setInputMessage(''); 
+        if (inputMessage.trim() === '') {
+            return;
+        } else{
+            setMessages(prevMessages => [...prevMessages, { senderId: USER_ID, message: inputMessage }]); 
+            socket.emit('sendMessage', { message: inputMessage, recipientId: FRIEND_ID });
+            setInputMessage(''); 
+        }
     };
 
     return (
         <div>
             <h1>Message Page</h1>
             <div>
+            {/* { messagesLength > 0 ? (
+                    messages.map((message, index) => (
+                        <div key={index} className={message.senderId === USER_ID ? 'sent' : 'received'}>
+                            <div>{message.message}</div>
+                        </div>
+                    ))
+                ) : null } */}
                 {messages.map((message, index) => (
                     <div key={index} className={message.senderId === USER_ID ? 'sent' : 'received'}>
                         <div>{message.message}</div>

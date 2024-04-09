@@ -5,6 +5,7 @@ import friendService from '../services/friendService'
 import styles from './friends.css'
 import {v4 as idGen} from "uuid"
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 // TODO: remove later once user is properly set up
 // const USER_ID = '65fa73b955410eecb776f5b1';
@@ -14,6 +15,7 @@ const USER_ID = '65fcabc9668f4f329e89992a';
 const FRIEND_ID = '65fa73b955410eecb776f5b1'
 
 export default function FriendsPage() {
+    const router = useRouter([]);
     const [friends, setFriends] = useState([]);
     const [pendingFriends, setPendingFriends] = useState([]);
     const [acceptedFriends, setAcceptedFriends] = useState([]);
@@ -133,7 +135,7 @@ export default function FriendsPage() {
             // const userId = getUserId(); 
     
             // Redirect to another page with user ID and friend ID as query parameters
-            window.location.href = `/messaging?userId=${encodeURIComponent(USER_ID)}&friendId=${encodeURIComponent(friendId)}`;
+            router.push(`/messaging?userId=${encodeURIComponent(USER_ID)}&friendId=${encodeURIComponent(friendId)}`);
         } catch(error) {
             console.error("Error:", error);
         }

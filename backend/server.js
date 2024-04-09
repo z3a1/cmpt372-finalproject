@@ -59,7 +59,7 @@ const io = require("socket.io")(server, {
         credentials: true, 
         optionSuccessStatus:200
     }
-  });
+});
 
 initializeSocket(io);
 
