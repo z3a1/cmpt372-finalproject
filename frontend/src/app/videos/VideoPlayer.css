@@ -1,11 +1,10 @@
 .videoplayer-container {
   text-align: center;
-  padding: 5px;
+  /* padding: 5px; */
 }
 
 .videoplayer-container iframe {
-  margin: 10px;
-  padding: 5px;
+ height:250px;
 }
 
 .favourite-button {

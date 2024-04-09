@@ -5,10 +5,11 @@ import "../VideoList.css";
 import React, { useState, useEffect } from "react";
 import "@mantine/carousel/styles.css";
 import { Carousel } from "@mantine/carousel";
-import { Container, rem } from "@mantine/core";
+import { Loader, Container, rem, Center } from "@mantine/core";
 
 export default function VideoList({ location, userId }) {
   const [videoIds, setVideoIds] = useState([]);
+  const [videosLoaded, setvideosLoaded] = useState(false);
 
   //UseEffect to rerender after location has be updated
   useEffect(() => {
@@ -22,6 +23,7 @@ export default function VideoList({ location, userId }) {
           .then((res) => res.json())
           .then((serverRes) => {
             setVideoIds(serverRes);
+            setvideosLoaded(true);
           });
       } catch (err) {
         console.log(err);
@@ -38,22 +40,28 @@ export default function VideoList({ location, userId }) {
 
   return (
     <Container className="videolist-container">
-      <Carousel
-        withIndicators
-        slideSize="100%"
-        height={270}
-        slideGap="md"
-        align="start"
-        controlsPosition="outside"
-      >
-        {videoIds.map((vidId) => (
-          <Carousel.Slide>
-            <Container className = "videoplayer-contaner" size ="xs">
-              <VideoPlayer key={vidId} videoId={vidId} userId={userId} />
-            </Container>
-          </Carousel.Slide>
-        ))}
-      </Carousel>
+      {!videosLoaded && (
+        <Center>
+          <Loader style={{ padding: "40px" }} />
+        </Center>
+      )}
+      {videosLoaded && (
+        <Carousel
+          loop
+          withIndicators
+          slideSize="50%"
+          slideGap="md"
+          align="start"
+        >
+          {videoIds.map((vidId) => (
+            <Carousel.Slide key={vidId}>
+              <Container className="videoplayer-contaner">
+                <VideoPlayer key={vidId} videoId={vidId} userId={userId} />
+              </Container>
+            </Carousel.Slide>
+          ))}
+        </Carousel>
+      )}
     </Container>
   );
 }

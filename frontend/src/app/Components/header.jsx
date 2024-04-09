@@ -4,7 +4,7 @@ import "./header.css";
 
 export default function Header() {
   return (
-    <Title className="title" variant="filled" bg="rgba(0, 150, 0, 0.7)">
+    <Title className="title" size = "h3" variant="filled" bg="var(--mantine-color-blue-7)">
       <IconMap className="icon-map" />
       Socializer
     </Title>

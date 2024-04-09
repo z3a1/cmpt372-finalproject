@@ -133,7 +133,7 @@ router.get("/api/event/friends/public", async (req, res) => {
                 }
             }
         }
-        const eventPackages = await EventController.getEventPackages(events)
+        const eventPackages = await EventController.getEventPackages(publicEvents)
         res.status(200).json({ eventPackages })
     } catch (err) {
         console.error('Error retrieving public events of friends:', err);

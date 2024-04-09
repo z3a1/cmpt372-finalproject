@@ -3,6 +3,7 @@ import selectionStyle from './selection.module.css'
 import { useDisclosure } from '@mantine/hooks';
 import VideosPage from '../../../videos/page'
 import { Button, Container, Drawer, Stack, Text, Title } from '@mantine/core';
+import VideosDrawer from '@/app/videos/VideoDrawer';
 
 export default function Selection({ selectedPlaceName, selectedAddress }) {
     const router = useRouter();
@@ -38,7 +39,7 @@ export default function Selection({ selectedPlaceName, selectedAddress }) {
                 )}
             </Stack>
             <Drawer position="bottom" size="md" opened={opened} onClose={close} title="🏙️ City Recommendations">
-                <VideosPage />
+                <VideosDrawer></VideosDrawer>
             </Drawer>
         </div>
     )

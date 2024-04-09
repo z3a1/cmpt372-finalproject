@@ -1,8 +1,12 @@
+html, body{
+    height:100%;
+    width:100%;
+}
 .videolist-container{
     /* width: 800px; */
-
+  margin-top:20px;
 }
 
 .videolist-container{
-    
+    height:100%;
 }

@@ -17,7 +17,7 @@ export default function NavBar(params){
         { link: `/friends?id=${params.id}`, label: "Friends", icon: IconFriends },
         { link: `/event/map?id=${params.id}`, label: "Create Event", icon: IconMapPin },
         { link: `/event/dashboard?id=${params.id}`, label: "Event Dashboard", icon: IconCalendarEvent },
-        { link: `/videos?id=${params.id}`, label: "Event Suggestions", icon: IconBrandYoutube },
+        { link: `/videos?id=${params.id}`, label: "Event Recommendations", icon: IconBrandYoutube },
       ];
 
     const links = dataLinks.map((data, index) => (
