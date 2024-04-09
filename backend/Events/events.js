@@ -7,27 +7,9 @@ const Event = mongoose.model("Event");
 const Location = mongoose.model("Location");
 const Attendee = mongoose.model("Attendee");
 const User = mongoose.model("User");
+const Friend = mongoose.model("Friend");
 
-// Returns the location id if it exists, otherwise creates and returns a new location
-async function getOrCreateLocation(location) {
-    try {
-        const existingLocation = await Location.findOne(location)
-        if (!existingLocation) {
-            const newLocation = new Location(location)
-            return await newLocation.save()
-                .then(savedLocation => {
-                    console.log("Location saved: ", savedLocation)
-                    return savedLocation;
-                })
-        } else {
-            console.log("Location already exists: ", existingLocation)
-            return existingLocation;
-        }
-    } catch (err) {
-        console.error("Error getting or creating location: ", err)
-        throw err;
-    }
-}
+const EventController = require('./EventController')
 
 // Create an event with location and attendees
 router.post("/api/event/create", async (req, res) => {
@@ -36,16 +18,13 @@ router.post("/api/event/create", async (req, res) => {
 
     // Send form data to database collections
     try {   
-        const location = await getOrCreateLocation({ name: placeName, address: address })
-        console.log("Location: ", location)
-        console.log(friends)
+        const location = await EventController.getOrCreateLocation({ name: placeName, address: address })
 
         const event = {
             creator_id: new mongoose.Types.ObjectId(creatorId),
             name: eventName,
             location_id: location._id,
             date_time: dayjs(dateTime, "MMM D, YYYY h:mm A").toDate(),
-            friends: friends,
             visibility: visibility,
             description: description   
         }
@@ -57,11 +36,13 @@ router.post("/api/event/create", async (req, res) => {
             await newEvent.save()
                 .then(savedEvent => {
                     console.log("Event saved: ", savedEvent)
+
                     // Add attendees to event
                     friends.forEach(async (friend) => {
+                        const friendUser = await User.findOne({ username: friend })
                         const attendee = {
                             event_id: savedEvent._id,
-                            user_id: friend._id,
+                            user_id: friendUser._id,
                             status: 'invited'
                         }
                         const newAttendee = new Attendee(attendee)
@@ -81,31 +62,6 @@ router.post("/api/event/create", async (req, res) => {
     }
 })
 
-// Create a package containing event, user, and location
-const getEventPackages = async (events) => {
-    let eventPackages = []
-    for (let event of events) {
-        const user = await User.findById(event.creator_id);
-        const location = await Location.findById(event.location_id)
-        const package = { event, user, location }
-        eventPackages.push(package)
-    }
-    return eventPackages
-}
-
-// Create a package containing event, user, location, and attendees
-const getEventPackagesWithAttendee = async (events, userId) => {
-    let eventPackages = []
-    for (let event of events) {
-        const user = await User.findById(event.creator_id);
-        const location = await Location.findById(event.location_id)
-        const attendee = await Attendee.findOne({ event_id: event._id, user_id: userId })
-        const package = { event, user, location, attendee }
-        eventPackages.push(package)
-    }
-    return eventPackages
-}
-
 // Get the list of created events for user
 router.get("/api/event/created", async (req, res) => {
     const userId = req.query.id
@@ -113,7 +69,7 @@ router.get("/api/event/created", async (req, res) => {
 
     try {
         const events = await Event.find({ creator_id: creatorId });
-        const eventPackages = await getEventPackages(events)
+        const eventPackages = await EventController.getEventPackages(events)
         res.status(200).json({ eventPackages })
     } catch (err) {
         console.error('Error retrieving created events:', err);
@@ -126,7 +82,6 @@ router.get("/api/event/invited", async (req, res) => {
     const userId = req.query.id
 
     try {
-
         const invitedEvents = await Attendee.find({ user_id: userId });
 
         // Get events
@@ -136,7 +91,7 @@ router.get("/api/event/invited", async (req, res) => {
             events.push(event)
         }
 
-        const eventPackages = await getEventPackagesWithAttendee(events, userId)
+        const eventPackages = await EventController.getEventPackagesWithAttendee(events, userId)
         res.status(200).json({ eventPackages })
     } catch (err) {
         console.error('Error retrieving invited events:', err);
@@ -144,22 +99,41 @@ router.get("/api/event/invited", async (req, res) => {
     }
 })
 
-// Get all public events of friends where user is not invited
+// Get all public events of friends where the user is not invited
 router.get("/api/event/friends/public", async (req, res) => {
     const userId = req.query.id
 
     try {
-        // Get friends
-        
-            // Get invited events of friends
-            // Loop
-            const friendInvitedEvents = await Attendee.find({ user_id: "friendId", status: "invited" || "confirmed" })
+        const allAcceptedFriends = await Friend.find({ user_id: userId, status: "accepted" })
+        console.log("all accepted friends:", allAcceptedFriends)
 
-        // Get public invited events of friends
-        const publicFriendInvitedEvents = friendInvitedEvents.map(async (event) => {
-            await Event.find({ _id: event._id, visibility: "public" })
-        })
-        res.status(200).json({ publicFriendInvitedEvents })
+        let publicEvents = []
+        for (let friend of allAcceptedFriends) {
+            console.log("friend:", friend.friend_id)
+
+            // Get friend's invited public events
+            const friendInvitedEvents = await Attendee.find({ user_id: friend.friend_id, status: "invited" || "confirmed" })
+            for (const invitedEvent of friendInvitedEvents) {
+                const publicEvent = await Event.findOne({ _id: invitedEvent.event_id, visibility: "public" })
+
+                // Check if user is already added to event
+                const userAlreadyInvitedEvent = await Attendee.findOne({ user_id: userId, event_id: publicEvent._id })
+                if (!userAlreadyInvitedEvent) {
+                    publicEvents.push(publicEvent)
+                }
+            }
+
+            // Get friend's created public events
+            const friendCreatedEvents = await Event.find({ creator_id: friend.friend_id, visibility: "public" })
+            for (const createdEvent of friendCreatedEvents) {
+                // Check if user is already added to event
+                const userAlreadyInvitedEvent = await Attendee.findOne({ user_id: userId, event_id: createdEvent._id })
+                if (!userAlreadyInvitedEvent) {
+                    publicEvents.push(createdEvent)
+                }
+            }
+        }
+        res.status(200).json({ publicEvents })
     } catch (err) {
         console.error('Error retrieving public events of friends:', err);
         res.status(500).json({ err: 'Failed to fetch public events of friends for user' });
@@ -173,7 +147,16 @@ router.get("/api/event", async (req, res) => {
     try {
         const event = await Event.findById(event_id)
         const location = await Location.findById(event.location_id)
-        res.status(200).json({ event, location })
+        const eventAttendees = await Attendee.find({ event_id: event_id })
+
+        // Get users from eventAttendees
+        let attendees = []
+        for (let attendee of eventAttendees) {
+            const user = await User.findById(attendee.user_id)
+            attendees.push({user, attendee})
+        }
+        
+        res.status(200).json({ event, location, attendees })
     } catch (err) {
         console.error('Error fetching event:', event_id, err);
         res.status(500).json({ err: 'Failed to fetch event and location data' });
@@ -183,20 +166,34 @@ router.get("/api/event", async (req, res) => {
 // Edit event by id
 router.post("/api/event/edit", async (req, res) => {
     const event_id = req.query.id;
-    const { eventName, placeName, address, dateTime, friends, visibility, description } = req.body
+    const { eventName, placeName, address, dateTime, attendees, visibility, description } = req.body
 
     try {
-        const location = await getOrCreateLocation({ name: placeName, address: address })
+        const location = await EventController.getOrCreateLocation({ name: placeName, address: address })
         const editedEvent = {
             name: eventName,
             location_id: location._id,
             date_time: dateTime,
-            friends: friends,
             visibility: visibility,
             description: description
         }
 
-        // TODO: Update friends
+        // Delete all attendees
+        await Attendee.deleteMany({ event_id: event_id })
+
+        // Add new attendees
+        attendees.forEach(async (attendee) => {
+            const user = await User.findOne({ username: attendee })
+            const newAttendee = {
+                event_id: event_id,
+                user_id: user._id,
+                status: 'invited'
+            }
+            const attendeeModel = new Attendee(newAttendee)
+            await attendeeModel.save()
+                .then(savedAttendee => console.log("Saved attendee:", savedAttendee))
+                .catch(err => console.error("Error saving attendee:", err))
+        })
 
         // Update event
         await Event.findByIdAndUpdate(event_id, editedEvent)
@@ -204,8 +201,8 @@ router.post("/api/event/edit", async (req, res) => {
                 res.status(200).json({ updatedEvent })
             })
     } catch (err) {
-        console.error('Error patching event:', event_id, err);
-        res.status(500).json({ err: 'Failed to patch event' });
+        console.error('Error editing event:', event_id, err);
+        res.status(500).json({ err: 'Failed to edit event' });
     }
 })
 
@@ -244,7 +241,6 @@ router.post("/api/event/attendee/status", async (req, res) => {
 // Get attendee
 router.get("/api/event/attendee", async (req, res) => {
     const { eventId, userId } = req.query
-    console.log("eventId:", eventId, "userId:", userId)
 
     try {
         const attendee = await Attendee.findOne({ 

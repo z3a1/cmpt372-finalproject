@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { eyeIcon } from "../../lib/icon";
 import dayjs from 'dayjs';
 import VisibilityBadge from "../../components/visibilityBadge"; 
-import StatusBadge from "./statusBadge";
+import StatusBadge from "../../components/statusBadge";
 
 export default function EventTable({ eventType }) {
     const router = useRouter()

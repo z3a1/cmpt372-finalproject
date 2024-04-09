@@ -59,7 +59,7 @@ var eventSchema = new Schema({
 var attendeeSchema = new Schema({
     event_id: {type: 'ObjectId', ref:'Event'},
     user_id: {type: 'ObjectId', ref:'User'},
-    status: {type: String, enum: ['invited','confirmed','rejected','cancelled']}
+    status: {type: String, enum: ['invited','confirmed','rejected']}
 })
 
 var videoSchema = new Schema({

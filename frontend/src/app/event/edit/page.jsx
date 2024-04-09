@@ -23,8 +23,12 @@ export default function EditEvent() {
     // For when address button is used
     const [isAddressOpen, setIsAddressOpen] = useState(false)
 
-    // Friends taken from user
+    // Friends
     const [friends, setFriends] = useState([])
+    const [areFriendsLoaded, setAreFriendsLoaded] = useState(false)
+
+    // Current attendees
+    const [currentAttendees, setCurrentAttendees] = useState([])
 
     // Map selection
     const [selectedPlaceName, setSelectedPlaceName] = useState("");
@@ -38,7 +42,7 @@ export default function EditEvent() {
         placeName: "",
         address: "",
         dateTime: new Date(),
-        friends: [],
+        attendees: [],
         visibility: "",
         description: ""
     })
@@ -46,16 +50,33 @@ export default function EditEvent() {
     const getEvent = async () => {
         await axios.get(process.env.SERVER_URL + `/events/api/event?id=${eventId}`)
             .then(res => {
-                console.log(res.data.event)
-                console.log(res.data.location)
+                console.log("Event retrieved successfully", res.data)
+
                 setEvent(res.data.event)
-                setFriends(event.friends)
                 setSelectedPlaceName(res.data.location.name)
                 setSelectedAddress(res.data.location.address)
                 setDateTime(new Date(res.data.event.date_time))
+                setCurrentAttendees(res.data.attendees.map(attendee => attendee.user.username))
+
                 setIsLoaded(true)
             })
-            .catch(error => console.error("Error retrieving event:", error.message))
+            .catch(error => {
+                console.error("Error retrieving event:", error.message)
+            })
+    }
+
+    const getFriends = async () => {
+        await axios.get(process.env.SERVER_URL + `/friends/get/accepted?userId=${userId}`)
+            .then(res => {
+                console.log("Friends retrieved successfully", res.data.friendArray)
+
+                setFriends(res.data.friendArray.map(friend => friend.username))
+
+                setAreFriendsLoaded(true)
+            })
+            .catch(error => {
+                console.error("Error retrieving friends:", error.message)
+            })
     }
     
     const setFormField = (fieldName, fieldValue) => {
@@ -69,8 +90,6 @@ export default function EditEvent() {
     const handleInput = (e) => {
         const fieldName = e.target.name;
         let fieldValue = e.target.value;
-
-        console.log(fieldName, fieldValue)
         setFormField(fieldName, fieldValue);
     }
 
@@ -90,9 +109,8 @@ export default function EditEvent() {
         formData.dateTime = dateTime
         formData.address = selectedAddress
         formData.placeName = selectedPlaceName
-        formData.eventName = event.name
         formData.description = event.description
-        formData.friends = event.friends
+        formData.attendees = currentAttendees
         
         await axios.post(process.env.SERVER_URL + `/events/api/event/edit?id=${eventId}`, formData)
             .then(() => {
@@ -110,12 +128,12 @@ export default function EditEvent() {
             })
             .catch(error => console.log(error.message))
 
-        router.push(`/event/view?eventId=${eventId}&id=${userId}`)
+        router.push(`/event/view/created?eventId=${eventId}&id=${userId}`)
     }
 
     useEffect(() => {
         getEvent()
-        // TODO: Set friends
+        getFriends()
     }, [])
 
   return (
@@ -135,121 +153,119 @@ export default function EditEvent() {
         />
         <Card shadow="sm" padding="lg" radius="md" withBorder style={{ width: '25vw' }}>
             <form method="POST" onSubmit={submitForm}>  
-                <LoadingOverlay visible={!isLoaded} size={50} />
-                <Container size="xs" my={20}>
-                    <Title order={1}>Edit Event</Title>
-                </Container>
-                <Container size="xs" my={20}>
-                    <TextInput 
-                        label="Name"
-                        placeholder="Event name"
-                        name="eventName"
-                        onChange={handleInput}
-                        size="md"
-                        required
-                        withAsterisk={false}
-                        defaultValue={event.name}
-                    />
-                </Container>
-                <Container size="xs" my={20}>
-                    <TextInput
-                        label="📍 Location"
-                        defaultValue={selectedPlaceName}
-                        placeholder='Place name'
-                        name="placeName"
-                        onChange={(e) => {
-                            handleInput(e)
-                            setSelectedPlaceName(e.target.value)
-                        }}
-                        size="md"
-                        withAsterisk={false}
-                        required
-                        rightSection={
-                            <Popover width={200} position="bottom" withArrow shadow="md" onChange={handleAddressClick}>
-                                <Popover.Target>
-                                    <ActionIcon radius="xl" color="green">
-                                        {isAddressOpen ? chevronUpIcon : chevronDownIcon}
-                                    </ActionIcon>
-                                </Popover.Target>
-                                <Popover.Dropdown>
-                                    <Text size='sm'>{selectedAddress}</Text>
-                                </Popover.Dropdown>
-                            </Popover>
-                        }
-                    />
-                </Container>
-                <Container size="xs" my={20}>
-                    <DateTimePicker
-                        label="📅 Date / Time"
-                        placeholder="Pick a date and time"
-                        valueFormat="MMM D, YYYY h:mm A"
-                        size="md"
-                        name="dateTime"
-                        comboboxprops={{ transitionProps: { transition: 'fade', duration: 200 } }}
-                        required
-                        withAsterisk={false}
-                        clearable
-                        value={dayjs(dateTime, 'MMM D, YYYY h:mm A').toDate()}
-                        onChange={setDateTime}
-                    />
-                </Container>
-                <Container size="xs" my={20}>
-                    {/* Added friends will be notified via email? */}
-                    <MultiSelect
-                        label="🤝 Friends"
-                        placeholder="Select friends"
-                        checkIconPosition="right"
-                        data={friends}
-                        maxDropdownHeight={200}
-                        comboboxProps={{ transitionProps: { transition: 'fade', duration: 200 } }}
-                        clearable
-                    />
-                </Container>
-                <Container size="xs" my={20}>
-                    <Radio.Group 
-                        name='visibility'
-                        label="👀 Visibility"
-                        defaultValue={event.visibility === "public" ? "public" : "private"}
-                        onChange={handleRadioInput}
-                    >
-                        <Group>
-                            <Radio
-                                value="public"
-                                label="Public"
+                <LoadingOverlay visible={!isLoaded && !areFriendsLoaded} size={50} />
+                {isLoaded && areFriendsLoaded && (
+                    <>
+                        <LoadingOverlay visible={!isLoaded && !areFriendsLoaded} size={50} />
+                        <Container size="xs" my={20}>
+                            <Title order={1} my={20}>Edit Event</Title>
+                            <TextInput 
+                                label="Name"
+                                placeholder="Event name"
+                                name="eventName"
+                                onChange={handleInput}
+                                size="md"
+                                required
+                                withAsterisk={false}
+                                defaultValue={event.name}
+                                my={20}
                             />
-                            <Radio
-                                value="private"
-                                label="Private"
+                            <TextInput
+                                label="📍 Location"
+                                defaultValue={selectedPlaceName}
+                                placeholder='Location name'
+                                name="placeName"
+                                onChange={(e) => {
+                                    handleInput(e)
+                                    setSelectedPlaceName(e.target.value)
+                                }}
+                                size="md"
+                                withAsterisk={false}
+                                required
+                                rightSection={
+                                    <Popover width={200} position="bottom" withArrow shadow="md" onChange={handleAddressClick}>
+                                        <Popover.Target>
+                                            <ActionIcon radius="xl" color="green">
+                                                {isAddressOpen ? chevronUpIcon : chevronDownIcon}
+                                            </ActionIcon>
+                                        </Popover.Target>
+                                        <Popover.Dropdown>
+                                            <Text size='sm'>{selectedAddress}</Text>
+                                        </Popover.Dropdown>
+                                    </Popover>
+                                }
                             />
-                        </Group>
-                    </Radio.Group>                    
-                </Container>
-                <Container size="xs" my={20}>
-                    <Textarea
-                        label="Description"
-                        placeholder="Description"
-                        name="description"
-                        onChange={handleInput}
-                        size="md"
-                        minRows={3}
-                        resize="vertical"
-                        autosize
-                        defaultValue={event.description}
-                    />
-                </Container>
-                <Container size="xs" my={20}>
-                    <Group justify="space-between">
-                        <Button 
-                            component={Link} 
-                            href={`/event/view?eventId=${eventId}&id=${userId}`} 
-                            color="gray"
-                            type="button"
-                        >
-                            Back
-                        </Button>
-                        <Button type="submit" color="green">Edit</Button>
-                    </Group>
-                </Container>
+                            <DateTimePicker
+                                label="📅 Date / Time"
+                                placeholder="Date and time"
+                                valueFormat="MMM D, YYYY h:mm A"
+                                size="md"
+                                name="dateTime"
+                                comboboxprops={{ transitionProps: { transition: 'fade', duration: 200 } }}
+                                required
+                                withAsterisk={false}
+                                clearable
+                                value={dayjs(dateTime, 'MMM D, YYYY h:mm A').toDate()}
+                                onChange={setDateTime}
+                                mt={20}
+                                my={20}
+                            />
+                            <MultiSelect
+                                label="🤝 Friends"
+                                placeholder="Friends"
+                                checkIconPosition="right"
+                                data={friends}
+                                defaultValue={currentAttendees}
+                                onChange={setCurrentAttendees}
+                                maxDropdownHeight={200}
+                                comboboxProps={{ transitionProps: { transition: 'fade', duration: 200 } }}
+                                searchable
+                                clearable
+                                my={20}
+                            />
+                            <Radio.Group 
+                                name='visibility'
+                                label="👀 Visibility"
+                                defaultValue={event.visibility === "public" ? "public" : "private"}
+                                onChange={handleRadioInput}
+                                my={20}
+                            >
+                                <Group>
+                                    <Radio
+                                        value="public"
+                                        label="Public"
+                                    />
+                                    <Radio
+                                        value="private"
+                                        label="Private"
+                                    />
+                                </Group>
+                            </Radio.Group> 
+                            <Textarea
+                                label="Description"
+                                placeholder="Description"
+                                name="description"
+                                onChange={handleInput}
+                                size="md"
+                                minRows={3}
+                                maxRows={3}
+                                defaultValue={event.description}
+                                my={20}
+                            />
+                            <Group justify="space-between">
+                                <Button 
+                                    component={Link} 
+                                    href={`/event/view/created?eventId=${eventId}&id=${userId}`} 
+                                    variant='default'
+                                    type="button"
+                                >
+                                    Back
+                                </Button>
+                                <Button type="submit" color="green">Edit</Button>
+                            </Group>
+                        </Container>
+                    </>
+                )}
             </form>
         </Card>
     </Flex>

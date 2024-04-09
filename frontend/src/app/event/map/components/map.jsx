@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
 import axios from 'axios';
 import mapStyle from "./map.module.css"
-import PlacesAutocomplete from './autocomplete';
+import PlacesAutocomplete from '../../components/autocomplete';
 import Selection from './selection';
 
 const STARTING_LOCATION = { lat: 49.21, lng: -122.96 }; // Metro Vancouver Area
