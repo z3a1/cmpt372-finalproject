@@ -7,7 +7,7 @@ import { IconChevronRight } from '@tabler/icons-react';
 
 export default function friendsList(params){
 
-    let user_id = params.user_id
+    let user_id = params.id
     let [friends,setFriendsArr] = useState([])
     let [loadingFriendsArr,setLoadingState] = useState(false)
 
@@ -17,8 +17,8 @@ export default function friendsList(params){
                 user_id: user_id
             })
             .then(res => {
-                setFriendsArr(res)
                 setLoadingState(true)
+                setFriendsArr(res)
             })
         }
         getFriendsArr()
@@ -27,8 +27,10 @@ export default function friendsList(params){
 
     return(
         <>
-            {!loadingFriendsArr && <Loader color = "blue"/>}
-            {loadingFriendsArr && friends.map((item,index) => {
+            <Text size = 'md'>Friends: </Text>
+            {loadingFriendsArr && 
+            <>
+             {friends.map((item,index) => {
                 return(
                     <UnstyledButton>
                         <Group>
@@ -41,7 +43,8 @@ export default function friendsList(params){
                         </Group>
                     </UnstyledButton>
                 )
-            })}
+            })} 
+            </>}
         </>
     )
 }

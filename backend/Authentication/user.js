@@ -51,19 +51,7 @@ router.post('/register',async (req,res) => {
 })
 
 router.post('/getSessionById', async(req,res) => {
-    let id = req.body.id
-    console.log(req.session.passport.user)
     res.status(200).json(req.session.passport.user)
-    // Session.findById({_id: id}).then(dbRes => {
-    //     let foundSession = JSON.parse(dbRes.session)
-    //     req.session.cookie = foundSession.cookie
-    //     req.session.user = foundSession.passport.user
-    //     req.session.save()
-    //     res.status(200).json(foundSession.passport.user)
-    // })
-    // .catch(err => {
-    //     res.status(500).json(err)
-    // })
 })
 
 router.post('/getUserId', async(req,res) => {
