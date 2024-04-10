@@ -10,19 +10,20 @@ var db = require("../Database/schema");
 
 router.get("/", async (req, res, next) => {
   try {
-    //  const searchQuery = req.query.q;
-
-    // //Searching is 100 quota units per request
-    // const url = `${youtubeApiUrl}/search?key=${youtbeApiKey}&type=video&part=id&fields=items(id)&maxResults=6&q=${searchQuery}`;
-
-    // const response = await axios.get(url);
-    // const videoIds = response.data.items.map((item) => item.id.videoId);
-
+    
+     const searchQuery = req.query.q;
+  
+    //Searching is 100 quota units per request
+    const url = `${youtubeApiUrl}/search?key=${youtbeApiKey}&type=video&part=id&fields=items(id)&maxResults=6&q=${searchQuery}`;
+   
+    const response = await axios.get(url);
+    const videoIds = response.data.items.map((item) => item.id.videoId);
+    console.log(response)
     /*
       TESTING PURPOSES BELOW
       MUST REMOVE THIS RES.SEND BEFORE UNCOMMENTING THE REST
     */
-    const videoIds = ["xNRJwmlRBNU", "jb-cDp5StCw", "SqcY0GlETPk", "ZVnjOPwW4ZA", "vwSlYG7hFk0", "Z-v6MxJGPS4"];
+   //const videoIds = ["xNRJwmlRBNU", "jb-cDp5StCw", "SqcY0GlETPk", "ZVnjOPwW4ZA", "vwSlYG7hFk0", "Z-v6MxJGPS4"];
 
     for (const videoId of videoIds) {
       await db.Video.findOne({ video_id: videoId }).then(async (checkVid) => {
@@ -33,16 +34,16 @@ router.get("/", async (req, res, next) => {
         }
       });
     }
-    
+    console.log(videoIds)
     res.status(200).json(videoIds);
   } catch (err) {
     res.status(500).json({ err: "Internal server error" });
   }
 });
 
-router.get("/favourites/:userId", async (req, res) => {
+router.get("/favourites", async (req, res) => {
   try {
-    await db.LikedVideo.find({ user_id: req.params.userId }).then(
+    await db.LikedVideo.find({ user_id: req.session.passport.user._id }).then(
       async (likedVids) => {
         if (!likedVids) {
           return res.status(404).json({ err: "No favourite videos" });
@@ -59,9 +60,9 @@ router.get("/favourites/:userId", async (req, res) => {
   }
 });
 
-router.post("/favourites/:userId", async (req, res) => {
+router.post("/favourites", async (req, res) => {
   try {
-    const user = await db.User.findById(req.params.userId);
+    const user = await db.User.findById(req.session.passport.user._id);
     const video = await db.Video.findOne({ video_id: req.body.videoId });
 
     if (!user || !video) {
@@ -96,9 +97,9 @@ router.post("/favourites/:userId", async (req, res) => {
   }
 });
 
-router.delete("/favourites/:userId/:videoId", async (req, res) => {
+router.delete("/favourites/:videoId", async (req, res) => {
   try {
-    const user = await db.User.findById(req.params.userId);
+    const user = await db.User.findById(req.session.passport.user._id);
     const video = await db.Video.findOne({ video_id: req.params.videoId });
 
     if (!user || !video) {
@@ -122,13 +123,14 @@ router.delete("/favourites/:userId/:videoId", async (req, res) => {
   }
 });
 
-router.get("/favourites/:userId/:videoId/checkFavourite", async (req, res) => {
+router.get("/favourites/:videoId/checkFavourite", async (req, res) => {
   try {
     const vidId = req.params.videoId;
+    console.log(req.session.passport.user._id)
 
     await db.Video.findOne({ video_id: vidId }).then(async (video) => {
       await db.LikedVideo.find({
-        user_id: req.params.userId,
+        user_id: req.session.passport.user._id,
         video_id: video._id.toString(),
       }).then((likedVid) => {
         if (!likedVid) {

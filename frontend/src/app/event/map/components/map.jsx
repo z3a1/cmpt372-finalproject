@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
 import axios from 'axios';
 import mapStyle from "./map.module.css"
-import PlacesAutocomplete from './autocomplete';
+import PlacesAutocomplete from '../../components/autocomplete';
 import Selection from './selection';
 
 const STARTING_LOCATION = { lat: 49.21, lng: -122.96 }; // Metro Vancouver Area
@@ -15,6 +15,7 @@ export default function Map() {
 
     // Selected nearby places
     const [nearbyPlaces, setNearbyPlaces] = useState([]);
+    const [areNearbyPlacesLoaded, setAreNearbyPlacesLoaded] = useState(false);
 
     // Selected marker
     const [selectedMarker, setSelectedMarker] = useState(false);
@@ -25,7 +26,7 @@ export default function Map() {
     const processPlaceName = async (e) => {
         if (e.placeId) {
             // Get specific place name
-            await axios.get(process.env.SERVER_URL + `/maps/api/places/marker/search?placeId=${e.placeId}`)
+            await axios.get(process.env.SERVER_URL + `/maps/api/places/marker/search?placeId=${e.placeId}`, {withCredentials: true})
                 .then(res => {
                     console.log(res.data.displayName.text)
                     setSelectedPlaceName(res.data.displayName.text)
@@ -40,8 +41,9 @@ export default function Map() {
     }
 
     const processSelectedAddress = async (lat, lng) => {
-        await axios.get(process.env.SERVER_URL + `/maps/api/places/selected/address?lat=${lat}&lng=${lng}`)
+        await axios.get(process.env.SERVER_URL + `/maps/api/places/selected/address?lat=${lat}&lng=${lng}`, {withCredentials: true})
             .then(res => {
+                // Get the first result
                 console.log(res.data.results[0])
                 console.log(res.data.results[0].formatted_address)
                 setSelectedAddress(res.data.results[0].formatted_address)
@@ -65,16 +67,17 @@ export default function Map() {
         setSelectedPlaceName(pName) // TODO: asynchronous call messes up name selection (race condition)
     }
 
-    // TODO: API Call fails on fast access -- May need retry or debounce
+    // On click spawn nearby places around a given radius
     const handleMarkerDoubleClick = async () => {
+        setAreNearbyPlacesLoaded(false)
         console.log("Getting nearby places...", selectedCoordinates.lat, selectedCoordinates.lng)
-        // On click spawn nearby places around a given radius
-        await axios.get(process.env.SERVER_URL + `/maps/api/places/nearby/search?lat=${selectedCoordinates.lat}&lng=${selectedCoordinates.lng}`)
+        await axios.get(process.env.SERVER_URL + `/maps/api/places/nearby/search?lat=${selectedCoordinates.lat}&lng=${selectedCoordinates.lng}`, {withCredentials: true})
             .then(res => {
                 console.log(res.data)
                 setNearbyPlaces(res.data)
+                setNearbyPlacesLoaded(true)
             })
-            .catch(error => console.error("Error processing nearby search: ", error));
+            .catch(error => console.error("Error processing nearby search: ", error))
     }
 
     return (
@@ -116,7 +119,7 @@ export default function Map() {
                         )}
 
                         {/* Load Nearby Places */}
-                        {nearbyPlaces.map((place, index) => (
+                        {areNearbyPlacesLoaded && nearbyPlaces.map((place, index) => (
                             <Marker
                                 key={index}
                                 position={{ lat: place.geometry.location.lat, lng: place.geometry.location.lng }}

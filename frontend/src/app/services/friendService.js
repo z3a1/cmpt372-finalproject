@@ -6,7 +6,7 @@ import axios from 'axios';
 
 const friendService =  {
     getAllFriends: async(userId) => {
-        return await axios.get(process.env.SERVER_URL + `/friends/get/all?userId=${userId}`)
+        return await axios.get(process.env.SERVER_URL + `/friends/get/all?userId=${userId}`, {withCredentials: true})
             .then(res => {
                 return res.data
             })
@@ -14,7 +14,7 @@ const friendService =  {
     },
 
     getPendingFriends: async(userId) => {
-        return await axios.get(process.env.SERVER_URL + `/friends/get/pending?userId=${userId}`)
+        return await axios.get(process.env.SERVER_URL + `/friends/get/pending?userId=${userId}`, {withCredentials: true})
             .then(res => {
                 console.log(res.data);
                 return res.data
@@ -23,7 +23,7 @@ const friendService =  {
     },
 
     getAcceptedFriends: async(userId) => {
-        return await axios.get(process.env.SERVER_URL + `/friends/get/accepted?userId=${userId}`)
+        return await axios.get(process.env.SERVER_URL + `/friends/get/accepted?userId=${userId}`, {withCredentials: true})
             .then(res => {
                 return res.data
             })
@@ -31,8 +31,7 @@ const friendService =  {
     },
 
     deleteFriend: async(id, userId,friendId) => {
-        console.log(id)
-        await axios.delete(process.env.SERVER_URL + `/friends/delete/friend?friendRequestId=${id}&userId=${userId}&friendId=${friendId}`)
+        await axios.delete(process.env.SERVER_URL + `/friends/delete/friend?friendRequestId=${id}&userId=${userId}&friendId=${friendId}`, {withCredentials: true})
             .then(res => {
                 console.log(res)
             })
@@ -40,28 +39,31 @@ const friendService =  {
     },
 
     addFriend: async(friend) =>{
-        await axios.post(process.env.SERVER_URL + `/friends/add?userId=${friend.userId}&friendId=${friend.friendId}`)
+        await axios.post(process.env.SERVER_URL + `/friends/add?friendId=${friend}`, {withCredentials: true})
         .then(res => {
             console.log(res)
         })
         .catch(error => console.error("Error adding friend", error.message))
     },
 
-    getFriendsCount: async(id) => {
-        await axios.get(process.env.SERVER_URL + `/friends/get/count?userId=${userId}`)
-        .then(res => {
-            return res.data
-        })
-        .catch(error => console.error("Error getting number of friends", error.message))
-    },
+    // getFriendsCount: async(id) => {
+    //     await axios.get(process.env.SERVER_URL + `/friends/get/count?userId=${userId}`, {withCredentials: true})
+    //     .then(res => {
+    //         return res.data
+    //     })
+    //     .catch(error => console.error("Error getting number of friends", error.message))
+    // },
 
     searchPeople: async(userName) => {
-        await axios.get(process.env.SERVER_URL + `/friends/get/people?userName=${userName}`)
+        let friend = [];
+        await axios.get(process.env.SERVER_URL + `/friends/get/people?userName=${userName}`, {withCredentials: true})
         .then(res => {
-            return res.data
+            console.log(res.data)
+            friend = res.data
             // use the data to go to a new page -> user profile
         })
         .catch(error => console.error("Error getting people", error.message))
+        return friend
     }
 }
 

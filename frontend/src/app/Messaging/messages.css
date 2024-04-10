@@ -1,0 +1,39 @@
+.message-container {
+  font-family: Arial, sans-serif;
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+}
+  
+.message {
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+}
+  
+.sent {
+  background-color: #DCF8C6;
+  text-align: right;
+}
+  
+.received {
+  background-color: #E0E0E0;
+  text-align: left;
+}
+  
+.input-message {
+  width: calc(100% - 80px);
+  padding: 10px;
+  border-radius: 5px 0 0 5px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+  
+.send-button {
+  padding: 11px 21px; 
+  border-radius: 0 5px 5px 0;
+  border: none;
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+}

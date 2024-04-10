@@ -1,6 +1,7 @@
 'use client'
 
 import { useLoadScript } from '@react-google-maps/api';
+import { Loader } from '@mantine/core';
 import Map from './components/map';
 
 export default function Maps() {
@@ -10,6 +11,10 @@ export default function Maps() {
         language: 'en'
     });
 
-    if (!isLoaded) return <div>Loading...</div>;
-    return <Map />
+    return (
+        <>
+            {!isLoaded && <Loader />}
+            {isLoaded && <Map />}
+        </>
+    );
 };

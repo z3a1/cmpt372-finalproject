@@ -10,7 +10,6 @@ var userSchema = new Schema({
     email: {type: String, unique: true, required: 'User must have an email!'},
     role: {type: String, enum:['Member','Admin'], default: 'Member'},
     password: {type: String, unique: true, required: 'User needs a password!!!'}
-
 })
 
 var friendSchema = new Schema({
@@ -30,29 +29,37 @@ var friendSchema = new Schema({
 })
 
 var locationSchema = new Schema({
-    location_id: 'UUID',
     name: String,
-    address: String,
-    city: String,
-    stateProvince: String,
-    country: String
+    address: String
 })
 
 var eventSchema = new Schema({
-    event_id: 'UUID',
+    creator_id: {
+        type: 'ObjectId',
+        ref:'User'
+    },
     name: String,
-    creator: {type: 'UUID', ref:'User'},
-    title: String,
+    location_id: {
+        type: 'ObjectId',
+        ref:'Location'
+    },
     description: String,
-    location_id: {type: 'UUID', ref:'Location'},
-    creation_date: Date,
-    deletion_date: Date
+    date_time: Date, // ISO 8601 format 
+    creation_date: {
+        type: Date,
+        default: Date.now
+    },
+    visibility: {
+        type: String,
+        enum: ['private', 'public'],
+        default: 'private'
+    }
 })
 
 var attendeeSchema = new Schema({
-    event_id: {type: 'UUID', ref:'Location'},
-    user_id: {type: 'UUID', ref:'User'},
-    status: {type: String, enum: ['invited','confirmed','denied','cancelled']}
+    event_id: {type: 'ObjectId', ref:'Event'},
+    user_id: {type: 'ObjectId', ref:'User'},
+    status: {type: String, enum: ['invited','confirmed','rejected']}
 })
 
 var videoSchema = new Schema({
@@ -93,6 +100,7 @@ const Attendee = mongoose.model('Attendee',attendeeSchema)
 const Video = mongoose.model('Video', videoSchema)
 const LikedVideo = mongoose.model('LikedVideo', likedVideoSchema)
 const Messages = mongoose.model('Messages', messages)
+
 
 const initializeDB = () => {
     mongoose.connect(process.env.CONNECTION_SECRET)

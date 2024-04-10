@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const Message = require('../Database/schema');
-const { storeUserSocket, getUserSocket, removeUserSocket } = require('./userSocket');
+const mongoose = require("mongoose");
+const Messages = mongoose.model("Messages");
+const User = mongoose.model("User");
+const { getUserSocket } = require('./userSocket');
 
 router.post('/sendMessage', async (req, res) => {
     try {
@@ -15,10 +17,10 @@ router.post('/sendMessage', async (req, res) => {
 
         await newMessage.save();
 
-        // if they are online
         const recipientSocketId = await getUserSocket(recipientId);
         if (recipientSocketId) {
-            io.to(recipientSocketId).emit('message', {
+    
+            req.io.to(recipientSocketId).emit('message', {
                 senderId: userId,
                 message
             });
@@ -31,18 +33,40 @@ router.post('/sendMessage', async (req, res) => {
     }
 });
 
+router.get('/friendInfo', async (req, res) => {
+    console.log("in get friend info");
+
+    try {
+        const friendId = req.query.friendId;
+
+        const friend = await User.findOne({ _id: friendId }, { username: 1, fname: 1, lname: 1, _id: 1 });
+        console.log("friend", friend);
+
+        res.status(200).json({ friend });
+
+    } catch (error){
+        console.error('Error fetching friend info:', error);
+        res.status(500).json({ error: 'Failed to fetch friend' });
+    }
+})
+
 router.get('/messages', async (req, res) => {
+    console.log("hi");
     try {
         const { userId, friendId } = req.query;
 
-        const messages = await Message.find({
+        const m = await Messages.find({
             $or: [
                 { senderId: userId, recipientId: friendId },
                 { senderId: friendId, recipientId: userId }
             ]
         });
 
-        res.status(200).json({ messages });
+        console.log(m);
+
+        //TODO: sort 
+
+        res.status(200).json({ m });
     } catch (error) {
         console.error('Error fetching messages:', error);
         res.status(500).json({ error: 'Failed to fetch messages' });

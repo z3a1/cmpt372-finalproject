@@ -51,7 +51,7 @@ const getUserSocket = async (userId, recipientId) => {
 
 const removeUserSocket = async (userId, recipientId) => {
     try {
-        await UserSocket.findOneAndRemove({ userId, recipientId });
+        await UserSocket.findOneAndDelete({ userId, recipientId });
     } catch (error) {
         throw error;
     }
