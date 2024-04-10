@@ -44,9 +44,13 @@ export default function VideosPage() {
 
   useEffect(() => {
     let getUser = async () => {
-      let res = await userService.getUserId(id);
-      if (!res) {
+      let res = await userService.getcurrentSession(id);
+      if (!res.data) {
+        alert("ERROR: Invalid Session!")
         router.push("/");
+      }
+      else{
+        console.log(res.data)
       }
     };
     getUser();

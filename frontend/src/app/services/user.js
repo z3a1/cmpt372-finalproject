@@ -17,4 +17,15 @@ let getUserId = async (id) => {
     }
 }
 
-module.exports = {getUserId}
+let getcurrentSession = async(sessionID) => {
+    let res = {}
+    await axios.post(process.env.SERVER_URL + "/auth/getSessionById", {id: sessionID}, {withCredentials: true}).then(serverRes => {
+        res = serverRes
+    })
+    .catch(err => {
+        alert(err)
+        return null
+    })
+    return res
+}
+module.exports = {getUserId, getcurrentSession}

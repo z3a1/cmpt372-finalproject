@@ -1,12 +1,14 @@
+"use client"
 import { Title } from "@mantine/core";
-import { IconMap } from "@tabler/icons-react";
 import "./header.css";
+import Logo from "./logofiller";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
+  const router = useRouter()
   return (
-    <Title className="title" size = "h3" variant="filled" bg="var(--mantine-color-blue-7)">
-      <IconMap className="icon-map" />
-      Socializer
+    <Title className="title" variant="filled" bg="rgba(0, 150, 0, 0.7)" onClick={() =>router.push("/")}>
+      <Logo/>
     </Title>
   );
 }

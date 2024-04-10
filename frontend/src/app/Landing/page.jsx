@@ -22,6 +22,7 @@ import NavBar from "../Components/navbar";
 import userService from "../services/user";
 import FriendsPage from "../friends/page";
 import VideosPage from "../videos/page";
+import friendsList from "../Components/friendsList";
 import "@mantine/core/styles.css";
 import "./landing.css";
 import FriendsActivity from "../Components/FriendsActivity";
@@ -29,24 +30,25 @@ import SuggestedEvents from "../Components/SuggestedEvents";
 import VideoDrawer from "../videos/VideoDrawer";
 
 export default function LandingPage() {
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id");
   const router = useRouter();
   const [userLoaded, setUserLoadState] = useState(false);
   const [user, setCurrentUser] = useState(null);
 
   useEffect(() => {
     let setUser = async () => {
-      let res = await userService.getUserId(id);
-      if (res) {
-        setUserLoadState(true);
-        setCurrentUser(res);
-      } else {
-        router.push("/");
-      }
+      await userService.getcurrentSession().then(res => {
+        if (res.data) {
+          setUserLoadState(true);
+          setCurrentUser(res.data);
+        } else {
+          router.push("/");
+        }
+      })
     };
     setUser();
   }, []);
+
+
 
   return (
     <div className="landing-container" style={{ height: "70vh" }}>

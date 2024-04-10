@@ -31,7 +31,6 @@ const friendService =  {
     },
 
     deleteFriend: async(id, userId,friendId) => {
-        console.log(id)
         await axios.delete(process.env.SERVER_URL + `/friends/delete/friend?friendRequestId=${id}&userId=${userId}&friendId=${friendId}`)
             .then(res => {
                 console.log(res)
