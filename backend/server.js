@@ -2,7 +2,7 @@ const express = require("express")
 const cors = require("cors")
 require('dotenv').config()
 const axios = require("axios")
-axios.defaults.withCredentials = true
+// axios.defaults.withCredentials = true
 const app = express()
 const db = require('./Database/schema')
 
@@ -15,7 +15,7 @@ const corsOptions = cors({
         "http://146.148.99.120",
         "http://35.188.178.185"
     ],
-    allowedHeaders: ["*"],
+    // allowedHeaders: ["*"],
     credentials: true,
     // sameSite: "none" 
 })
@@ -71,6 +71,11 @@ app.use('/friends', friends);
 // Data population for testing
 const Data = require('./Data/populate')
 app.use('/data', Data)
+
+app.use('/test', (req, res) => {
+    console.log("testing testing testing")
+    res.status(200).send("Test")
+})
 
 // Database
 db.initializeDB()
