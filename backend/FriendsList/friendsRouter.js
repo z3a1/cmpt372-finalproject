@@ -6,13 +6,6 @@ const mongoose = require("mongoose");
 const Friend = mongoose.model("Friend");
 const User = mongoose.model("User");
 
-/*
-TODO: 
-    make sure that all backend works with the front end 
-        adding a count 
-        make the names clickable - going to the profile of that user
-*/
-
 async function getInfo (idArray) {
     const friendArray = [];
 

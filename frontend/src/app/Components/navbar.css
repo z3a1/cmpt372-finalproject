@@ -32,5 +32,6 @@
   a:hover {
     color: var(--mantine-color-black);
     background-color: var(--mantine-color-gray-0);
+    cursor: pointer;
   }
   

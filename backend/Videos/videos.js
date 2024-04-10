@@ -19,12 +19,6 @@ router.get("/", async (req, res, next) => {
     const response = await axios.get(url);
     const videoIds = response.data.items.map((item) => item.id.videoId);
     console.log(response)
-    /*
-      TESTING PURPOSES BELOW
-      MUST REMOVE THIS RES.SEND BEFORE UNCOMMENTING THE REST
-    */
-   //const videoIds = ["xNRJwmlRBNU", "jb-cDp5StCw", "SqcY0GlETPk", "ZVnjOPwW4ZA", "vwSlYG7hFk0", "Z-v6MxJGPS4"];
-
     for (const videoId of videoIds) {
       await db.Video.findOne({ video_id: videoId }).then(async (checkVid) => {
         if (!checkVid) {
