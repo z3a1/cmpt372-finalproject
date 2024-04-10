@@ -1,5 +1,6 @@
 "use client";
 import {
+  Loader,
   Title,
   Group,
   Box,
@@ -36,23 +37,21 @@ export default function LandingPage() {
 
   useEffect(() => {
     let setUser = async () => {
-      await userService.getcurrentSession().then(res => {
+      await userService.getcurrentSession().then((res) => {
         if (res.data) {
           setUserLoadState(true);
           setCurrentUser(res.data);
         } else {
           router.push("/");
         }
-      })
+      });
     };
     setUser();
   }, []);
 
-
-
   return (
     <div className="landing-container" style={{ height: "70vh" }}>
-      <NavBar id={id} />
+      <NavBar />
 
       <Group
         className="landing-group"
@@ -60,10 +59,12 @@ export default function LandingPage() {
         style={{ width: "100%", height: "100%", overflow: "hidden" }}
       >
         <Box id="friends-container" style={{ width: "450px", height: "100%" }}>
-          <Title size="h2">Friends</Title>
-          <ScrollArea h={"100%"}>
-            <FriendsPage />
-          </ScrollArea>
+          {!userLoaded && <Loader />}
+          {userLoaded && (
+            <ScrollArea h={"100%"}>
+              <friendsList id={user._id} />
+            </ScrollArea>
+          )}
         </Box>
 
         <div
