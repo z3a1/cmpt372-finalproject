@@ -75,7 +75,7 @@ export default function Map({ selectedPlaceName, setSelectedPlaceName, setSelect
 
     // Load Google Maps API
     const { isLoaded } = useLoadScript({
-        googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY,
+        googleMapsApiKey: "AIzaSyCpBPMtC5bqLctASD__Hth5ru00ns3aRdM",
         libraries: ['places'],
         language: 'en'
     });

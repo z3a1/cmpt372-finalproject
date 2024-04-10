@@ -2,16 +2,22 @@ const express = require("express")
 const cors = require("cors")
 require('dotenv').config()
 const axios = require("axios")
-axios.defaults.withCredentials = true
+// axios.defaults.withCredentials = true
 const app = express()
 const db = require('./Database/schema')
 
 // CORS
 const corsOptions = cors({
-    origin: ["https://backend-tmmf5kaaqa-uw.a.run.app", "http://localhost:8080", "http://localhost:3000", "http://146.148.99.120"],
+    origin: [
+        "https://backend-tmmf5kaaqa-uw.a.run.app",
+        "http://localhost:8080",
+        "http://localhost:3000",
+        "http://146.148.99.120",
+        "http://35.188.178.185"
+    ],
     // allowedHeaders: ["*"],
     credentials: true,
-    sameSite: "none" 
+    // sameSite: "none" 
 })
 app.use(corsOptions);
 app.options('*', corsOptions)
@@ -66,11 +72,14 @@ app.use('/friends', friends);
 const Data = require('./Data/populate')
 app.use('/data', Data)
 
+app.use('/test', (req, res) => {
+    console.log("testing testing testing")
+    res.status(200).send("Test")
+})
+
 // Database
 db.initializeDB()
 
 app.listen(process.env.PORT, () => {
     console.log("Server is up and running on specified port")
 })
-
-exports.app = app

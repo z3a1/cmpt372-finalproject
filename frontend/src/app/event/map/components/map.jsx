@@ -75,7 +75,7 @@ export default function Map() {
             .then(res => {
                 console.log(res.data)
                 setNearbyPlaces(res.data)
-                setNearbyPlacesLoaded(true)
+                setAreNearbyPlacesLoaded(true)
             })
             .catch(error => console.error("Error processing nearby search: ", error))
     }
