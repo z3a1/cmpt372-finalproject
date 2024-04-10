@@ -8,7 +8,13 @@ const db = require('./Database/schema')
 
 // CORS
 const corsOptions = cors({
-    origin: ["https://backend-tmmf5kaaqa-uw.a.run.app", "http://localhost:8080", "http://localhost:3000", "http://146.148.99.120"],
+    origin: [
+        "https://backend-tmmf5kaaqa-uw.a.run.app",
+        "http://localhost:8080",
+        "http://localhost:3000",
+        "http://146.148.99.120",
+        "http://35.188.178.185/"
+    ],
     // allowedHeaders: ["*"],
     credentials: true,
     sameSite: "none" 
