@@ -1,9 +1,9 @@
 import { Badge } from "@mantine/core"
 
 const VisibilityBadge = ({ visibility }) => {
-    let color = "indigo"
+    let color = "violet"
     if (visibility === "public") {
-        color = "green"
+        color = "blue"
     }
 
     return (

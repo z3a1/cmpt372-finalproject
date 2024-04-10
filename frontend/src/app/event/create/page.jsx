@@ -166,13 +166,13 @@ export default function CreateEvent() {
                                 withAsterisk={false}
                                 required
                                 rightSection={
-                                    <ActionIcon onClick={handleAddressClick} radius="xl" color="green">
+                                    <ActionIcon onClick={handleAddressClick} radius="xl" color="blue">
                                         {isAddressOpen ? chevronUpIcon : chevronDownIcon}
                                     </ActionIcon>
                                 }
                             />
                             {isAddressOpen && (
-                                <Blockquote color="green" size="md">
+                                <Blockquote color="blue" size="md">
                                     {address}
                                 </Blockquote>
                             )}
@@ -232,7 +232,7 @@ export default function CreateEvent() {
                                 >
                                     Back
                                 </Button>
-                                <Button type="submit" color='green'>Create</Button>
+                                <Button type="submit" color='blue'>Create</Button>
                             </Group>    
                         </Container>
                     )}

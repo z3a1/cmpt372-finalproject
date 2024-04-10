@@ -97,7 +97,7 @@ export default function InvitedEventView() {
                                 <Button component={Link} href={`/event/dashboard`} variant="default">Back</Button>
                                 <Group>
                                     <SegmentedControl 
-                                        color="green" 
+                                        color="blue" 
                                         data={["invited", "confirmed", "rejected"]}
                                         onChange={(value) => handleStatus(value.toLowerCase())}
                                         defaultValue={attendee.status}

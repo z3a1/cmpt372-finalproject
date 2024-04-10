@@ -52,7 +52,7 @@ export default function Logincomp(){
                     <PasswordInput label = "Password: " 
                     required = {true}
                      {...loginForm.getInputProps('password', {type: 'password'})}/>
-                    <Button variant="filled" color="green" type="submit" mt={20}>Login</Button>
+                    <Button variant="filled" color="blue" type="submit" mt={20}>Login</Button>
                 </form>
             </Box>
         </Box>

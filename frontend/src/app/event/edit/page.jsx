@@ -200,7 +200,7 @@ export default function EditEvent() {
                                 rightSection={
                                     <Popover width={200} position="bottom" withArrow shadow="md" onChange={handleAddressClick}>
                                         <Popover.Target>
-                                            <ActionIcon radius="xl" color="green">
+                                            <ActionIcon radius="xl" color="blue">
                                                 {isAddressOpen ? chevronUpIcon : chevronDownIcon}
                                             </ActionIcon>
                                         </Popover.Target>
@@ -276,7 +276,7 @@ export default function EditEvent() {
                                 >
                                     Back
                                 </Button>
-                                <Button type="submit" color="green">Edit</Button>
+                                <Button type="submit" color="blue">Edit</Button>
                             </Group>
                         </Container>
                     </>

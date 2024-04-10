@@ -13,7 +13,7 @@ const corsOptions = cors({
         "http://localhost:8080",
         "http://localhost:3000",
         "http://146.148.99.120",
-        "http://35.188.178.185"
+        "http://34.29.165.205"
     ],
     // allowedHeaders: ["*"],
     credentials: true,
