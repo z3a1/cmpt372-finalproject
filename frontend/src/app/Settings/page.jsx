@@ -75,7 +75,6 @@ export default function SettingsPage(){
 
     return(
     <Container fluid>
-        <NavBar/>
             <Grid justify = "center" align = "flex-start" mt = {100}>
                 <Grid.Col span = {1}>
                     <Text size = "xl">Username: </Text>

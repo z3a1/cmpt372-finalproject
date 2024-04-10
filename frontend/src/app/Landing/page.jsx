@@ -19,8 +19,8 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import NavBar from "../Components/navbar";
 import userService from "../services/user";
+import NavBar from "../Components/navbar";
 import FriendsPage from "../friends/page";
 import VideosPage from "../videos/page";
 import axios from 'axios'
@@ -34,27 +34,28 @@ import VideoDrawer from "../videos/VideoDrawer";
 
 export default function LandingPage() {
   const router = useRouter();
-  // TODO: remove?
   const [userLoaded, setUserLoadState] = useState(false);
   const [user, setCurrentUser] = useState(null);
 
-  const getUser = async () => {
-    const userInfo = await getUserInfo()
-    if (userInfo) {
-      setCurrentUser(userInfo)
-      setUserLoadState(true)
-    } else {
-      router.push('/')
-    }
-  }
-
   useEffect(() => {
-    getUser()
+    let setUser = async () => {
+      await userService.getcurrentSession().then(res => {
+        if (res.data) {
+          setUserLoadState(true);
+          setCurrentUser(res.data);
+        } else {
+          router.push("/");
+        }
+      })
+    };
+    setUser();
   }, []);
+
+
+
 
   return (
     <div className="landing-container" style={{ height: "70vh" }}>
-      <NavBar />
 
       <Group
         className="landing-group"

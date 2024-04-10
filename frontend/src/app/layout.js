@@ -4,6 +4,7 @@ import '@mantine/dates/styles.css';
 import { MantineProvider } from '@mantine/core';
 import "./globals.css";
 import Header from "./Components/header";
+import NavBar from "./Components/navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,6 +19,7 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <MantineProvider>
           <Header/>
+          <NavBar/>
           {children}
         </MantineProvider>
       </body>

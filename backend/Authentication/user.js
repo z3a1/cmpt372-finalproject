@@ -50,17 +50,9 @@ router.post('/register',async (req,res) => {
     })
 })
 
+
 router.post('/getSessionById', async(req,res) => {
-    let id = req.body.id
-    Session.findById({_id: id}).then(dbRes => {
-        let foundSession = JSON.parse(dbRes.session)
-        req.session.cookie = foundSession.cookie
-        req.session.user = foundSession.passport.user
-        res.status(200).json(foundSession.passport.user)
-    })
-    .catch(err => {
-        res.status(500).json(err)
-    })
+    res.status(200).json(req.session.passport.user)
 })
 
 router.post('/getUserId', async(req,res) => {
@@ -81,10 +73,10 @@ router.post('/getUserId', async(req,res) => {
 
 router.get('/user/info', (req, res) => {
     try {
-        // console.log("session", req.session)
+         console.log("session", req.session)
         // console.log("session passport", req.session.passport)
         const user = req.session.passport.user
-        // console.log("user info", user)
+        //  console.log("user info", user)
         if (user) {
             res.status(200).json({ user })
         } else {
@@ -102,7 +94,7 @@ router.post('/changeInfo', async (req,res) => {
     if(!req.body.inputData) res.status(404).json({message: "The new change field is empty!"});
 
     await db.User.findById({_id: id}).then(async (user) => {
-        // console.log(user)
+        //   console.log(user)
         await bcrypt.compare(givenPassword,user.password).then(async result => {
             if(result){
                 let changeSetting = req.body.status
