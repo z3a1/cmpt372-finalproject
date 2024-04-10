@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react';
 import friendService from '../services/friendService'
 import User from '../services/user'
+import { Button } from '@mantine/core';
 
 import styles from './friends.css'
-import {v4 as idGen} from "uuid"
 import axios from 'axios';
 
 import { useRouter } from 'next/navigation';
@@ -31,6 +31,18 @@ export default function FriendsPage() {
     const [user, setuser] = useState([]);
 
     const [userName, setUserName] = useState([]);
+
+    useEffect(() => {
+        let getSession = async () => {
+            await User.getcurrentSession().then(res => {
+                setuser(res.data)
+            })
+            .catch(err => {
+                alert(err.status)
+            })
+        }
+        getSession()
+    },[])
 
     const remove = async (id) => {
         try{
@@ -85,19 +97,6 @@ export default function FriendsPage() {
         getPendingFriendRequests();
     }
 
-    // To be deleted 
-    // const add = async () => {
-    //     let newFriend = { userId: USER_ID, friendId: FRIEND_ID };
-    //     try {
-    //         await friendService.addFriend(newFriend)
-            
-    //         fetchFriends();
-    //         getPendingFriendRequests();
-    //     } catch (error){
-    //         alert(error)
-    //     }
-    // };
-
     const searchPeople = async (userName) =>{    
         let f;
         try {
@@ -110,11 +109,13 @@ export default function FriendsPage() {
             console.log(f);
             let f_id = f[0]._id;
             // await friendService.addFriend(f_id);
-            await axios.post(process.env.SERVER_URL + `/friends/add?friendId=${f_id}`, {withCredentials: true})
+            console.log(user._id)
+            await axios.post(process.env.SERVER_URL + `/friends/add?friendId=${f_id}&userId=${user._id}`, {withCredentials: true})
             .then(res => {
-                console.log(res)
+                alert(res.data.message)
+                pendingFriendRequests()
             })
-            .catch(error => console.error("Error adding friend", error.message))
+            .catch(error => alert(error.message))
         }
         catch (error){
             alert(error)
@@ -165,7 +166,6 @@ export default function FriendsPage() {
 
     return (
         <div className="container" >
-            <button className="add" onClick={() => add()}>Add Friend</button>
             <form onSubmit={handleSubmit}>
                 <input type='text' placeholder='Search User Name...' className='searchFriend' value={userName} onChange={handleInputChange}></input>
                 <button type="search" className='search'>Add</button>
@@ -237,17 +237,13 @@ export default function FriendsPage() {
                             <h4>{friend._id}</h4>
                             <p>- {friend.username}</p>
                             <p>- {friend.fname} {friend.lname}</p>
-                            <button className='message' onClick={() => message(friend._id)}>Message</button> 
-                            <button className="remove" onClick={() => remove(friend._id)}>Remove</button>
+                            <Button className='message' onClick={() => message(friend._id)}>Message</Button> 
+                            <Button className="remove" onClick={() => remove(friend._id)}>Remove</Button>
                         </div>
                     ))
                 ) : 
                 <p>Invite Some of Your Friends to Join Socializer or Meet New People at Events!!!</p> }
-
             </div>
-
-            {/* Just to test */}
-            <button className='message' onClick={() => message(FRIEND_ID)}>Message</button>
         </div>
     );
 } 

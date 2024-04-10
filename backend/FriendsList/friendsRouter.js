@@ -95,9 +95,8 @@ router.get('/get/people', async (req, res) => {
 // Handles all friend additions
 // Includes accepting pending friend requests sent by others
 router.post('/add', async (req, res) => {
-    console.log(req.session);
-    const userId = req.session.passport.user._id
-    const friendId = req.query.friendId;
+    console.log(req.query);
+    let {userId, friendId} = req.query
 
     try {
         // User is already friends
