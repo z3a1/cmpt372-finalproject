@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 export default function Header() {
   const router = useRouter()
   return (
-    <Title className="title" variant="filled" bg="rgba(0, 150, 0, 0.7)" onClick={() =>router.push("/landing")}>
+    <Title className="title" variant="filled" bg="var(--mantine-color-blue-7)" onClick={() =>router.push("/landing")}>
       <Logo/>
     </Title>
   );

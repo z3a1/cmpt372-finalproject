@@ -17,7 +17,6 @@ export default function FavouritesPage() {
           <IconArrowBackUp className = "icon-arrow-back" size={32} strokeWidth={2} color={"black"} />
         </Link>
       </Center>
-    
     </div>
   );
 }

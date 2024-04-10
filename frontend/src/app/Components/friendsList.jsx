@@ -1,7 +1,7 @@
 'use client'
 import { useState,useEffect } from "react";
 import axios from "axios"
-import { UnstyledButton, Group, Avatar, Text, rem, Loader } from '@mantine/core';
+import { Title, Container, UnstyledButton, Group, Avatar, Text, rem, Loader } from '@mantine/core';
 import { IconChevronRight } from '@tabler/icons-react';
 
 
@@ -23,13 +23,14 @@ export default function FriendsList(){
 
     return(
         <>
-            <Text size = 'md'>Friends: </Text>
+            <Title size = 'md'>Friends </Title>
             {loadingFriendsArr && 
             <>
              {friends.map((item,index) => {
                 return(
-                    <UnstyledButton>
-                        <Group>
+                    <Container fluid>
+                    <UnstyledButton  style = {{width:"100%"}}>
+                        <Group  style = {{width:"100%"}}>
                             <Avatar radius="xl"/>
                             <div style = {{flex: 1}}>
                                 <Text size = "sm" fw = {500}>{item.username}</Text>
@@ -38,6 +39,7 @@ export default function FriendsList(){
                             <IconChevronRight style = {{width: rem(14), height: rem(14)}} stroke = {1.5}/>
                         </Group>
                     </UnstyledButton>
+                </Container>
                 )
             })} 
             </>}

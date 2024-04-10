@@ -19,16 +19,8 @@ export default function FavouriteVideos() {
   };
 
   useEffect(() => {
-    //const favouriteList = JSON.parse(localStorage.getItem(`user-${userId}-vids`)) || []; //Local Storage
-    //setFavourites(favouriteList);
     getFavourites();
   }, []);
-
-  // function removeFavouriteDisplay(videoId) {
-  //   //If user clicks remove then stop displaying it
-  //   const updatedList = favourites.filter((id) => id !== videoId);
-  //   setFavourites(updatedList);
-  // }
 
   if (!favourites) {
     return <div>No favourite videos</div>;
@@ -40,11 +32,11 @@ export default function FavouriteVideos() {
       bg="rgba(255, 255, 255, 1.0)"
     >
       <Center>
-      <Title size="h2">Favourite Videos</Title>
+        <Title size="h2">Favourite Videos</Title>
       </Center>
-      <Carousel withIndicators align="start">
+      <Carousel align="start">
         {favourites.map((vidId) => (
-          <Carousel.Slide>
+          <Carousel.Slide  key={vidId}>
             <VideoPlayer
               key={vidId}
               videoId={vidId}
