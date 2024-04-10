@@ -13,11 +13,11 @@ const corsOptions = cors({
         "http://localhost:8080",
         "http://localhost:3000",
         "http://146.148.99.120",
-        "http://35.188.178.185/"
+        "http://35.188.178.185"
     ],
-    // allowedHeaders: ["*"],
+    allowedHeaders: ["*"],
     credentials: true,
-    sameSite: "none" 
+    // sameSite: "none" 
 })
 app.use(corsOptions);
 app.options('*', corsOptions)
@@ -78,5 +78,3 @@ db.initializeDB()
 app.listen(process.env.PORT, () => {
     console.log("Server is up and running on specified port")
 })
-
-exports.app = app

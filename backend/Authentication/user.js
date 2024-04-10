@@ -16,12 +16,14 @@ router.get('/error', (req,res) => {
 })
 
 router.post('/login',passport.authenticate('local',{failureRedirect: '/auth/error', failureMessage: true}), (req,res) => {
+    console.log("Logging in user: ", req.user)
     req.session.cookie.expires = expirationDate
     req.session.save()
     res.status(200).json({userId: req.user._id, sessionId: req.session.id})
 })
 
 router.post('/register',async (req,res) => {
+    console.log("Registering user: ", req.body)
     await bcrypt.hash(req.body.password,saltRounds,async (dbErr,hash) => {
         if(!dbErr){
             let newUser = {
