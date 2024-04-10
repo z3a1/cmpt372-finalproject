@@ -14,7 +14,7 @@ router.get('/api/places/nearby/search', async (req, res) => {
                 radius: 2000,
                 type: `restaurant|cafe|bar|night_club|bowling_alley|movie_theater|tourist_attraction|park|amusement_park|
                         aquarium|`,
-                key: "AIzaSyCpBPMtC5bqLctASD__Hth5ru00ns3aRdM"
+                key: process.env.GOOGLE_MAPS_API_KEY
               }
         }) 
         res.status(200).send(result.data.results)
@@ -29,7 +29,7 @@ router.get('/api/places/marker/search', async (req, res) => {
     const placeId = req.query.placeId
     
     try {
-        const result = await axios.get(`https://places.googleapis.com/v1/places/${placeId}?fields=id,displayName&key=AIzaSyCpBPMtC5bqLctASD__Hth5ru00ns3aRdM`)
+        const result = await axios.get(`https://places.googleapis.com/v1/places/${placeId}?fields=id,displayName&key=${process.env.GOOGLE_MAPS_API_KEY}`)
         res.status(200).send(result.data)
     } catch (err) {
         console.error('Error fetching marked place:', err);
@@ -43,7 +43,7 @@ router.get('/api/places/selected/address', async (req, res) => {
     const lng = req.query.lng
 
     try {
-        const result = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyCpBPMtC5bqLctASD__Hth5ru00ns3aRdM`)
+        const result = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.GOOGLE_MAPS_API_KEY}`)
         res.status(200).send(result.data)
     } catch (err) {
         console.error('Error fetching marked place:', err);
