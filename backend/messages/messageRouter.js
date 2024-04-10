@@ -35,6 +35,7 @@ router.post('/sendMessage', async (req, res) => {
 
 router.get('/friendInfo', async (req, res) => {
     console.log("in get friend info");
+
     try {
         const friendId = req.query.friendId;
 

@@ -46,6 +46,7 @@ router.get('/get/accepted', async (req, res) => {
 // Get all pending friends of user
 router.get('/get/pending', async (req, res) => {
     const userId = req.session.passport.user._id
+    console.log(req.session)
 
     try {
         const allPendingFriends = await Friend.find({ user_id: userId, status: "pending" })
@@ -62,6 +63,7 @@ router.get('/get/pending', async (req, res) => {
 // Get all pending friend requests
 router.get('/get/requests', async (req, res) => {
     const userId = req.session.passport.user._id
+    console.log(req.session)
 
     try {
         const friendRequests = await Friend.find({ friend_id: userId, status: "pending" })

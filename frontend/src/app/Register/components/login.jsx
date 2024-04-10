@@ -33,8 +33,8 @@ export default function Logincomp(){
         .catch(err => {
             console.log(err)
             //alert(err.response.data.message)
-            if(err.response.message){
-                alert(err.response.message)
+            if(err){
+                alert(err)
             }
             else{
                 alert(err.response)

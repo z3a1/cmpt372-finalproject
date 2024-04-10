@@ -5,12 +5,11 @@ const Messages = mongoose.model("Messages");
 function initializeSocket(io) {
 
     io.on('connection', (socket) => {
-        console.log('New socket connection');
-
+        const { userId, recipientId } = socket.handshake.query;
+        // console.log('New socket connection');
 
         // const userId = '65fcabc9668f4f329e89992a'; // For testing, replace with actual user ID
-
-        const userId = '65fa73b955410eecb776f5b1';
+        // const userId = '65fa73b955410eecb776f5b1';
         
         if (!userId) {
             console.log('User not authenticated. Disconnecting.');
@@ -19,11 +18,11 @@ function initializeSocket(io) {
         }
 
         // const recipientId = '65fa73b955410eecb776f5b1'; // For testing, replace with actual recipient ID
-        const recipientId = '65fcabc9668f4f329e89992a';
+        // const recipientId = '65fcabc9668f4f329e89992a';
         
         storeUserSocket(userId, socket.id, recipientId)
             .then(() => {
-                console.log(`User socket stored for user ID ${userId}`);
+                // console.log(`User socket stored for user ID ${userId}`);
             })
             .catch((err) => {
                 console.error('Error storing user socket:', err);
