@@ -39,28 +39,31 @@ const friendService =  {
     },
 
     addFriend: async(friend) =>{
-        await axios.post(process.env.SERVER_URL + `/friends/add?userId=${friend.userId}&friendId=${friend.friendId}`, {withCredentials: true})
+        await axios.post(process.env.SERVER_URL + `/friends/add?friendId=${friend}`, {withCredentials: true})
         .then(res => {
             console.log(res)
         })
         .catch(error => console.error("Error adding friend", error.message))
     },
 
-    getFriendsCount: async(id) => {
-        await axios.get(process.env.SERVER_URL + `/friends/get/count?userId=${userId}`, {withCredentials: true})
-        .then(res => {
-            return res.data
-        })
-        .catch(error => console.error("Error getting number of friends", error.message))
-    },
+    // getFriendsCount: async(id) => {
+    //     await axios.get(process.env.SERVER_URL + `/friends/get/count?userId=${userId}`, {withCredentials: true})
+    //     .then(res => {
+    //         return res.data
+    //     })
+    //     .catch(error => console.error("Error getting number of friends", error.message))
+    // },
 
     searchPeople: async(userName) => {
+        let friend = [];
         await axios.get(process.env.SERVER_URL + `/friends/get/people?userName=${userName}`, {withCredentials: true})
         .then(res => {
-            return res.data
+            console.log(res.data)
+            friend = res.data
             // use the data to go to a new page -> user profile
         })
         .catch(error => console.error("Error getting people", error.message))
+        return friend
     }
 }
 

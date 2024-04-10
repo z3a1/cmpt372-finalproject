@@ -81,9 +81,11 @@ router.get('/get/requests', async (req, res) => {
 // For the Search Bar
 router.get('/get/people', async (req, res) => {
     const userName = req.query.userName;
+    console.log(userName);
     try{
         const newFriend = await User.find({ username: userName }, { fname: 1, lname: 1, _id: 1 } )
-        res.status(200).json({ newFriend });
+        console.log(newFriend);
+        res.status(200).json( newFriend );
     } catch (err) {
         res.status(500).json({ message: 'internal server error' })
     }
@@ -93,6 +95,7 @@ router.get('/get/people', async (req, res) => {
 // Handles all friend additions
 // Includes accepting pending friend requests sent by others
 router.post('/add', async (req, res) => {
+    console.log(req.session);
     const userId = req.session.passport.user._id
     const friendId = req.query.friendId;
 

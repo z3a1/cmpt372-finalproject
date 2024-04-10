@@ -20,7 +20,8 @@ const MessagePage = () => {
     const friendId = searchParams.get('friendId')
     // console.log("FRIEND_ID", FRIEND_ID);
     // console.log('type', typeof(FRIEND_ID));
-    // console.log(friendId);
+    console.log('user',userId);
+    console.log('friends',friendId);
     // console.log( typeof(friendId));
 
 

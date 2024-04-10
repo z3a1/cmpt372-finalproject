@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import friendService from '../services/friendService'
+import User from '../services/user'
+
 import styles from './friends.css'
 import {v4 as idGen} from "uuid"
 import axios from 'axios';
@@ -12,8 +14,8 @@ import { useRouter } from 'next/navigation';
 // const USER_ID = '65fa73b955410eecb776f5b1';
 // const FRIEND_ID = '65fcabc9668f4f329e89992a'
 
-const USER_ID = '65fcabc9668f4f329e89992a';
-const FRIEND_ID = '65fa73b955410eecb776f5b1'
+// const USER_ID = '65fcabc9668f4f329e89992a';
+// const FRIEND_ID = '65fa73b955410eecb776f5b1'
 
 export default function FriendsPage() {
     const router = useRouter([]);
@@ -26,20 +28,9 @@ export default function FriendsPage() {
     const [pendingFriendsLength, setpendingFriendsLength] = useState([]);
     const [acceptedFriendsLength, setacceptedFriendsLength] = useState([]);
 
-    const [userName, setUserName] = useState([]);
+    const [user, setuser] = useState([]);
 
-    // To be deleted 
-    const add = async () => {
-        let newFriend = { userId: USER_ID, friendId: FRIEND_ID };
-        try {
-            await friendService.addFriend(newFriend)
-            
-            fetchFriends();
-            getPendingFriendRequests();
-        } catch (error){
-            alert(error)
-        }
-    };
+    const [userName, setUserName] = useState([]);
 
     const remove = async (id) => {
         try{
@@ -57,7 +48,7 @@ export default function FriendsPage() {
     }
 
     const getPendingFriends = async () => {
-        await friendService.getPendingFriends(USER_ID)
+        await friendService.getPendingFriends(user._id)
             .then(res => {
                 console.log("fetching pending friends:", res.pendingfriendArray);
                 setPendingFriends(res.pendingfriendArray);
@@ -66,7 +57,7 @@ export default function FriendsPage() {
     }
 
     const getAcceptedFriends = async () => {
-        await friendService.getAcceptedFriends(USER_ID)
+        await friendService.getAcceptedFriends(user._id)
             .then(res => {
                 setAcceptedFriends(res.friendArray)
             })
@@ -75,7 +66,7 @@ export default function FriendsPage() {
 
 
     const getPendingFriendRequests = async () => {
-        await axios.get(process.env.SERVER_URL + `/friends/get/requests?userId=${USER_ID}`, {withCredentials: true})
+        await axios.get(process.env.SERVER_URL + `/friends/get/requests?userId=${user._id}`, {withCredentials: true})
             .then(res => {
                 setPendingFriendRequests(res.data.friendRequestArray);
                 if (res.data.friendRequestArray === null || res.data.friendRequestArray === undefined){
@@ -94,12 +85,39 @@ export default function FriendsPage() {
         getPendingFriendRequests();
     }
 
+    // To be deleted 
+    // const add = async () => {
+    //     let newFriend = { userId: USER_ID, friendId: FRIEND_ID };
+    //     try {
+    //         await friendService.addFriend(newFriend)
+            
+    //         fetchFriends();
+    //         getPendingFriendRequests();
+    //     } catch (error){
+    //         alert(error)
+    //     }
+    // };
+
     const searchPeople = async (userName) =>{    
+        let f;
         try {
             await friendService.searchPeople(userName)
-            
-        } catch (error){
-            alert(err)
+                .then(friend => {
+                    console.log(friend);
+                    f = friend 
+                })
+                .catch(error => alert(error.message))
+            console.log(f);
+            let f_id = f[0]._id;
+            // await friendService.addFriend(f_id);
+            await axios.post(process.env.SERVER_URL + `/friends/add?friendId=${f_id}`, {withCredentials: true})
+            .then(res => {
+                console.log(res)
+            })
+            .catch(error => console.error("Error adding friend", error.message))
+        }
+        catch (error){
+            alert(error)
         }
     }
 
@@ -107,7 +125,7 @@ export default function FriendsPage() {
     const message = async (friendId) => {
         try {
             // Redirect to another page with user ID and friend ID as query parameters
-            window.location.href = `/Messaging?userId=${encodeURIComponent(USER_ID)}&friendId=${encodeURIComponent(friendId)}`;
+            window.location.href = `/Messaging?userId=${encodeURIComponent(user._id)}&friendId=${encodeURIComponent(friendId)}`;
         } catch(error) {
             console.error("Error:", error);
         }
@@ -124,6 +142,7 @@ export default function FriendsPage() {
 
     // On load
     useEffect(() => {
+        setuser(User.getUserInfo())
         fetchFriends()
         getPendingFriendRequests()
     }, []);
@@ -149,7 +168,7 @@ export default function FriendsPage() {
             <button className="add" onClick={() => add()}>Add Friend</button>
             <form onSubmit={handleSubmit}>
                 <input type='text' placeholder='Search User Name...' className='searchFriend' value={userName} onChange={handleInputChange}></input>
-                <button type="search" className='search'>Search</button>
+                <button type="search" className='search'>Add</button>
             </form>
             
             {/* <ul className="friendsList">
