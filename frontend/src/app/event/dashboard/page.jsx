@@ -16,8 +16,8 @@ export default function Dashboard() {
             <Group justify="space-between">
                 <Title order={1} mb="xs">Events</Title>
                 <Group justify="flex-end" mb="lg" gap="xs">
-                    <Button onClick={() => handleEventTypeChange('created')} color="green">Created</Button>
-                    <Button onClick={() => handleEventTypeChange('invited')} color="green">Invited</Button>
+                    <Button onClick={() => handleEventTypeChange('created')} color="blue">Created</Button>
+                    <Button onClick={() => handleEventTypeChange('invited')} color="blue">Invited</Button>
                 </Group>
             </Group>
             <EventTable eventType={eventType} />

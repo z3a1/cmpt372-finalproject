@@ -36,7 +36,6 @@ export default function LandingPage() {
   const router = useRouter();
   const [userLoaded, setUserLoadState] = useState(false);
   const [user, setCurrentUser] = useState(null);
-
   useEffect(() => {
     let setUser = async () => {
       await userService.getcurrentSession().then(res => {
@@ -49,7 +48,6 @@ export default function LandingPage() {
       })
     };
     setUser();
-  }, []);
 
 
 
@@ -105,5 +103,4 @@ export default function LandingPage() {
         </div>
       </Group>
     </div>
-  );
-}
+  )})}

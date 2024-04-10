@@ -15,7 +15,6 @@ router.get('/populateUsersDB', async (req,res) => {
     let users = []
     let passwords = []
     for(let i = 0; i < 50; i++){
-        // console.log(`First: ${faker.person.firstName()} Last: ${faker.person.lastName()}`)
         let firstName = faker.person.firstName()
         let lastName = faker.person.lastName({firstName: firstName})
         let email = faker.internet.email({firstName: firstName, lastName: lastName, allowSpecialCharacters: false})

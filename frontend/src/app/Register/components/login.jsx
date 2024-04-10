@@ -1,4 +1,3 @@
-import styles from "../registerStyle.module.css"
 import axios from "axios"
 import {TextInput, Button, Box, PasswordInput } from '@mantine/core';
 import { Title } from "@mantine/core";
@@ -53,7 +52,7 @@ export default function Logincomp(){
                     <PasswordInput label = "Password: " 
                     required = {true}
                      {...loginForm.getInputProps('password', {type: 'password'})}/>
-                    <Button variant="filled" color="green" type="submit" mt={20}>Login</Button>
+                    <Button variant="filled" color="blue" type="submit" mt={20}>Login</Button>
                 </form>
             </Box>
         </Box>

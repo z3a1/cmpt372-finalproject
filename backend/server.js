@@ -2,7 +2,7 @@ const express = require("express")
 const cors = require("cors")
 require('dotenv').config()
 const axios = require("axios")
-axios.defaults.withCredentials = true
+// axios.defaults.withCredentials = true
 const app = express()
 const http = require("http");
 const socketio = require('socket.io'); 
@@ -17,9 +17,16 @@ app.use(session({
 
 // CORS
 const corsOptions = cors({
-    origin: ["https://backend-tmmf5kaaqa-uw.a.run.app", "http://localhost:8080", "http://localhost:3000", "http://146.148.99.120"],
-    credentials: true, 
-    optionSuccessStatus:200
+    origin: [
+        "https://backend-tmmf5kaaqa-uw.a.run.app",
+        "http://localhost:8080",
+        "http://localhost:3000",
+        "http://146.148.99.120",
+        "http://34.29.165.205"
+    ],
+    // allowedHeaders: ["*"],
+    credentials: true,
+    // sameSite: "none" 
 })
 app.use(corsOptions);
 app.options('*', corsOptions)
@@ -74,29 +81,10 @@ app.use('/events', events)
 const Data = require('./Data/populate')
 app.use('/data', Data)
 
-// Messaging 
-// const messaging = require('./messages/messages'); 
-// app.use('/messaging', messaging);
-
-app.use('/messages', messageRouter);
-
-const initializeSocket = require('./messages/messages');
-const server = http.createServer(app); 
-// const io = socketio(server);
-
-const io = require("socket.io")(server, {
-    cors: {
-        origin: ["https://backend-tmmf5kaaqa-uw.a.run.app", "http://localhost:8080", "http://localhost:3000", "http://146.148.99.120"],
-        allowedHeaders: ["*"],
-        credentials: true, 
-        optionSuccessStatus:200
-    }
-});
-
-// console.log('server', server)
-
-// console.log("io object:", io);
-initializeSocket(io);
+app.use('/test', (req, res) => {
+    console.log("testing testing testing")
+    res.status(200).send("Test")
+})
 
 // Database
 db.initializeDB()
@@ -108,5 +96,3 @@ db.initializeDB()
 server.listen(process.env.PORT, () => {
     console.log("Server is up and running on specified port");
 });
-
-exports.app = app

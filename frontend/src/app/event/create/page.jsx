@@ -6,7 +6,8 @@ import Link from 'next/link'
 import axios from 'axios';
 import { DateTimePicker } from '@mantine/dates';
 import { Container, TextInput, MultiSelect, Switch, Textarea, Button, Group, Title, Blockquote, ActionIcon, Card, LoadingOverlay } from '@mantine/core';
-import { lockIcon, unlockIcon, chevronDownIcon, chevronUpIcon } from '../lib/icon';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLock, faUnlock, faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons'
 
 export default function CreateEvent() {
     const router = useRouter()
@@ -32,6 +33,35 @@ export default function CreateEvent() {
     const [friends, setFriends] = useState([])
     const [invitedFriends, setInvitedFriends] = useState([])
     const [isFriendsLoaded, setIsFriendsLoaded] = useState(false)
+
+    const lockIcon = (
+        <FontAwesomeIcon 
+            icon={faLock}
+            size="2xl"
+        />
+    );
+    
+    const unlockIcon = (
+        <FontAwesomeIcon 
+            icon={faUnlock}
+            size="2xl"
+        />
+    );
+
+    const chevronUpIcon = (
+        <FontAwesomeIcon 
+            icon={faChevronUp}
+            size="sm"
+        />
+    )
+
+    const chevronDownIcon = (
+        <FontAwesomeIcon 
+            icon={faChevronDown}
+            size="sm"
+        />
+    )
+    
 
     const setFormField = (fieldName, fieldValue) => {
         setFormData((prevState) => ({
@@ -136,13 +166,13 @@ export default function CreateEvent() {
                                 withAsterisk={false}
                                 required
                                 rightSection={
-                                    <ActionIcon onClick={handleAddressClick} radius="xl" color="green">
+                                    <ActionIcon onClick={handleAddressClick} radius="xl" color="blue">
                                         {isAddressOpen ? chevronUpIcon : chevronDownIcon}
                                     </ActionIcon>
                                 }
                             />
                             {isAddressOpen && (
-                                <Blockquote color="green" size="md">
+                                <Blockquote color="blue" size="md">
                                     {address}
                                 </Blockquote>
                             )}
@@ -202,7 +232,7 @@ export default function CreateEvent() {
                                 >
                                     Back
                                 </Button>
-                                <Button type="submit" color='green'>Create</Button>
+                                <Button type="submit" color='blue'>Create</Button>
                             </Group>    
                         </Container>
                     )}

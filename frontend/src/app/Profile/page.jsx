@@ -1,7 +1,7 @@
 'use client'
 
 import {Loader,Text, Avatar, Paper, Container} from '@mantine/core'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import "./user.modules.css"
 import userService from "../services/user"
@@ -17,24 +17,34 @@ export default function verifyUser(){
     const [userLoaded,setUserLoadState] = useState(false)
     const [user,setCurrentUser] = useState(null)
 
-    useEffect(() => {
-        let setUser = async () => {
-            let res = await userService.getcurrentSession(id)
-            if(res.data){
-                setUserLoadState(true)
-                setCurrentUser(res.data)
-            }
-            else{
-                router.push("/")
-            }
+    const getUser = async () => {
+        const user = await getUserInfo();
+        if (user) {
+            setUserLoadState(true);
+            setCurrentUser(user);
+        } else {
+            router.push("/");
         }
-        setUser()
+    } 
+
+    useEffect(() => {
+        getUser();
     },[])
 
     return(
         <>
             <Container justify='center' mx = "auto" maw = {500} className='loaderStyles' mt={100} fluid>
                 {!userLoaded && <Loader color = "cyan" size = {500}/>}
+                {userLoaded &&
+                <>
+                <Paper radius="md" withBorder p="lg" bg="var(--mantine-color-body)" shadow='xl'>
+                    <IconMap className="icon-map" color = 'lightblue'/>
+                    <Avatar radius= {120} size = {120}mx = "auto"/>
+                    <Text ta="center" fz="lg" fw={500} mt="md"> {user.username}</Text>
+                    <Text fz = "md" c = "dimmed" ta = "center">{user.email}</Text>
+                    <Text fz = "sm" c = "dimmed" ta = "center">{`${user.fname} ${user.lname}`}</Text>
+                </Paper>
+                </>}
                 {userLoaded &&
                 <>
                 <Paper radius="md" withBorder p="lg" bg="var(--mantine-color-body)" shadow='xl'>
@@ -58,7 +68,7 @@ export default function verifyUser(){
                     <Title order = {4}>Email: {user.email}</Title>
                     <Title order = {4}>Password: {'*'.repeat(10)}</Title>
                     <Center>
-                        <FavouriteVideos userId = {id}/>
+                        <FavouriteVideos/>
                     </Center>
                 </SimpleGrid>
  */

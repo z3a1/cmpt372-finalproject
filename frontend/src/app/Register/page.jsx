@@ -1,5 +1,4 @@
 'use client'
-import "./registerStyle.module.css";
 import { useState } from "react";
 import Logincomp from "./components/login";
 import Registercomp from "./components/register";

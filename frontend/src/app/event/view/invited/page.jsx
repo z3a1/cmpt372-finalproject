@@ -70,7 +70,7 @@ export default function InvitedEventView() {
                                 frameBorder={0}
                                 allowFullScreen
                                 referrerPolicy="no-referrer-when-downgrade"
-                                src={`https://www.google.com/maps/embed/v1/place?key=${process.env.GOOGLE_MAPS_API_KEY}&q=${location.address}`}
+                                src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyCpBPMtC5bqLctASD__Hth5ru00ns3aRdM&q=${location.address}`}
                             />
                         </Card.Section>
                         <Card.Section px="md">
@@ -97,7 +97,7 @@ export default function InvitedEventView() {
                                 <Button component={Link} href={`/event/dashboard`} variant="default">Back</Button>
                                 <Group>
                                     <SegmentedControl 
-                                        color="green" 
+                                        color="blue" 
                                         data={["invited", "confirmed", "rejected"]}
                                         onChange={(value) => handleStatus(value.toLowerCase())}
                                         defaultValue={attendee.status}
