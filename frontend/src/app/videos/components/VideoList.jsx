@@ -4,10 +4,11 @@ import VideoPlayer from "./VideoPlayer";
 import React, { useState, useEffect } from "react";
 import "@mantine/carousel/styles.css";
 import { Carousel } from "@mantine/carousel";
-import { Container, rem } from "@mantine/core";
+import { Loader, Container, rem, Center } from "@mantine/core";
 
 export default function VideoList({ location }) {
   const [videoIds, setVideoIds] = useState([]);
+  const [videosLoaded, setVideosLoaded] = useState(false);
 
   //UseEffect to rerender after location has be updated
   useEffect(() => {
@@ -19,6 +20,7 @@ export default function VideoList({ location }) {
         await axios.get(process.env.SERVER_URL + `/videos?q=${query}`, {cache: "no-cache"}, {withCredentials: true})
           .then((serverRes) => {
             setVideoIds(serverRes.data);
+            setVideosLoaded(true);
           });
       } catch (err) {
         console.log(err);
@@ -35,22 +37,28 @@ export default function VideoList({ location }) {
 
   return (
     <Container className="videolist-container">
-      <Carousel
-        withIndicators
-        slideSize="100%"
-        height={270}
-        slideGap="md"
-        align="start"
-        controlsPosition="outside"
-      >
-        {videoIds.map((vidId) => (
-          <Carousel.Slide>
-            <Container className = "videoplayer-contaner" size ="xs">
-              <VideoPlayer key={vidId} videoId={vidId} />
-            </Container>
-          </Carousel.Slide>
-        ))}
-      </Carousel>
+      {!videosLoaded && (
+        <Center>
+          <Loader style={{ padding: "40px" }} />
+        </Center>
+      )}
+      {videosLoaded && (
+        <Carousel
+          loop
+          withIndicators
+          slideSize="50%"
+          slideGap="md"
+          align="start"
+        >
+          {videoIds.map((vidId) => (
+            <Carousel.Slide key={vidId}>
+              <Container className="videoplayer-container">
+                <VideoPlayer key={vidId} videoId={vidId}/>
+              </Container>
+            </Carousel.Slide>
+          ))}
+        </Carousel>
+      )}
     </Container>
   );
 }

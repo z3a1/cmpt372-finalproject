@@ -27,7 +27,6 @@ export default function verifyUser(){
     }, [])
 
     return(
-        <MantineProvider>
             <Group justify='center' mx = "auto" maw = {500} className='loaderStyles'>
                 {!userLoaded && <Loader color = "cyan" size = {500}/>}
                 {userLoaded && 
@@ -37,6 +36,5 @@ export default function verifyUser(){
                     <p>{user.lname}</p>
                 </section>}
             </Group>
-        </MantineProvider>
     )
 }

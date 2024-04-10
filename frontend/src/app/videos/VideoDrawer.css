@@ -1,0 +1,42 @@
+.video-container {
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    margin: 20px;
+    overflow: hidden;
+  
+  }
+  
+  .video-title{
+    color: var(--mantine-color-gray-7);
+    border-bottom: rem(1px) solid var(--mantine-color-gray-4);
+    margin-bottom: 10px;
+  }
+  
+  .search-container{
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    margin: 20px;
+    overflow: hidden;
+  
+  }
+  
+  
+  .link {
+    text-decoration: none;
+    font-size: var(--mantine-font-size-md);
+    color: var(--mantine-color-gray-7);
+    padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+    border-radius: var(--mantine-radius-sm);
+    font-weight: 600;
+  }
+  
+  .icon-arrow{
+      width: rem(26px);
+      height: rem(25px);
+      color: var(--mantine-color-black);
+      background-color: var(--mantine-color-gray-2);
+      border-radius: 50%;
+      vertical-align: middle;
+      margin: var(--mantine-spacing-sm);
+    
+  }

@@ -1,14 +1,14 @@
 .icon-map {
-    width: rem(40px);
-    height: rem(33px);
+    padding:1px;
     color: var(--mantine-color-black);
     background-color: var(--mantine-color-gray-0);
     border-radius: 50%;
     vertical-align: middle;
-    margin-left: var(--mantine-spacing-sm);
     margin-right: var(--mantine-spacing-sm);
   }
   .title {
+    display: flex;
+    align-items: center;
     padding: var(--mantine-spacing-md);
     color: var(--mantine-color-gray-0);
     font-size: rem(25px);

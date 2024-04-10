@@ -1,11 +1,8 @@
-.video-container {
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  margin: 20px;
-  overflow: hidden;
 
+html, body{
+  height:100%;
+  width:100%;
 }
-
 .video-title{
   color: var(--mantine-color-gray-7);
   border-bottom: rem(1px) solid var(--mantine-color-gray-4);
@@ -15,11 +12,12 @@
 .search-container{
   border: 2px solid #ccc;
   border-radius: 8px;
-  margin: 20px;
-  overflow: hidden;
+  margin-top: 30px;
+} 
 
+.video-container{
+  height:100%;
 }
-
 
 .link {
   text-decoration: none;
