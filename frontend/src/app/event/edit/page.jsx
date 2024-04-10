@@ -15,7 +15,6 @@ export default function EditEvent() {
     const router = useRouter()
     const searchParams = useSearchParams()
     const eventId = searchParams.get('eventId')
-    const userId = searchParams.get('id')
 
     const [event, setEvent] = useState({})
     const [dateTime, setDateTime] = useState(new Date())
@@ -48,7 +47,7 @@ export default function EditEvent() {
     })
 
     const getEvent = async () => {
-        await axios.get(process.env.SERVER_URL + `/events/api/event?id=${eventId}`)
+        await axios.get(process.env.SERVER_URL + `/events/api/event?id=${eventId}`, {withCredentials: true})
             .then(res => {
                 console.log("Event retrieved successfully", res.data)
 
@@ -66,7 +65,7 @@ export default function EditEvent() {
     }
 
     const getFriends = async () => {
-        await axios.get(process.env.SERVER_URL + `/friends/get/accepted?userId=${userId}`)
+        await axios.get(process.env.SERVER_URL + `/friends/get/accepted`, {withCredentials: true})
             .then(res => {
                 console.log("Friends retrieved successfully", res.data.friendArray)
 
@@ -112,7 +111,7 @@ export default function EditEvent() {
         formData.description = event.description
         formData.attendees = currentAttendees
         
-        await axios.post(process.env.SERVER_URL + `/events/api/event/edit?id=${eventId}`, formData)
+        await axios.post(process.env.SERVER_URL + `/events/api/event/edit?id=${eventId}`, formData, {withCredentials: true})
             .then(() => {
                 console.log("Event edited successfully", formData)
                 // Reset form
@@ -128,7 +127,7 @@ export default function EditEvent() {
             })
             .catch(error => console.log(error.message))
 
-        router.push(`/event/view/created?eventId=${eventId}&id=${userId}`)
+        router.push(`/event/view/created?eventId=${eventId}`)
     }
 
     useEffect(() => {
@@ -255,7 +254,7 @@ export default function EditEvent() {
                             <Group justify="space-between">
                                 <Button 
                                     component={Link} 
-                                    href={`/event/view/created?eventId=${eventId}&id=${userId}`} 
+                                    href={`/event/view/created?eventId=${eventId}`} 
                                     variant='default'
                                     type="button"
                                 >

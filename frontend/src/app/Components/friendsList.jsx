@@ -5,20 +5,16 @@ import { UnstyledButton, Group, Avatar, Text, rem, Loader } from '@mantine/core'
 import { IconChevronRight } from '@tabler/icons-react';
 
 
-export default function friendsList(params){
-
-    let user_id = params.id
+export default function FriendsList(){
     let [friends,setFriendsArr] = useState([])
     let [loadingFriendsArr,setLoadingState] = useState(false)
 
     useEffect(() => {
         let getFriendsArr = async () => {
-            await axios.post(process.env.SERVER_URL + '/friends/get/accepted', {
-                user_id: user_id
-            })
+            await axios.get(process.env.SERVER_URL + '/friends/get/accepted', { withCredentials: true})
             .then(res => {
                 setLoadingState(true)
-                setFriendsArr(res)
+                setFriendsArr(res.data.friendArray)
             })
         }
         getFriendsArr()

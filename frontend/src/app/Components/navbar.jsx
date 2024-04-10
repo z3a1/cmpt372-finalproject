@@ -7,20 +7,17 @@ import {IconUserCircle,
     IconCalendarEvent,
     IconSettings
 } from "@tabler/icons-react"
-
 import "./navbar.css"
-import { Button } from "@mantine/core";
-
 
 export default function NavBar(params){
 
     const dataLinks = [
-        { link: `/Profile`, label: "Profile", icon: IconUserCircle },
+        { link: `/profile`, label: "Profile", icon: IconUserCircle },
         { link: `/friends`, label: "Friends", icon: IconFriends },
         { link: `/event/map`, label: "Create Event", icon: IconMapPin },
         { link: `/event/dashboard`, label: "Event Dashboard", icon: IconCalendarEvent },
         { link: `/videos`, label: "Event Suggestions", icon: IconBrandYoutube },
-        { link: `/Settings`, label: "Settings", icon: IconSettings}
+        { link: `/settings`, label: "Settings", icon: IconSettings}
       ];
 
     const links = dataLinks.map((data, index) => (
@@ -35,11 +32,11 @@ export default function NavBar(params){
             <nav className="navbar">
                 <div className="navbar-container">
                 {links}
-                <a href="/Register" id="logout" className="link">
+                <a href="/register" id="logout" className="link">
                     <IconLogout className="icon" />
                     <span>Logout</span>
                 </a>
-                <a href="/Register" id="login" className="link">
+                <a href="/register" id="login" className="link">
                     <IconLogin className="icon" />
                     <span>Login</span>
                 </a>

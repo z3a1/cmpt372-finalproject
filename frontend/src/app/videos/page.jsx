@@ -2,7 +2,6 @@
 import Link from "next/link";
 import FavouriteVideos from "./components/FavouriteVideos";
 import VideoList from "./components/VideoList";
-import { v4 as idGen } from "uuid";
 import {
   Title,
   Container,
@@ -15,17 +14,14 @@ import {
 } from "@mantine/core";
 import { IconSearch, IconArrowRight } from "@tabler/icons-react";
 import "./VideoPage.css";
-import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import userService from "../services/user";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { IconArrowBackUp, IconArrowForwardUp } from "@tabler/icons-react";
+import { getUserInfo } from '../services/user'
 
 export default function VideosPage() {
   const [location, setLocation] = useState("");
-  //var location;
   const [submitState, setSubmitState] = useState(false);
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id");
   const router = useRouter();
 
   function onSubmit(e) {
@@ -39,17 +35,14 @@ export default function VideosPage() {
     setSubmitState(false);
   }
 
+  const getUser = async () => {
+    let user = await getUserInfo();
+    if (!user) {
+      router.push("/");
+    }
+  }
+
   useEffect(() => {
-    let getUser = async () => {
-      let res = await userService.getcurrentSession(id);
-      if (!res.data) {
-        alert("ERROR: Invalid Session!")
-        router.push("/");
-      }
-      else{
-        console.log(res.data)
-      }
-    };
     getUser();
   }, []);
 
@@ -96,7 +89,7 @@ export default function VideosPage() {
                 onKeyDown={resetSubmitState}
               />
             </form>
-            <Link className="link" href={`/videos/favourites?id=${id}`}>
+            <Link className="link" href={`/videos/favourites`}>
               Favourites Page
               <IconArrowForwardUp
                 className="icon-arrow"
@@ -106,7 +99,7 @@ export default function VideosPage() {
               />
             </Link>
             <br></br>
-            <Link className="link" href={`/Landing/?id=${id}`}>
+            <Link className="link" href={`/landing`}>
               Return to Homepage{" "}
               <IconArrowBackUp
                 className="icon-arrow"
@@ -122,7 +115,7 @@ export default function VideosPage() {
           <Center>
               <Title className = "video-title" size = "h2">Video Results</Title>
             </Center>
-            {submitState && <VideoList location={location} userId={id} />}
+            {submitState && <VideoList location={location} />}
           </Container>
         </Grid.Col>
       </Grid>
