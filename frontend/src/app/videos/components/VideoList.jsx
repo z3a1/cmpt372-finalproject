@@ -1,13 +1,12 @@
 "use client";
 import axios from "axios";
 import VideoPlayer from "./VideoPlayer";
-import "../VideoList.css";
 import React, { useState, useEffect } from "react";
 import "@mantine/carousel/styles.css";
 import { Carousel } from "@mantine/carousel";
 import { Loader, Container, rem, Center } from "@mantine/core";
 
-export default function VideoList({ location, userId }) {
+export default function VideoList({ location }) {
   const [videoIds, setVideoIds] = useState([]);
   const [videosLoaded, setVideosLoaded] = useState(false);
 
@@ -17,12 +16,10 @@ export default function VideoList({ location, userId }) {
       try {
         //Added travel to end of location, to search for travel spots
         const query = `${location} places`;
-        await fetch(process.env.SERVER_URL + `/videos?q=${query}`, {
-          cache: "no-cache",
-        })
-          .then((res) => res.json())
+
+        await axios.get(process.env.SERVER_URL + `/videos?q=${query}`, {cache: "no-cache"}, {withCredentials: true})
           .then((serverRes) => {
-            setVideoIds(serverRes);
+            setVideoIds(serverRes.data);
             setVideosLoaded(true);
           });
       } catch (err) {
@@ -55,8 +52,8 @@ export default function VideoList({ location, userId }) {
         >
           {videoIds.map((vidId) => (
             <Carousel.Slide key={vidId}>
-              <Container className="videoplayer-contaner">
-                <VideoPlayer key={vidId} videoId={vidId} userId={userId} />
+              <Container className="videoplayer-container">
+                <VideoPlayer key={vidId} videoId={vidId}/>
               </Container>
             </Carousel.Slide>
           ))}

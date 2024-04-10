@@ -5,14 +5,13 @@ import VideoPlayer from "./VideoPlayer";
 import { Carousel } from "@mantine/carousel";
 import { Title, Container, Card, rem, Center } from "@mantine/core";
 import "@mantine/carousel/styles.css";
-import "../FavouriteVideos.css";
 
-export default function FavouriteVideos({ userId }) {
+export default function FavouriteVideos() {
   const [favourites, setFavourites] = useState([]);
 
   const getFavourites = async () => {
     await axios
-      .get(process.env.SERVER_URL + `/videos/favourites/${userId}`)
+      .get(process.env.SERVER_URL + `/videos/favourites`, {withCredentials: true})
       .then((res) => {
         setFavourites(res.data.favourites);
       })
@@ -21,7 +20,7 @@ export default function FavouriteVideos({ userId }) {
 
   useEffect(() => {
     getFavourites();
-  }, [userId]);
+  }, []);
 
   if (!favourites) {
     return <div>No favourite videos</div>;
@@ -29,7 +28,6 @@ export default function FavouriteVideos({ userId }) {
 
   return (
     <Container
-      className="favourites-container"
       size="xs"
       bg="rgba(255, 255, 255, 1.0)"
     >
@@ -38,11 +36,10 @@ export default function FavouriteVideos({ userId }) {
       </Center>
       <Carousel align="start">
         {favourites.map((vidId) => (
-          <Carousel.Slide>
+          <Carousel.Slide  key={vidId}>
             <VideoPlayer
               key={vidId}
               videoId={vidId}
-              userId={userId}
               visible={true}
               getFavourites={getFavourites}
             />

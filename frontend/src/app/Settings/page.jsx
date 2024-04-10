@@ -7,6 +7,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import {useState, useEffect} from "react"
 import userService from "../services/user"
 import axios from "axios";
+import { getUserInfo } from '../services/user'
+import { setuid } from "process";
 
 export default function SettingsPage(){
 
@@ -21,20 +23,18 @@ export default function SettingsPage(){
         initialValues: {inputData: '', password: ''}
     })
 
-    useEffect(() => {
-        let getCurrentUser = async () => {
-            console.log("Getting current user")
-            let res = await userService.getcurrentSession(session_id)
-            if(!res){
-                alert("Could not fetch the given user!")
-                router.push("/")
-            }
-            else{
-                setUser(res.data)
-            }
+    const getUser = async () => {
+        let user = await getUserInfo()
+        if (user) {
+            setUser(user)
+        } else {
+            router.push("/")
         }
-        getCurrentUser()
-    },[])
+    }
+
+    useEffect(() => {
+        getUser()
+    }, [])
 
     let changeUsername = () => {
         setChoice('username')

@@ -1,4 +1,4 @@
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import selectionStyle from './selection.module.css'
 import { useDisclosure } from '@mantine/hooks';
 import VideosPage from '../../../videos/page'
@@ -7,8 +7,6 @@ import VideosDrawer from '@/app/videos/VideoDrawer';
 
 export default function Selection({ selectedPlaceName, selectedAddress }) {
     const router = useRouter();
-    const searchParams = useSearchParams()
-    const userId = searchParams.get('id')
     const [opened, { open, close }] = useDisclosure(false);
 
     // Send place info to event page
@@ -16,7 +14,7 @@ export default function Selection({ selectedPlaceName, selectedAddress }) {
         if (!selectedPlaceName) {
             alert('⚠️ Please select a place on the map')
         } else {
-            router.push(`/event/create?placeName=${selectedPlaceName}&address=${selectedAddress}&id=${userId}`)
+            router.push(`/event/create?placeName=${selectedPlaceName}&address=${selectedAddress}`)
         }
     }
 

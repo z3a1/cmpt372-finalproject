@@ -17,36 +17,39 @@ import {
 } from "@mantine/core";
 
 import { useDisclosure } from "@mantine/hooks";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import NavBar from "../Components/navbar";
 import userService from "../services/user";
 import FriendsPage from "../friends/page";
 import VideosPage from "../videos/page";
-import friendsList from "../Components/friendsList";
+import axios from 'axios'
+import FriendsList from "../Components/friendsList";
 import "@mantine/core/styles.css";
 import "./landing.css";
+import { getUserInfo } from '../services/user'
 import FriendsActivity from "../Components/FriendsActivity";
 import SuggestedEvents from "../Components/SuggestedEvents";
 import VideoDrawer from "../videos/VideoDrawer";
 
 export default function LandingPage() {
   const router = useRouter();
+  // TODO: remove?
   const [userLoaded, setUserLoadState] = useState(false);
   const [user, setCurrentUser] = useState(null);
 
+  const getUser = async () => {
+    const userInfo = await getUserInfo()
+    if (userInfo) {
+      setCurrentUser(userInfo)
+      setUserLoadState(true)
+    } else {
+      router.push('/')
+    }
+  }
+
   useEffect(() => {
-    let setUser = async () => {
-      await userService.getcurrentSession().then((res) => {
-        if (res.data) {
-          setUserLoadState(true);
-          setCurrentUser(res.data);
-        } else {
-          router.push("/");
-        }
-      });
-    };
-    setUser();
+    getUser()
   }, []);
 
   return (
@@ -62,7 +65,7 @@ export default function LandingPage() {
           {!userLoaded && <Loader />}
           {userLoaded && (
             <ScrollArea h={"100%"}>
-              <friendsList id={user._id} />
+             <FriendsList id = {user._id} />
             </ScrollArea>
           )}
         </Box>

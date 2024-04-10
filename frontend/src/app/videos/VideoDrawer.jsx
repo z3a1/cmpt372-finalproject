@@ -11,7 +11,7 @@ import {
   rem,
   ActionIcon,
   Grid,
-  Center
+  Center,
 } from "@mantine/core";
 import { IconSearch, IconArrowRight } from "@tabler/icons-react";
 import "./VideoDrawer.css";
@@ -19,13 +19,11 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import userService from "../services/user";
 import { IconArrowBackUp, IconArrowForwardUp } from "@tabler/icons-react";
+import { getUserInfo } from "../services/user";
 
 export default function VideosDrawer() {
   const [location, setLocation] = useState("");
-  //var location;
   const [submitState, setSubmitState] = useState(false);
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id");
   const router = useRouter();
 
   function onSubmit(e) {
@@ -40,13 +38,14 @@ export default function VideosDrawer() {
     setSubmitState(false);
   }
 
+  const getUser = async () => {
+    let user = await getUserInfo();
+    if (!user) {
+      router.push("/");
+    }
+  };
+
   useEffect(() => {
-    let getUser = async () => {
-      let res = await userService.getUserId(id);
-      if (!res) {
-        router.push("/");
-      }
-    };
     getUser();
   }, []);
 
@@ -56,7 +55,9 @@ export default function VideosDrawer() {
         <Grid.Col span={5}>
           <Container className="search-container">
             <Center>
-              <Title className = "video-title" size = "h2">Event Recommendations</Title>
+              <Title className="video-title" size="h2">
+                Event Recommendations
+              </Title>
             </Center>
             <form onSubmit={onSubmit}>
               <label htmlFor="location"></label>
@@ -71,11 +72,7 @@ export default function VideosDrawer() {
                   />
                 }
                 rightSection={
-                  <ActionIcon
-                    size={32}
-                    radius="xl"
-                    variant="filled"
-                  >
+                  <ActionIcon size={32} radius="xl" variant="filled">
                     <IconArrowRight
                       style={{ width: rem(18), height: rem(18) }}
                       stroke={1.5}
@@ -92,7 +89,7 @@ export default function VideosDrawer() {
                 onKeyDown={resetSubmitState}
               />
             </form>
-            <Link className="link" href={`/videos/favourites?id=${id}`}>
+            {/* <Link className="link" href={`/videos/favourites`}>
               Favourites Page
               <IconArrowForwardUp
                 className="icon-arrow"
@@ -100,9 +97,9 @@ export default function VideosDrawer() {
                 strokeWidth={2}
                 color={"black"}
               />
-            </Link>
+            </Link> */}
             <br></br>
-            <Link className="link" href={`/Landing/?id=${id}`}>
+            <Link className="link" href={`/landing`}>
               Return to Home{" "}
               <IconArrowBackUp
                 className="icon-arrow"
@@ -114,7 +111,7 @@ export default function VideosDrawer() {
           </Container>
         </Grid.Col>
         <Grid.Col span={7}>
-            {submitState && <VideoList location={location} userId={id} />}
+          {submitState && <VideoList location={location} />}
         </Grid.Col>
       </Grid>
     </>

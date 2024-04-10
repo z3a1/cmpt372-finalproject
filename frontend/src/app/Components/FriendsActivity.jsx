@@ -1,22 +1,34 @@
 "use client";
 import React from "react";
-import { Group, Loader, Center, Notification, HoverCard, Button, Popover } from "@mantine/core";
+import {
+  Group,
+  Loader,
+  Center,
+  Notification,
+  HoverCard,
+  Button,
+  Popover,
+  Banner,
+  Title,
+} from "@mantine/core";
 import { IconUserCircle } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import axios from "axios";
+import VideosPage from "../videos/page";
 export default function FriendsActivity() {
   const searchParams = useSearchParams();
   const userId = searchParams.get("id");
   const [activityLoaded, setActivityLoaded] = useState(false);
-  // const [eventDetails, setEventDetails] = useState(false);
+  const [eventDetails, setEventDetails] = useState(false);
   const [friendsActivity, setFriendsActivity] = useState([]);
   useEffect(() => {
     const getFriendActivity = async () => {
       await axios
         .get(
           process.env.SERVER_URL +
-            `/events/api/event/friends/public?id=${userId}`
+            `/events/api/event/friends/public?id=${userId}`,
+          { withCredentials: true }
         )
         .then((res) => {
           console.log(res);
@@ -25,7 +37,7 @@ export default function FriendsActivity() {
               eventTitle: activity.event.name,
               userName: activity.user.username.toString(),
               location: activity.location.name.toString(),
-              description: activity.event.description.toString()
+              description: activity.event.description.toString(),
             }))
           );
           setActivityLoaded(true);
@@ -43,34 +55,37 @@ export default function FriendsActivity() {
         </Center>
       )}
       {activityLoaded && (
-        
-        <div style = {{height:"100%", width:"100%",margin:"30px"}}>
+        <div style={{ height: "100%", width: "100%", margin: "30px" }}>
           {friendsActivity.map((activity, index) => (
-         
-            <Notification
-             icon={ <IconUserCircle/>}
-              key={index}
-              title={activity.userName}
-              style={{
-                maxWidth: "500px",
-                margin: "20px",
-                border: "1px solid var(--mantine-color-gray-4)",
-              }}
-            >
-              {activity.eventTitle}
-              {/* <Button
-                onClick={() => setEventDetails(true)}
-                style={{ marginTop: "10px" }}
+            <div>
+              <Group>
+              <Notification
+                icon={<IconUserCircle />}
+                key={index}
+                title={activity.userName}
+                style={{
+                  maxWidth: "500px",
+                  width:"500px",
+                  margin: "20px",
+                  border: "1px solid var(--mantine-color-gray-4)",
+                }}
               >
-                Show Details
-              </Button> */}
-            </Notification>
-          
-           
+                {activity.eventTitle}
+              </Notification>
+              <Popover width={300} position="bottom" withArrow shadow="md">
+                <Popover.Target>
+                  <Button onClick={() => setEventDetails(true)} style={{}}>
+                    Show Details
+                  </Button>
+                </Popover.Target>
+                <Popover.Dropdown>
+                  <div style={{ width: "500px"}}>{activity.description}</div>
+                </Popover.Dropdown>
+              </Popover>
+              </Group>
+            </div>
           ))}
-         
         </div>
-        
       )}
     </div>
   );
