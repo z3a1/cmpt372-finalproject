@@ -28,7 +28,7 @@ export default function Logincomp(){
             { withCredentials: true }
         ).then(res => {
             console.log("Session id:", res)
-            router.push(`/Landing`)
+            router.push(`/landing`)
         })
         .catch(err => {
             console.log(err)

@@ -40,7 +40,7 @@ export default function Registercomp(){
        }, {withCredentials: true})
         .then(res => {
             console.log(res)
-            router.push(`/Landing`)
+            router.push(`/landing`)
         })
         .catch(err => {
                 console.log(err)

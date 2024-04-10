@@ -99,7 +99,7 @@ export default function VideosPage() {
               />
             </Link>
             <br></br>
-            <Link className="link" href={`/Landing`}>
+            <Link className="link" href={`/landing`}>
               Return to Homepage{" "}
               <IconArrowBackUp
                 className="icon-arrow"
