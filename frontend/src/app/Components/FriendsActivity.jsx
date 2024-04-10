@@ -17,8 +17,6 @@ import { useSearchParams } from "next/navigation";
 import axios from "axios";
 import VideosPage from "../videos/page";
 export default function FriendsActivity() {
-  const searchParams = useSearchParams();
-  const userId = searchParams.get("id");
   const [activityLoaded, setActivityLoaded] = useState(false);
   const [eventDetails, setEventDetails] = useState(false);
   const [friendsActivity, setFriendsActivity] = useState([]);
@@ -27,7 +25,7 @@ export default function FriendsActivity() {
       await axios
         .get(
           process.env.SERVER_URL +
-            `/events/api/event/friends/public?id=${userId}`,
+            `/events/api/event/friends/public`,
           { withCredentials: true }
         )
         .then((res) => {
@@ -45,7 +43,7 @@ export default function FriendsActivity() {
         .catch((error) => console.error(error));
     };
     getFriendActivity();
-  }, [userId]);
+  }, []);
 
   return (
     <div>

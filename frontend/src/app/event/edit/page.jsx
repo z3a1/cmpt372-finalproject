@@ -71,7 +71,8 @@ export default function EditEvent() {
                 setSelectedAddress(res.data.location.address)
                 setDateTime(new Date(res.data.event.date_time))
                 setCurrentAttendees(res.data.attendees.map(attendee => attendee.user.username))
-
+                formData.eventName = res.data.event.name
+                
                 setIsLoaded(true)
             })
             .catch(error => {
