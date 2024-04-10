@@ -1,0 +1,11 @@
+.placesContainer {
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+}
+
+.mapContainer {
+  width: 55%;
+  height: 43.8em;
+  border-radius: 5px;
+}

@@ -23,16 +23,22 @@ export default function Logincomp(){
         event.preventDefault()
         loginForm.validate()
         let {email, password} = loginForm.values
-        await axios.post(process.env.SERVER_URL + "/auth/login",{
-            email: email,
-            password: password
-        }).then(res => {
-            console.log(res)
-            router.push(`/Landing/?id=${res.data}`)
+        await axios.post(process.env.SERVER_URL + "/auth/login",
+            { email: email, password: password },
+            { withCredentials: true }
+        ).then(res => {
+            console.log("Session id:", res)
+            router.push(`/landing`)
         })
         .catch(err => {
             console.log(err)
-            alert(err.response.data.message)
+            //alert(err.response.data.message)
+            if(err.response.message){
+                alert(err.response.message)
+            }
+            else{
+                alert(err.response)
+            }
         })
       }
 

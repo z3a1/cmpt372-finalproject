@@ -5,7 +5,6 @@ import React, { useState, useEffect } from "react";
 
 export default function VideoPlayer({
   videoId,
-  userId,
   visible = true,
   getFavourites,
 }) {
@@ -19,7 +18,7 @@ export default function VideoPlayer({
       await axios
         .get(
           process.env.SERVER_URL +
-            `/videos/favourites/${userId}/${videoId}/checkFavourite`
+            `/videos/favourites/${videoId}/checkFavourite`
         )
         .then((res) => {
           if (res.data && res.data.likedVid.length > 0) {
@@ -31,13 +30,13 @@ export default function VideoPlayer({
         .catch((error) => console.error(error));
     };
     getData();
-  }, [videoId, userId]);
+  }, [videoId]);
 
   async function updateFavourite() {
     if (checkFavourite) {
       await axios
         .delete(
-          process.env.SERVER_URL + `/videos/favourites/${userId}/${videoId}`
+          process.env.SERVER_URL + `/videos/favourites/${videoId}`, {withCredentials: true}
         )
         .then((res) => {
           setCheckFavourite(false);
@@ -46,9 +45,9 @@ export default function VideoPlayer({
         .catch((error) => console.error(error));
     } else {
       await axios
-        .post(process.env.SERVER_URL + `/videos/favourites/${userId}`, {
+        .post(process.env.SERVER_URL + `/videos/favourites`, {
           videoId,
-        })
+        }, {withCredentials: true})
         .then((res) => {
           setCheckFavourite(true);
         })

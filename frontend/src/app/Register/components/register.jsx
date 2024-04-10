@@ -21,29 +21,31 @@ export default function Registercomp(){
             fname: matches(/^[A-Za-z]+$/,"Invalid First Name!"),
             lname: matches(/^[A-Za-z]+$/,"Invalid Last Name!"),
             email: isEmail("Not a valid email!"),
-            password: matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,"The password is invalid!")
+            password: matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,"The password is invalid!")
         }
     })
 
     const getFormData = async (event) => {
         event.preventDefault()
         registerForm.validate()
-        const newUserId = idGen()
+        // const newUserId = idGen()
         let {fname,lname,user_name,email,password} = registerForm.values;
         await axios.post(process.env.SERVER_URL + "/auth/register",{
-        id: newUserId,
+        // id: newUserId,
         fname: fname,
         lname: lname,
         user_name: user_name,
         email: email,
         password: password
-       }).then(res => {
-        console.log(res)
-        router.push(`/Landing?id=${res.data.user_id}`)
-       })
-       .catch(err => {
-            alert(err)
-       })
+       }, {withCredentials: true})
+        .then(res => {
+            console.log(res)
+            router.push(`/landing`)
+        })
+        .catch(err => {
+                console.log(err)
+                alert(err)
+        })
     }
 
     return(
