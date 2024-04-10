@@ -20,7 +20,7 @@ export default function AttendeeList({ attendees }) {
 
     return (
         <>
-            <Button onClick={open} color="blue">Attendees</Button>
+            <Button onClick={open} color="green">Attendees</Button>
             <Modal 
                 opened={opened} 
                 onClose={close} 

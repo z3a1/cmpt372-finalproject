@@ -140,7 +140,6 @@ router.get("/api/event/friends/public", async (req, res) => {
 // Get event by id
 router.get("/api/event", async (req, res) => {
     const event_id = req.query.id;
-    console.log("Retrieving event:", event_id)
 
     try {
         const event = await Event.findById(event_id)

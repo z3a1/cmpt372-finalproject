@@ -7,10 +7,9 @@ import Link from 'next/link'
 import axios from 'axios';
 import { DateTimePicker } from '@mantine/dates';
 import { Container, TextInput, MultiSelect, Textarea, Button, Group, Title, ActionIcon, Card, Flex, Popover, Text, LoadingOverlay, Radio } from '@mantine/core';
+import { chevronDownIcon, chevronUpIcon } from '../lib/icon';
 import dayjs from 'dayjs';
 import Map from './components/map'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons'
 
 export default function EditEvent() {
     const router = useRouter()
@@ -47,20 +46,6 @@ export default function EditEvent() {
         description: ""
     })
 
-    const chevronUpIcon = (
-        <FontAwesomeIcon 
-            icon={faChevronUp}
-            size="sm"
-        />
-    )
-
-    const chevronDownIcon = (
-        <FontAwesomeIcon 
-            icon={faChevronDown}
-            size="sm"
-        />
-    )
-
     const getEvent = async () => {
         await axios.get(process.env.SERVER_URL + `/events/api/event?id=${eventId}`, {withCredentials: true})
             .then(res => {
@@ -71,8 +56,7 @@ export default function EditEvent() {
                 setSelectedAddress(res.data.location.address)
                 setDateTime(new Date(res.data.event.date_time))
                 setCurrentAttendees(res.data.attendees.map(attendee => attendee.user.username))
-                formData.eventName = res.data.event.name
-                
+
                 setIsLoaded(true)
             })
             .catch(error => {
@@ -200,7 +184,7 @@ export default function EditEvent() {
                                 rightSection={
                                     <Popover width={200} position="bottom" withArrow shadow="md" onChange={handleAddressClick}>
                                         <Popover.Target>
-                                            <ActionIcon radius="xl" color="blue">
+                                            <ActionIcon radius="xl" color="green">
                                                 {isAddressOpen ? chevronUpIcon : chevronDownIcon}
                                             </ActionIcon>
                                         </Popover.Target>
@@ -276,7 +260,7 @@ export default function EditEvent() {
                                 >
                                     Back
                                 </Button>
-                                <Button type="submit" color="blue">Edit</Button>
+                                <Button type="submit" color="green">Edit</Button>
                             </Group>
                         </Container>
                     </>

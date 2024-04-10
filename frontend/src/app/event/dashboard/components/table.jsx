@@ -2,11 +2,10 @@ import { useRouter } from "next/navigation";
 import { ActionIcon, Center, Loader, Table } from "@mantine/core";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { eyeIcon } from "../../lib/icon";
 import dayjs from 'dayjs';
 import VisibilityBadge from "../../components/visibilityBadge"; 
 import StatusBadge from "../../components/statusBadge";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye } from '@fortawesome/free-solid-svg-icons'
 
 export default function EventTable({ eventType }) {
     const router = useRouter()
@@ -16,12 +15,6 @@ export default function EventTable({ eventType }) {
     const [isCreatedEventsLoaded, setIsCreatedEventsLoaded] = useState(false)
     const [isInvitedEventsLoaded, setIsInvitedEventsLoaded] = useState(false)
     const areBothEventsLoaded = isCreatedEventsLoaded && isInvitedEventsLoaded
-
-    const eyeIcon = (
-        <FontAwesomeIcon 
-            icon={faEye}
-        />
-    )
 
     const getAllCreatedEvents = async () => {
         await axios.get(process.env.SERVER_URL + `/events/api/event/created`, {withCredentials: true})

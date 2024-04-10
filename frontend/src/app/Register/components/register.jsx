@@ -1,4 +1,5 @@
 import {v4 as idGen} from "uuid"
+import styles from "../registerStyle.module.css"
 import axios from "axios"
 import { TextInput, Box, PasswordInput, Title, Button } from '@mantine/core';
 import { useForm, matches, isEmail } from "@mantine/form"
