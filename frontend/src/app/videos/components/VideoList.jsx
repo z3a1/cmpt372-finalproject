@@ -9,7 +9,7 @@ import { Loader, Container, rem, Center } from "@mantine/core";
 
 export default function VideoList({ location, userId }) {
   const [videoIds, setVideoIds] = useState([]);
-  const [videosLoaded, setvideosLoaded] = useState(false);
+  const [videosLoaded, setVideosLoaded] = useState(false);
 
   //UseEffect to rerender after location has be updated
   useEffect(() => {
@@ -23,7 +23,7 @@ export default function VideoList({ location, userId }) {
           .then((res) => res.json())
           .then((serverRes) => {
             setVideoIds(serverRes);
-            setvideosLoaded(true);
+            setVideosLoaded(true);
           });
       } catch (err) {
         console.log(err);

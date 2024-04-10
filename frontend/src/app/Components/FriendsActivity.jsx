@@ -1,23 +1,34 @@
 "use client";
 import React from "react";
-import { Center, Notification, HoverCard, Button } from "@mantine/core";
+import { Group, Loader, Center, Notification, HoverCard, Button, Popover } from "@mantine/core";
 import { IconUserCircle } from "@tabler/icons-react";
-import { useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import axios from "axios";
 export default function FriendsActivity() {
   const searchParams = useSearchParams();
   const userId = searchParams.get("id");
-
+  const [activityLoaded, setActivityLoaded] = useState(false);
+  // const [eventDetails, setEventDetails] = useState(false);
   const [friendsActivity, setFriendsActivity] = useState([]);
   useEffect(() => {
     const getFriendActivity = async () => {
-    await axios
-        .get(process.env.SERVER_URL + `/events/api/event/friends/public?id=${userId}`)
+      await axios
+        .get(
+          process.env.SERVER_URL +
+            `/events/api/event/friends/public?id=${userId}`
+        )
         .then((res) => {
-           console.log(res)
-
-          setFriendsActivity(res.data.eventPackages);
+          console.log(res);
+          setFriendsActivity(
+            res.data.eventPackages.map((activity) => ({
+              eventTitle: activity.event.name,
+              userName: activity.user.username.toString(),
+              location: activity.location.name.toString(),
+              description: activity.event.description.toString()
+            }))
+          );
+          setActivityLoaded(true);
         })
         .catch((error) => console.error(error));
     };
@@ -26,16 +37,41 @@ export default function FriendsActivity() {
 
   return (
     <div>
-      {friendsActivity.map((event, index) => (
-        <Notification key={index} title={event.user}  style={{
-          width: "500px",
-          margin: "2px",
-          border: "1px solid var(--mantine-color-gray-4)",
-        }}>
-          {event.location}
-        </Notification>
-      ))}
-
+      {!activityLoaded && (
+        <Center>
+          <Loader style={{ padding: "40px" }} />
+        </Center>
+      )}
+      {activityLoaded && (
+        
+        <div style = {{height:"100%", width:"100%",margin:"30px"}}>
+          {friendsActivity.map((activity, index) => (
+         
+            <Notification
+             icon={ <IconUserCircle/>}
+              key={index}
+              title={activity.userName}
+              style={{
+                maxWidth: "500px",
+                margin: "20px",
+                border: "1px solid var(--mantine-color-gray-4)",
+              }}
+            >
+              {activity.eventTitle}
+              {/* <Button
+                onClick={() => setEventDetails(true)}
+                style={{ marginTop: "10px" }}
+              >
+                Show Details
+              </Button> */}
+            </Notification>
+          
+           
+          ))}
+         
+        </div>
+        
+      )}
     </div>
   );
 }

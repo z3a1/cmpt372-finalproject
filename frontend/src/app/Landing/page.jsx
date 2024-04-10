@@ -76,7 +76,7 @@ export default function LandingPage() {
             <Box
               id="events-container"
               style={{
-                height: "50%",
+                maxHeight: "500px",
                 width: "100%",
                 position: "relative",
                 overflow: "hidden",
