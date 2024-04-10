@@ -3,8 +3,7 @@
 import {Loader, MantineProvider, Group} from '@mantine/core'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
-import axios from 'axios';
-import "./user.modules.css"
+import ".././user.modules.css"
 import { getUserInfo } from '../../services/user'
 
 export default function verifyUser(){
