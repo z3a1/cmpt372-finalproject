@@ -14,7 +14,8 @@ export default function FriendsList(){
             await axios.get(process.env.SERVER_URL + '/friends/get/accepted', { withCredentials: true})
             .then(res => {
                 setLoadingState(true)
-                setFriendsArr(res.data.friendArray)
+                console.log(res);
+                setFriendsArr(res.data)
             })
         }
         getFriendsArr()

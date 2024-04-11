@@ -30,6 +30,12 @@ const MessagePage = () => {
     const [inputMessage, setInputMessage] = useState('');
     const SERVER_URL = process.env.SERVER_URL || 'http://localhost:8080';
 
+    const [socket, setSocket] = useState([]);
+
+    const [fuserName, setfuserName ] = useState([]);
+    const [ fname, setfname ] = useState([]);
+    const [ lname, setlname ] = useState([]);
+
 
     useEffect(() => {
 
@@ -39,12 +45,16 @@ const MessagePage = () => {
                 recipientId: friendId
             }
         });
+        setSocket(socket);
     
         socket.on('connect', () => {
             fetch(`${SERVER_URL}/messages/friendInfo?friendId=${friendId}`)
                 .then (response => response.json())
                 .then (data => {
-                    console.log(data.friend)
+                    console.log(data.friend);
+                    setfname(data.friend.fname);
+                    setlname(data.friend.lname);
+                    setfuserName(data.friend.username);
                 })
 
             fetch(`${SERVER_URL}/messages/messages?userId=${userId}&friendId=${friendId}`)
@@ -83,7 +93,7 @@ const MessagePage = () => {
 
     return (
         <div className="message-container">
-            <h1>Message Page</h1>
+            <h1>{fname} {lname}</h1>
             <div>
                 {messages.map((message, index) => (
                     <div key={index} className={`message ${message.senderId === userId ? 'sent' : 'received'}`} >
@@ -93,7 +103,7 @@ const MessagePage = () => {
                             </div>
                         ) : (
                             <div>
-                                <strong>Friend:</strong> {message.message}
+                                <strong>{fuserName}</strong> {message.message}
                             </div>
                         )}
                     </div>

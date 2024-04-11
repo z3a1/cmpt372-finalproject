@@ -31,13 +31,17 @@ async function getInfo (idArray) {
 
 // Get all accepted friends of user
 router.get('/get/accepted', async (req, res) => {
-    const userId = req.session.passport.user._id
+    // const userId = req.session.passport.user._id
+    const userId = req.userId
+    console.log(userId);
 
     try {
         const allAcceptedFriends = await Friend.find({ user_id: userId, status: "accepted" })
         const friendArray = await getInfo(allAcceptedFriends); 
 
-        res.status(200).json({ friendArray });
+        console.log(friendArray);
+
+        res.status(200).json( friendArray );
     } catch (err) {
         res.status(500).json({ message: 'internal server error' })
     }
@@ -45,16 +49,20 @@ router.get('/get/accepted', async (req, res) => {
 
 // Get all pending friends of user
 router.get('/get/pending', async (req, res) => {
-    const userId = req.session.passport.user._id
-    console.log(req.session)
+    // const userId = req.session.passport.user._id
+    // console.log(req.session)
+    const userId = req.userId
+    console.log('userid',userId);
 
     try {
         const allPendingFriends = await Friend.find({ user_id: userId, status: "pending" })
 
         // To be able to get the friend's name
         const pendingfriendArray = await getInfo(allPendingFriends);
+        
+        console.log(pendingfriendArray);
 
-        res.status(200).json({ pendingfriendArray });
+        res.status(200).json( pendingfriendArray );
     } catch (err) {
         res.status(500).json({ message: 'internal server error' })
     }
@@ -62,17 +70,23 @@ router.get('/get/pending', async (req, res) => {
 
 // Get all pending friend requests
 router.get('/get/requests', async (req, res) => {
-    const userId = req.session.passport.user._id
-    console.log(req.session)
+    // const userId = req.session.passport.user._id
+    // console.log(req.session)
+    console.log(req.query);
+    const userId = req.query.userId
+    console.log('userid',userId);
+ 
 
     try {
-        const friendRequests = await Friend.find({ friend_id: userId, status: "pending" })
+        const friendRequests = await Friend.find({ user_id: userId, status: "pending" })
 
         // To be able to get the friend's name
         // might have to change this to have friend's info?
         const friendRequestArray = await getInfo(friendRequests); // NOTE: was commented out
 
-        res.status(200).json({ friendRequestArray });
+        console.log("friend request",friendRequestArray);
+
+        res.status(200).json( friendRequestArray );
     } catch (err) {
         res.status(500).json({ message: 'internal server error' })
     }
@@ -97,6 +111,10 @@ router.get('/get/people', async (req, res) => {
 router.post('/add', async (req, res) => {
     console.log(req.query);
     let {userId, friendId} = req.query
+    // const userId = req.userId;
+    console.log('userId',userId)
+    // const friendId = req.friendId;
+    console.log('friendid',friendId)
 
     try {
         // User is already friends
