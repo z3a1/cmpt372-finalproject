@@ -138,7 +138,7 @@ export default function FriendsPage() {
     const message = async (friendId) => {
         try {
             // Redirect to another page with user ID and friend ID as query parameters
-            window.location.href = `/Messaging?userId=${encodeURIComponent(user._id)}&friendId=${encodeURIComponent(friendId)}`;
+            window.location.href = `/messaging?userId=${encodeURIComponent(user._id)}&friendId=${encodeURIComponent(friendId)}`;
         } catch(error) {
             console.error("Error:", error);
         }

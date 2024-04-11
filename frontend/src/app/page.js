@@ -1,6 +1,6 @@
 'use client'
 import "@mantine/core/styles.css";
-import EntryPage from './Register/page';
+import EntryPage from './register/page';
 import axios from "axios";
 
 export default function Home() {
