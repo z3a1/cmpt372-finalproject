@@ -230,7 +230,7 @@ export default function FriendsPage() {
                         <div key={index} className="friend-container">
                             {/* <h4>{friend._id}</h4>
                             <p>- {friend.username}</p> */}
-                            <p>{friend._id} ' ' </p>
+                            {/* <p>{friend._id} ' ' </p> */}
                             <p> {friend.fname} {friend.lname}</p> 
                             <button className="remove" onClick={() => remove(friend._id)}>Remove</button>
                         </div>
