@@ -15,10 +15,12 @@ router.get('/error', (req,res) => {
     res.status(500).json({message: "Could not authenticate user!"})
 })
 
-router.post('/login',passport.authenticate('local',{failureRedirect: '/auth/error', failureMessage: true}), (req,res) => {
+router.post('/login',passport.authenticate('local',{failureRedirect: '/auth/error', failureMessage: true}), async (req,res) => {
     req.session.cookie.expires = expirationDate
-    req.session.save()
-    res.status(200).json({userId: req.user._id, sessionId: req.session.id})
+    await req.session.save().then(res => {
+        console.log(res)
+        res.status(200).json({userId: req.user._id, sessionId: req.session.id})
+    })
 })
 
 router.post('/register',async (req,res) => {
@@ -37,8 +39,9 @@ router.post('/register',async (req,res) => {
             await newDocument.save().then(async dbRes => {
                 req.session.cookie.expires = expirationDate
                 req.session.passport = {user : dbRes}
-                req.session.save()
-                res.status(200).json({user_id: req.session.id})
+                await req.session.save().then(res => {
+                    res.status(200).json({user_id: req.session.id})
+                })
             })
             .catch(err => {
                 res.status(500).json(err)
@@ -50,9 +53,25 @@ router.post('/register',async (req,res) => {
     })
 })
 
+router.post('/logout', async(req,res) => {
+    await req.session.destory().then(sessionRes => {
+        if(!sessionRes){
+            res.status(200).json({message: 'Logged Out!'})
+        }
+        else{
+            res.status(500).json({message: 'ERROR: Cannot log out!'})
+        }
+    })
+})
 
 router.post('/getSessionById', async(req,res) => {
-    res.status(200).json(req.session.passport.user)
+    console.log(req.session)
+    try{
+        res.status(200).json(req.session)
+    }
+    catch(err){
+        res.status(500).json(err)
+    }
 })
 
 router.post('/getUserId', async(req,res) => {
