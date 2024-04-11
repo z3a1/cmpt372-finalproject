@@ -35,7 +35,6 @@ export default function FriendsPage() {
     useEffect(() => {
         let getSession = async () => {
             await User.getcurrentSession().then(res => {
-                console.log("res.data",res.data)
                 setuser(res.data)
                 // console.log(user);
                 fetchFriends(res.data)
@@ -48,19 +47,24 @@ export default function FriendsPage() {
     },[])
 
     const remove = async (id) => {
-        try{
-            await friendService.deleteFriend(id);
-            fetchFriends();
-        } catch (error){
-            alert(error)
-        }
+        await friendService.deleteFriend(id).then(res => {
+            console.log(res)
+            fetchFriends(user)
+        })
 
     };
 
     const fetchFriends = async (u) => {
-        await getPendingFriends(u);
-        await getAcceptedFriends(u);
-        await getPendingFriendRequests(u);
+        console.log(u)
+        // await getPendingFriends(u);
+        await getAcceptedFriends(u).then(async res => {
+            await getPendingFriends(u).then(async res2 => {
+                await getPendingFriendRequests(u).then(() => {
+                    console.log("Done getting friends info")
+                })
+            })
+        })
+        // await getPendingFriendRequests(u);
     }
 
     const getPendingFriends = async (u) => {
@@ -76,7 +80,7 @@ export default function FriendsPage() {
     const getAcceptedFriends = async (u) => {
         await friendService.getAcceptedFriends(u._id)
             .then(res => {
-                console.log("fetching pending friends:", res);
+                console.log("fetching accepted friends:", res);
                 setAcceptedFriends(res)
             })
             .catch(error => alert(error.message))
@@ -87,8 +91,8 @@ export default function FriendsPage() {
         console.log('getting pending friend requests')
         await axios.get(process.env.SERVER_URL + `/friends/get/requests?userId=${u._id}`, {withCredentials: true})
             .then(res => {
-                console.log("fetching pending friend requests:", res);
-                setPendingFriendRequests(res);
+                console.log("fetching pending friend requests:", res.data);
+                setPendingFriendRequests(res.data);
                 if (res === null || res === undefined){
                     setPendingFriendRequestsLength(0);
                 } else{
@@ -121,7 +125,7 @@ export default function FriendsPage() {
             await axios.post(process.env.SERVER_URL + `/friends/add?friendId=${f_id}&userId=${user._id}`, {withCredentials: true})
             .then(res => {
                 alert(res.data.message)
-                getPendingFriendRequests()
+                fetchFriends(user)
             })
             .catch(error => alert(error.message))
         }
@@ -226,7 +230,8 @@ export default function FriendsPage() {
                         <div key={index} className="friend-container">
                             {/* <h4>{friend._id}</h4>
                             <p>- {friend.username}</p> */}
-                            <p>{friend.fname} {friend.lname}</p> 
+                            <p>{friend._id} ' ' </p>
+                            <p> {friend.fname} {friend.lname}</p> 
                             <button className="remove" onClick={() => remove(friend._id)}>Remove</button>
                         </div>
                     ))

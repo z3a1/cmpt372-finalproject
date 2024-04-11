@@ -26,7 +26,6 @@ let getcurrentSession = async(sessionID) => {
         alert(err)
         return null
     })
-    console.log(res);
     return res
 }
 
