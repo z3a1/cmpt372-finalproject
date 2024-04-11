@@ -1,3 +1,4 @@
+import styles from "../registerStyle.module.css"
 import axios from "axios"
 import {TextInput, Button, Box, PasswordInput } from '@mantine/core';
 import { Title } from "@mantine/core";
@@ -32,8 +33,8 @@ export default function Logincomp(){
         .catch(err => {
             console.log(err)
             //alert(err.response.data.message)
-            if(err.response.message){
-                alert(err.response.message)
+            if(err){
+                alert(err)
             }
             else{
                 alert(err.response)

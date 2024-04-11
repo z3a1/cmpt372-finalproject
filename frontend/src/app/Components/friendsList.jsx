@@ -5,16 +5,18 @@ import { Title, Container, UnstyledButton, Group, Avatar, Text, rem, Loader } fr
 import { IconChevronRight } from '@tabler/icons-react';
 
 
-export default function FriendsList(){
+export default function FriendsList(params){
     let [friends,setFriendsArr] = useState([])
     let [loadingFriendsArr,setLoadingState] = useState(false)
+    console.log(params.id)
 
     useEffect(() => {
         let getFriendsArr = async () => {
-            await axios.get(process.env.SERVER_URL + '/friends/get/accepted', { withCredentials: true})
+            await axios.get(process.env.SERVER_URL + `/friends/get/accepted?userId=${params.id}`, { withCredentials: true})
             .then(res => {
                 setLoadingState(true)
-                setFriendsArr(res.data.friendArray)
+                console.log(res.data)
+                setFriendsArr(res.data)
             })
         }
         getFriendsArr()

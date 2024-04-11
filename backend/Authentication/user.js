@@ -16,17 +16,16 @@ router.get('/error', (req,res) => {
 })
 
 router.post('/login',passport.authenticate('local',{failureRedirect: '/auth/error', failureMessage: true}), (req,res) => {
-    console.log("Logging in user: ", req.user)
     req.session.cookie.expires = expirationDate
     req.session.save()
     res.status(200).json({userId: req.user._id, sessionId: req.session.id})
 })
 
 router.post('/register',async (req,res) => {
-    console.log("Registering user: ", req.body)
     await bcrypt.hash(req.body.password,saltRounds,async (dbErr,hash) => {
         if(!dbErr){
             let newUser = {
+                // user_id: req.body.id,
                 username: req.body.user_name,
                 fname: req.body.fname,
                 lname: req.body.lname,
@@ -56,11 +55,6 @@ router.post('/getSessionById', async(req,res) => {
     res.status(200).json(req.session.passport.user)
 })
 
-router.get('/logout', async(req,res) => {
-    req.session.destroy()
-    res.status(200).json('Deleted session!')
-})
-
 router.post('/getUserId', async(req,res) => {
     let givenUser = req.body.id
     let id = new mongoose.Types.ObjectId(givenUser)
@@ -80,7 +74,9 @@ router.post('/getUserId', async(req,res) => {
 router.get('/user/info', (req, res) => {
     try {
          console.log("session", req.session)
-         const user = req.session.passport.user
+        // console.log("session passport", req.session.passport)
+        const user = req.session.passport.user
+        //  console.log("user info", user)
         if (user) {
             res.status(200).json({ user })
         } else {
@@ -98,6 +94,7 @@ router.post('/changeInfo', async (req,res) => {
     if(!req.body.inputData) res.status(404).json({message: "The new change field is empty!"});
 
     await db.User.findById({_id: id}).then(async (user) => {
+        //   console.log(user)
         await bcrypt.compare(givenPassword,user.password).then(async result => {
             if(result){
                 let changeSetting = req.body.status
@@ -124,6 +121,7 @@ router.post('/changeInfo', async (req,res) => {
             }
         })
         .catch(err => {
+            console.log(err)
             res.status(404).json(err)
         })
     })

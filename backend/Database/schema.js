@@ -71,6 +71,27 @@ var likedVideoSchema = new Schema({
     video_id: { type: String, ref: 'Video' }
 })
 
+const messages = new mongoose.Schema({
+    senderId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User', 
+        required: true
+    },
+    recipientId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User', 
+        required: true
+    },
+    message: {
+        type: String,
+        required: true
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+})
+
 const User = mongoose.model('User',userSchema)
 const Friend = mongoose.model('Friend',friendSchema)
 const Location = mongoose.model('Location',locationSchema)
@@ -78,6 +99,8 @@ const Event = mongoose.model('Event',eventSchema)
 const Attendee = mongoose.model('Attendee',attendeeSchema)
 const Video = mongoose.model('Video', videoSchema)
 const LikedVideo = mongoose.model('LikedVideo', likedVideoSchema)
+const Messages = mongoose.model('Messages', messages)
+
 
 const initializeDB = () => {
     mongoose.connect(process.env.CONNECTION_SECRET)
@@ -86,5 +109,5 @@ const initializeDB = () => {
 }
 
 module.exports = {
-    User,Friend,Location,Event,Attendee,Video,LikedVideo,initializeDB
+    User,Friend,Location,Event,Attendee,Video,LikedVideo,Messages,initializeDB
 }

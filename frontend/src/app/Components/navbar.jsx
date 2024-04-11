@@ -1,4 +1,3 @@
-"use client"
 import {IconUserCircle, 
     IconFriends, 
     IconMapPin, 
@@ -9,12 +8,8 @@ import {IconUserCircle,
     IconSettings
 } from "@tabler/icons-react"
 import "./navbar.css"
-import axios from "axios"
-import { useRouter } from "next/navigation";
 
 export default function NavBar(params){
-
-    const router = useRouter()
 
     const dataLinks = [
         { link: `/profile`, label: "Profile", icon: IconUserCircle },
@@ -23,18 +18,7 @@ export default function NavBar(params){
         { link: `/event/dashboard`, label: "Event Dashboard", icon: IconCalendarEvent },
         { link: `/videos`, label: "Event Suggestions", icon: IconBrandYoutube },
         { link: `/settings`, label: "Settings", icon: IconSettings}
-    ];
-
-    const logout = async () => {
-        await axios.get(process.env.SERVER_URL + "/auth/logout").then(res => {
-            if(res.status == 200){
-                router.push("/")
-            }
-            else{
-                alert(res.data)
-            }
-        })
-    }
+      ];
 
     const links = dataLinks.map((data, index) => (
         <a key={index} className="link" href={data.link}>
@@ -48,9 +32,13 @@ export default function NavBar(params){
             <nav className="navbar">
                 <div className="navbar-container">
                 {links}
-                <a id="logout" className="link" onClick={logout}>
-                    <IconLogout className="icon"/>
+                <a href="/register" id="logout" className="link">
+                    <IconLogout className="icon" />
                     <span>Logout</span>
+                </a>
+                <a href="/register" id="login" className="link">
+                    <IconLogin className="icon" />
+                    <span>Login</span>
                 </a>
                 </div>
             </nav>

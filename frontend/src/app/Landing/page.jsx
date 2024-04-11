@@ -37,19 +37,22 @@ export default function LandingPage() {
   const [userLoaded, setUserLoadState] = useState(false);
   const [user, setCurrentUser] = useState(null);
 
-  const getUser = async () => {
-    const user = await getUserInfo();
-    if (user) {
-      setUserLoadState(true);
-      setCurrentUser(user);
-    } else {
-      router.push("/");
-    }
-  }
-
   useEffect(() => {
-    getUser();
+    let setUser = async () => {
+      await userService.getcurrentSession().then(res => {
+        if (res.data) {
+          setUserLoadState(true);
+          setCurrentUser(res.data);
+        } else {
+          router.push("/");
+        }
+      })
+    };
+    setUser();
   }, []);
+
+
+
 
   return (
     <div className="landing-container" style={{ height: "70vh" }}>
@@ -63,7 +66,7 @@ export default function LandingPage() {
           {!userLoaded && <Loader />}
           {userLoaded && (
             <ScrollArea h={"100%"}>
-             <FriendsList />
+             <FriendsList id = {user._id} />
             </ScrollArea>
           )}
         </Box>

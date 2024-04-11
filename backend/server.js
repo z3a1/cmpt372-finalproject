@@ -2,22 +2,24 @@ const express = require("express")
 const cors = require("cors")
 require('dotenv').config()
 const axios = require("axios")
-// axios.defaults.withCredentials = true
+axios.defaults.withCredentials = true
 const app = express()
+const http = require("http");
+const socketio = require('socket.io'); 
 const db = require('./Database/schema')
+const messageRouter = require('./messages/messageRouter');
+const session = require('express-session')
+app.use(session({
+    secret: process.env.APP_SECRET,
+    resave: true,
+    saveUninitialized: true
+}))
 
 // CORS
 const corsOptions = cors({
-    origin: [
-        "https://backend-tmmf5kaaqa-uw.a.run.app",
-        "http://localhost:8080",
-        "http://localhost:3000",
-        "http://146.148.99.120",
-        "http://35.188.178.185"
-    ],
-    // allowedHeaders: ["*"],
-    credentials: true,
-    // sameSite: "none" 
+    origin: ["https://backend-tmmf5kaaqa-uw.a.run.app", "http://localhost:8080", "http://localhost:3000", "http://146.148.99.120"],
+    credentials: true, 
+    optionSuccessStatus:200
 })
 app.use(corsOptions);
 app.options('*', corsOptions)
@@ -25,7 +27,7 @@ app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 
 const MongoStore = require('connect-mongo')
-const session = require('express-session')
+// const session = require('express-session')
 
 var passport = require('passport')
 
@@ -60,26 +62,51 @@ app.use('/videos', videos)
 const googleMaps = require('./GoogleMaps/googleMaps')
 app.use('/maps', googleMaps)
 
-// Events
-const events = require('./Events/events')
-app.use('/events', events)
-
 // Friends List 
 const friends = require('./FriendsList/friendsRouter');
 app.use('/friends', friends);
+
+// Events
+const events = require('./Events/events')
+app.use('/events', events)
 
 // Data population for testing
 const Data = require('./Data/populate')
 app.use('/data', Data)
 
-app.use('/test', (req, res) => {
-    console.log("testing testing testing")
-    res.status(200).send("Test")
-})
+// Messaging 
+// const messaging = require('./messages/messages'); 
+// app.use('/messaging', messaging);
+
+app.use('/messages', messageRouter);
+
+const initializeSocket = require('./messages/messages');
+const server = http.createServer(app); 
+// const io = socketio(server);
+
+const io = require("socket.io")(server, {
+    cors: {
+        origin: ["https://backend-tmmf5kaaqa-uw.a.run.app", "http://localhost:8080", "http://localhost:3000", "http://146.148.99.120"],
+        allowedHeaders: ["*"],
+        credentials: true, 
+        optionSuccessStatus:200
+    }
+});
+
+// console.log('server', server)
+
+// console.log("io object:", io);
+initializeSocket(io);
 
 // Database
 db.initializeDB()
 
-app.listen(process.env.PORT, () => {
-    console.log("Server is up and running on specified port")
-})
+// app.listen(process.env.PORT, () => {
+//     console.log("Server is up and running on specified port")
+// })
+
+server.listen(process.env.PORT, () => {
+    console.log("Server is up and running on specified port");
+});
+
+exports.app = app
