@@ -17,9 +17,9 @@ app.use(session({
 
 // CORS
 const corsOptions = cors({
-    origin: ["https://backend-tmmf5kaaqa-uw.a.run.app", "http://localhost:8080", "http://localhost:3000", "http://146.148.99.120",'https://cmpt372-finalproject-8h4cbn3ub-z3a1s-projects.vercel.app'
+    origin: ["https://backend-tmmf5kaaqa-uw.a.run.app", "http://localhost:8080", "http://localhost:3000", "http://35.188.43.243",'https://cmpt372-finalproject-8h4cbn3ub-z3a1s-projects.vercel.app'
 ,'https://cmpt372-finalproject-z3a1s-projects.vercel.app'],
-    allowedHeaders: ["*"],
+    // allowedHeaders: ["*"],
     credentials: true, 
     optionSuccessStatus:200,
 })
@@ -88,7 +88,7 @@ const server = http.createServer(app);
 
 const io = require("socket.io")(server, {
     cors: {
-        origin: ["https://backend-tmmf5kaaqa-uw.a.run.app", "http://localhost:8080", "http://localhost:3000", "http://146.148.99.120",'https://cmpt372-finalproject-8h4cbn3ub-z3a1s-projects.vercel.app'],
+        origin: ["https://backend-tmmf5kaaqa-uw.a.run.app", "http://localhost:8080", "http://localhost:3000", "http://35.188.43.243",'https://cmpt372-finalproject-8h4cbn3ub-z3a1s-projects.vercel.app'],
         allowedHeaders: ['*'],
         credentials: true, 
         optionSuccessStatus:200

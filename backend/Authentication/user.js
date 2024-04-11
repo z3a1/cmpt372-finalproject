@@ -17,9 +17,14 @@ router.get('/error', (req,res) => {
 
 router.post('/login',passport.authenticate('local',{failureRedirect: '/auth/error', failureMessage: true}), async (req,res) => {
     req.session.cookie.expires = expirationDate
-    await req.session.save().then(res => {
-        console.log(res)
-        res.status(200).json({userId: req.user._id, sessionId: req.session.id})
+    await req.session.save((err) => {
+        if(err){
+            res.status(500).json({message: 'ERROR!: invalid login'})
+        }
+        else{
+            console.log(res)
+            res.status(200).json({userId: req.user._id, sessionId: req.session.id})
+        }
     })
 })
 
@@ -39,8 +44,14 @@ router.post('/register',async (req,res) => {
             await newDocument.save().then(async dbRes => {
                 req.session.cookie.expires = expirationDate
                 req.session.passport = {user : dbRes}
-                await req.session.save().then(res => {
-                    res.status(200).json({user_id: req.session.id})
+                await req.session.save((err) => {
+                    if(err){
+                        res.status(500).json({message: 'ERROR!: invalid login'})
+                    }
+                    else{
+                        console.log(res)
+                        res.status(200).json({userId: req.user._id})
+                    }
                 })
             })
             .catch(err => {
