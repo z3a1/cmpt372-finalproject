@@ -19,7 +19,7 @@ app.use(session({
 const corsOptions = cors({
     origin: ["https://backend-tmmf5kaaqa-uw.a.run.app", "http://localhost:8080", "http://localhost:3000", "http://146.148.99.120",'https://cmpt372-finalproject-8h4cbn3ub-z3a1s-projects.vercel.app'
 ,'https://cmpt372-finalproject-z3a1s-projects.vercel.app'],
-    // allowedHeaders: ["https://cmpt372-finalproject-8h4cbn3ub-z3a1s-projects.vercel.app"],
+    allowedHeaders: ["*"],
     credentials: true, 
     optionSuccessStatus:200,
 })
