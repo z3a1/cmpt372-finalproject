@@ -41,6 +41,7 @@ export default function LandingPage() {
     let setUser = async () => {
       await userService.getcurrentSession().then(res => {
         if (res.data) {
+          console.log(res)
           setUserLoadState(true);
           setCurrentUser(res.data);
         } else {
@@ -50,8 +51,6 @@ export default function LandingPage() {
     };
     setUser();
   }, []);
-
-
 
 
   return (

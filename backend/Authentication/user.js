@@ -78,7 +78,7 @@ router.post('/logout', async(req,res) => {
 router.post('/getSessionById', async(req,res) => {
     console.log(req.session)
     try{
-        res.status(200).json(req.session)
+        res.status(200).json(req.session.passport.user)
     }
     catch(err){
         res.status(500).json(err)
