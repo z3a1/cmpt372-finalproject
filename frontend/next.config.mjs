@@ -4,7 +4,6 @@ const nextConfig = {
         SERVER_URL: process.env.SERVER_URL,
         GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY
     },
-    output: 'export',
     experimental: {
         missingSuspenseWithCSRBailout: false,
         optimizePackageImports: [
