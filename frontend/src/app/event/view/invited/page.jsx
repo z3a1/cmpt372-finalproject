@@ -6,7 +6,7 @@ import axios from "axios"
 import { Button, Card, Container, Group, LoadingOverlay, SegmentedControl, Text, Textarea, Title } from "@mantine/core"
 import Link from "next/link"
 import dayjs from 'dayjs';
-import FriendsList from ".././components/FriendList"
+import AttendeeList from "../components/attendeeList"
 import VisibilityBadge from "../../components/visibilityBadge"
 
 export default function InvitedEventView() {
@@ -90,7 +90,7 @@ export default function InvitedEventView() {
                                 minRows={3}
                                 maxRows={3}
                             />
-                            <FriendsList attendees={allAttendees} />
+                            <AttendeeList attendees={allAttendees} />
                         </Card.Section>
                         <Card.Section p="md">
                             <Group justify="space-between" mt="xl">
