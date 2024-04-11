@@ -7,7 +7,8 @@ import Link from 'next/link'
 import axios from 'axios';
 import { DateTimePicker } from '@mantine/dates';
 import { Container, TextInput, MultiSelect, Textarea, Button, Group, Title, ActionIcon, Card, Flex, Popover, Text, LoadingOverlay, Radio } from '@mantine/core';
-import { chevronDownIcon, chevronUpIcon } from '../lib/icon';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import dayjs from 'dayjs';
 import Map from './components/map'
 
@@ -45,6 +46,20 @@ export default function EditEvent() {
         visibility: "",
         description: ""
     })
+
+    const chevronUpIcon = (
+        <FontAwesomeIcon 
+            icon={faChevronUp}
+            size="sm"
+        />
+    )
+    
+    const chevronDownIcon = (
+        <FontAwesomeIcon 
+            icon={faChevronDown}
+            size="sm"
+        />
+    )
 
     const getEvent = async () => {
         await axios.get(process.env.SERVER_URL + `/events/api/event?id=${eventId}`, {withCredentials: true})
